@@ -1,0 +1,121 @@
+% a sample file for Journal of Quantum Information and Computation (QIC) in 
+% LaTex2e by inputing macro file "qic.sty" with command \usepackage{qic}, 
+% all the macros have been defined in the style file, so it is no need to 
+% put many macros at the beginning of the text file  
+
+\documentclass[twoside]{article}
+\usepackage{qic}
+%\usepackage[dvips]{graphicx}
+%\usepackage{times}
+%\usepackage{fullpage}
+\usepackage{eprint}
+\usepackage{rotating}
+\usepackage{eepic}
+%\usepackage{amsfonts}
+\usepackage{algorithmic}
+%\usepackage{amsthm}
+
+%\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}
+
+\input{Qcircuit}
+
+\newcommand{\braket}[2]{\langle #1|#2 \rangle}
+\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+
+
+\textwidth=5.6truein
+\textheight=8.0truein
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}  %use symbolic footnote
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% starting the text file 
+
+\begin{document}
+\setlength{\textheight}{8.0truein}    %FOR 2ND PAGE ONWARDS
+
+\runninghead{Title  $\ldots$}
+            {Author(s) $\ldots$}
+
+\normalsize\textlineskip
+\thispagestyle{empty}
+\setcounter{page}{1}
+
+%\copyrightheading{Vol.}{No.}{Year}{Page Nos.}
+\copyrightheading{0}{0}{2003}{000--000}
+
+\vspace*{0.88truein}
+
+\alphfootnote
+
+\fpage{1}
+
+\centerline{\bf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Put in titiles here
+%%%%%%%%%%%%%%%%%%%%%
+Quantum compiling two-qubit gates}
+
+\vspace*{0.37truein}
+\centerline{\footnotesize
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%put authors' name and address here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PAUL PHAM
+}
+\vspace*{0.015truein}
+\centerline{\footnotesize\it Department of Computer Science \& Engineering,
+University of Washington,
+Box 352350, Seattle, WA 98195-2350}
+\vspace*{10pt}
+\vspace*{0.225truein}
+\publisher{(received date)}{(revised date)}
+
+\vspace*{0.21truein}
+
+%% \abstracts{first paragraph}{second paragraph}{third paragraph}
+%% If there is only one paragraph, just keep the second and third empty 
+%% like the following one 
+\abstracts{
+%%%%%%%%%%%%%%%%%%%%
+% put abstract here
+%%%%%%%%%%%%%%%%%%%%
+\input{qcompile-abstract} 
+}{}{}
+
+\vspace*{10pt}
+
+\keywords{The contents of the keywords}
+\vspace*{3pt}
+\communicate{to be filled by the Editorial}
+
+\vspace*{1pt}\textlineskip    %) USE THIS MEASUREMENT WHEN THERE IS
+   %) A SECTION HEADING
+%\vspace*{-0.5pt}
+%\noindent
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%put the text of the paper here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{qcompile-intro}
+
+\input{qcompile-definitions}
+
+\input{qcompile-related}
+
+\input{qcompile-sk-algo}
+
+\input{qcompile-main-algo}
+
+\input{qcompile-methods}
+
+\input{qcompile-results}
+
+\input{qcompile-future}
+
+\bibliography{qcompile}
+\bibliographystyle{tocplain}
+
+\end{document}
