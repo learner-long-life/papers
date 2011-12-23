@@ -1,0 +1,182 @@
+\section{Preliminaries}
+\label{sec:prelims}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Some Special Operator Notation}
+
+Borrowing the notation in \cite{ksv02},
+we define two controlled ``meta-operators'' which takes some unitary $U$ as
+a parameter. The first describes a controlled-$U$ operation where the control
+is a single qubit.
+
+\begin{displaymath}
+\Lambda(U) = \ket{0}\bra{0} \otimes I + \ket{1}\bra{1} \otimes U
+\end{displaymath}
+
+The second describes a registered-$U$ operation, which
+can be thought of as applying $U^p$ to some target register
+controlled on a second $m$-qubit register
+encoding the number $p$.
+
+\begin{displaymath}
+\Upsilon_m(U) : \ket{p} \otimes \ket{\psi} \rightarrow \ket{p}
+\otimes U^p\ket{\psi}
+\end{displaymath}
+
+Note that $\Upsilon_1(U)$ and $\Lambda(U)$ are equivalent.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A Universal Set of Gates}
+
+We use the following universal standard set of gates $\mathcal{G}$.
+
+\begin{displaymath}
+\mathcal{G} = \{ H, K, K^{\dagger}, X, Z,
+\Lambda(\sigma_x), \Lambda^2(\sigma_x) \}
+\end{displaymath}
+
+These gates all operate on single qubits with the
+exception of $\Lambda(\sigma_x)$ (the two-qubit CNOT gate)
+and $\Lambda^2(\sigma_x)$ (the three-qubit Toffoli gate),
+which can be interpreted as singly- and doubly-controlled
+$X$ gates, respectively. $X$ and $Z$ are the standard Pauli matrices
+$\sigma_x$ and $\sigma_z$, $H$ is the Hadamard matrix, $K$ and its
+Hermitian conjugate $K^{\dagger}$ are phase gates of $i$ and $-i$,
+respectively.
+
+\begin{displaymath}
+Z = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & -1 \\
+  \end{array} \right]
+\qquad
+X = 
+ \left[
+  \begin{array}{cc}
+    0 & 1 \\
+    1 & 0 \\
+  \end{array} \right]
+\end{displaymath}
+
+\begin{displaymath}
+K = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & i \\
+  \end{array} \right]
+\qquad
+K^{\dagger} = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & -i \\
+  \end{array} \right]
+\end{displaymath}
+
+Any current or future physical implementations of a quantum
+computer will need to efficiently implement this set or an equivalent one.
+Without proving the universality of $\mathcal{G}$, we note that there are
+methods for expressing any $2^n \times 2^n$ unitary matrix as a
+tensor product of single- and two-qubit gates \cite{Bremner2002}.
+
+\subsection{Parameters}
+
+The problem of quantum compiling is to translate
+an entire circuit $C$ of $L$ gates with depth
+$D$ to a new, compiled circuit $C'$ of size $L'$ and depth $D'$ which approximates
+$C$ within error $\epsilon$ using some distance measure.
+
+In our code, we use the trace measure introduced by Austin Fowler which disregards
+the global phase factor. Here,
+$l$ refers to the dimensionality
+of our system (for $n = 2^l$ qubits).
+
+\begin{equation}
+d(U,\tilde{U}) = \sqrt{\frac{l - \norm{\mathrm{tr}(U^\dagger \tilde{U})}}{l}}
+\end{equation}
+
+We will be somewhat sloppy and use the terms ``error'', ``precision'', and
+``accuracy'' interchangeably when approximating gates.
+There is some overhead in the compiled circuit, so in
+general $C'$ is larger (that is, $L' > L$ and $D' > D$). It's also known that
+in order to approximate a circuit with $L$ gates to a total precision of
+$\epsilon$
+requires each gate to be approximated to a precision of
+$n = O(\log(L/\epsilon)$ \cite{Lloyd1995}.
+We'll denote the classical preprocessing time to
+produce $C'$ as $T$.
+ 
+Circuit depth is analogous to running time, or how long we have to wait from
+feeding in inputs to getting a correct output. Relative to the circuit size,
+it is a heuristic for how parallelizable our
+circuit is. For example, in a single ion trap, if we had multiple lasers,
+we could ``flatten'' our circuit into layers with bounded fan-in and
+fan-out and operate on multiple ions in parallel.
+We could also operate multiple ion traps in parallel which communicate by
+teleportation.
+All other things being equal, a circuit with low depth will complete
+faster than one with high depth, although in practice we can only execute
+fixed-width circuits.
+
+\subsection{Quantum Coprocessor Model}
+
+All experimental implementations of quantum computers treat them as an
+auxiliary device controlled by a classical computer. This is the way
+quantum computers will function for the foreseeable future, and many
+quantum algorithms can actually be split into classical and quantum parts
+to reflect this distinction.
+
+For example,
+SK is a completely classical procedure which is run before
+the quantum algorithm to yield a deterministic set of gates. KSV
+also contains classical postprocessing as part of its parallelized
+phase-estimation. Since classical computers are well understood and
+pretty fast, we will neglect the performance of these classical parts
+if they are polynomial in time. However, we will discuss one aspect
+of classical overhead later, which is the space requirement of SK.
+
+On a related note, we mention here that most notions of a quantum algorithm
+are completely reversible. Specifically, any ancilla qubits which contain
+garbage values are usually uncomputed back to $\ket{0}$ so that they can be
+reused later. Uncomputing does not affect the asymptotic depth or size of
+a circuit. However, in practice, we may be willing to sacrifice a
+negligible number of ancillae qubits (leaving them with garbage values) to reduce
+circuit depth or size. We use this ``one-shot'' method in the quantum
+runtime part of KSV by projectively measuring some ancillae in the phase
+estimation component instead of coherently simulating
+the measurement and then unmeasuring later. This allows us to offload a
+significant (although still polynomial in size and depth) computation to our
+classical controller, with a quadratic increase in the error probability.
+This is described in more detail in Section \ref{subsec:ppe}.
+
+\subsection{Asymptotic Circuit Bounds}
+
+The SK and KSV algorithms compile circuits with
+a size and depth which depend on the desired per-gate precision via the
+parameter $n = O(\log(L/\epsilon))$. These asymptotic bounds are listed in
+Table \ref{tab:asymptotics}, which actually refer to an improved version of
+SK described in Theorem 8.5 of \cite{ksv02}, where 
+$\nu$ is a small positive constant.
+However, we describe a simpler version of SK in Section \ref{sec:sk-algo}
+which has a fixed exponent of about 3.97, which is easier to understand.
+
+We will see these asymptotic bounds reflected
+later in the actual numerical results in Section \ref{sec:results}.
+
+\begin{center}
+\begin{table}
+\label{tab:asymptotics}
+\begin{tabular}{|c|c|c|}
+\hline
+   & Solovay-Kitaev & Super-Kitaev\\
+\hline
+$L'$ & $O(Ln^{3+\nu})$ & $O(Ln + n^2 \log n)$\\
+$d'$ & $O(dn^{3+\nu})$ & $O(d \log{n} + (\log{n})^2))$\\ 
+\hline
+\end{tabular}
+\caption{Asymptotic circuit resources for SK and KSV compilers}
+\end{table}
+\end{center}
