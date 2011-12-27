@@ -1,12 +1,13 @@
 \section{Review of Solovay-Kitaev}
 \label{sec:sk-algo}
 
-The essential structure of SK is to recursively generate nets of
-successively finer precision and to use a divide-and-conquer approach to
-approximate the desired gate. At any given level of recursion, the input 
-gate is divided up into two halves which are closer to identity but can be
+The essential structure of SK is to recursively generate nets of unitary
+operators with
+successively finer precision. At any given level of recursion, the input 
+gate is divided up into two halves which are further from identity [is this
+really true] and can be
 approximated with less precision. Our pseudo-code and explanation
-follows the excellent exposition in \cite{Dawson2005} and \cite{harrow01}
+follows the exposition in \cite{Dawson2005} and \cite{harrow01}
 
 \begin{algorithmic}[1]
 \STATE \textsc{function} $\tilde{U}_i \leftarrow$ SK$(U,n)$
@@ -24,7 +25,7 @@ follows the excellent exposition in \cite{Dawson2005} and \cite{harrow01}
 
 Since the recursion must eventually bottom out, we must precompute some sequences
 of gates from $\mathcal{G}$ up to length $l_0$. This is the classical
-preprocessing step for SK which requires upfront storage space for this
+preprocessing step which requires upfront storage space for this
 coarsest-grained net, where
 each sequence is no more than $\epsilon_0$ from its nearest neighbor. According
 to \cite{Dawson2005} the values of $l_0=16$ and $\epsilon_0 = 0.14$ using
@@ -50,8 +51,19 @@ geometric decomposition in \cite{Dawson2005} rather than the decomposition
 based on a BCH-like approximation as in \cite{harrow01}, although it is not
 known which method converges more quickly to a desired gate in general.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% we still need to reconcile this 5^n with log^{3.97}(1/\epsilon)
+% this is an evernote item, maybe it is already reconciled
+
 Each level $i$ of recursion solves the problem of compiling 
 $U_i$ by combining five gates compiled at the lower $i-1$ level.
-Therefore, the compiled circuit size is upper-bounded by $5^i$, and
+Therefore, the compiled circuit size at the top-level is upper-bounded by $5^n$,
+and
 this is in general the same as the circuit depth (since not all gates in
 $\mathcal{G}$ commute).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% we still need a discussion somewhere of the relationship between commuting
+% operators and parallelizing them into the same timestep

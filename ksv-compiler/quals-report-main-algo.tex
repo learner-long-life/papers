@@ -1,10 +1,10 @@
-\section{The Main Algorithm}
+\section{The KSV Procedure}
 \label{sec:main-algo}
 
 KSV takes a radically different approach than SK by identifying that most gates
 can be easily constructed from sequences in
 $\mathcal{G}$ in constant time with the exception of the ``targetless''
-controlled phase operator, which will take some sweat to approximate.
+controlled phase operator, which takes the most work to approximate.
 
 \begin{displaymath}
 \Lambda(e^{i\phi}) = 
@@ -15,25 +15,27 @@ controlled phase operator, which will take some sweat to approximate.
   \end{array} \right)
 \end{displaymath}
 
-Thankfully \cite{ksv02} is a self-contained reference
+\cite{ksv02} is a self-contained reference
 for enacting $\Lambda(e^{i\phi})$ with several modules which are useful in
 their own right:
-parallelized phase estimation procedure, parallel iteration of finite
+parallelized phase estimation, parallel iteration of finite
 automata, and a logarithmic depth quantum arithmetic operations such
 as addition (and subtraction) described in \ref{subsec:add},
 multiplication described in \ref{subsec:mult}, and division described
 in \ref{subsec:div}.
 
-It is now useful to discuss certain states with remarkable properties.
-Their superposition is easy to form, and they are the eigenstates of the
-afore-mentioned
-addition operator. Used with phase estimation and modular arithmetic,
-this would allow us to enact
-a particular phase shift simply by adding numbers.
-Moreover, it turns out we can copy these states
-also using simple addition. These ideas make KSV a beautiful result
-regardless of the outcome of our later numerical comparisons.
+In order to do all of this, however, we will need to introduce the eigenstates
+of the $\bmod 2^n$ addition operator.
 
+%It is now useful to discuss certain states with remarkable properties.
+%Their superposition is easy to form, and they are the eigenstates of a
+%$\bmod 2^n$ addition operator which is efficient to implement.
+%Used with phase estimation,
+%this would allow us to enact
+%a particular phase shift, and also to copy these eigenstates,
+%simply by adding numbers.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{quals-report-magic-state}
 
 %For the steps below, we note that we can avoid solving the equation $kp \equiv l (mod 2^n)$
@@ -42,7 +44,7 @@ regardless of the outcome of our later numerical comparisons.
 %$\ket{\psi_{n,1}}$. So we need to create one copy of this magic state to
 %simulate each of $m$ $\Lambda(e^{i\phi})$ gates, $m \le L'$.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{KSV Steps}
 
 Given a circuit $C$ to compile,
