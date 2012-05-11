@@ -1,0 +1,606 @@
+\documentclass{article}
+\usepackage{eprint}
+\usepackage[osf]{mathpazo}
+
+\title{Constant-Depth Circuits for Teleportation, Fanout, and Cat State Creation}
+
+\author{Paul Pham}
+
+\newcommand{\targfix}{\qw {\xy {<0em,0em> \ar @{ - } +<.39em,0em>
+\ar @{ - } -<.39em,0em> \ar @{ - } +
+<0em,.39em> \ar @{ - }
+-<0em,.39em>},<0em,0em>*{\rule{.01em}{.01em}}*+<.8em>\frm{o}
+\endxy}}
+
+\input{Qcircuit}
+
+\newcommand{\braket}[2]{\langle #1|#2 \rangle}
+\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+
+\newcommand\coolleftbrace[2]{%
+#1\left\{\vphantom{\begin{matrix} #2 \end{matrix}} \right.}
+
+\newcommand\coolrightbrace[2]{%
+\left. \vphantom{\begin{matrix} #2 \end{matrix}} \right\} #1}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We review the techniques for performing teleportation
+and unbounded fanout which are behind recent results in performing
+Shor's algorithm in constant-depth on a nearest-neighbor architecture
+with a classical controller. We give concrete circuits for both techniques,
+place them within a historical context, and discuss their limitations.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+Many recent works in quantum circuit construction are concentrated around a
+core group of techniques that execute certain primitive gates in constant-depth.
+Traditionally, in order to be fault-tolerant,
+primitive gates have been assumed to come from the Clifford
+group, 
+which must be efficiently implementable on any physical technology.
+The typical generating set of the Clifford group is usually given as
+the following:
+
+\begin{equation}
+X =
+ \left[
+  \begin{array}{cc}
+    0 & 1 \\
+    1 & 0 \\
+  \end{array} \right]
+\qquad
+Z = \Lambda(e^{i\pi}) =
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & -1 \\
+  \end{array} \right]
+\qquad
+K = \Lambda(e^{i\pi/2}) =
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & i \\
+  \end{array} \right]
+\end{equation}
+\begin{equation}
+H = \normtwo
+ \left[
+  \begin{array}{cc}
+    1 & 1 \\
+    1 & -1 \\
+  \end{array} \right]
+\qquad
+CNOT =
+ \left[
+  \begin{array}{cccc}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 1 \\
+    0 & 0 & 1 & 0
+  \end{array} \right]
+\end{equation}
+
+This is often augmented with the single-qubit rotation $\Lambda(e^{i\pi/4})$
+in order to be universal, although this gate by itself may be hard to
+implement in many error-correcting codes.
+
+\begin{equation}
+\Lambda(e^{i\pi/4}) = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & e^{i\pi/4} \\
+  \end{array} \right]
+\end{equation}
+
+Before about 2009, many works measured the circuit resources of
+depth, size, and width when implementing Shor's
+factoring algorithm \cite{Zalka1998} \cite{Zalka2006} \cite{Kutin2006}
+\cite{Fowler2004}
+on various architectural models (AC, 1D NTC, and 2D NTC)
+\cite{VanMeter2006}
+using the set of primitive gates above, or a variant which only counts
+two-qubit gates. However, is there a way to further reduce circuit
+resources by considering other gates as primitive? And can these new primitive
+gates be efficiently implemented using some capability previously
+unconsidered, yet is physically realizable?
+
+The answer to both of these questions is yes. However, there are several parts
+to this puzzle
+of showing that Shor's factoring algorithm could be performed in constant-depth
+on an augmented nearest-neighbor architecture. It is now known that this task
+in possible, but it remains to be seen what is the optimal size and width of
+such a constant-depth circuit.
+
+In 2002, H{\o}yer and {\v S}palek showed that if an unbounded quantum
+fanout gate was taken as a primitive multi-qubit gate (as is physically
+the case for trapped ions),
+factoring could be performed in constant-depth. However, how could an
+unbounded fanout gate be implemented in an architecture where only two-qubit
+gates, and not multi-qubit gates, are efficient? Can we make use
+of a classical controller, which is available to us in experiments
+through fast digital computers?
+
+In 2009, Browne, Kashefi, and Perdrix answered
+both of these questions in the affirmative by
+linking the power of measurement-based (one-way) quantum computing to
+H{\o}yer and {\v S}palek's unbounded fanout results, building upon previous
+results about the power of the measurement-based model by Broadbent
+and Kashefi in 2007 \cite{Broadbent2007}. Using this connection,
+the logarithmic-depth factoring circuit of Cleve and Watrous from
+2000 \cite{Cleve2000}
+can be done in constant-depth on a $k$-dimensional
+nearest neighbor architecture with a
+classical controller, a model which we call \textsc{kD CCNTC}, for $k \ge 2$.
+This construction
+relies on two new primitives,
+\emph{constant-depth teleportation} and \emph{constant-depth fanout}, which
+we will review in these notes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Constant-Depth Teleportation (\textsc{CDT})}
+
+In the normal teleportation protocol, a quantum state $\ket{\psi}$ is transported
+physically from a source qubit (called $A$ for Alice) to a target qubit
+(called $B$ for Bob) using a so-called two-qubit
+\emph{Bell pair}, or an entangled state of the following form:
+
+\begin{equation}
+\ket{\Phi^{+}} = \normtwo(\ket{00} + \ket{11})
+\end{equation}
+
+This is actually one of four possible Bell states, or maximally-entangled
+two-qubit states, which forms an alternate basis from the usual computational
+basis.
+
+\begin{eqnarray}
+\ket{\Phi^{-}} & = & \normtwo(\ket{00} - \ket{11}) \\
+\ket{\Psi^{+}} & = & \normtwo(\ket{01} + \ket{10}) \\
+\ket{\Psi^{-}} & = & \normtwo(\ket{01} - \ket{10})
+\end{eqnarray}
+
+Note that we can form the state $\ket{\Phi^{+}}$
+starting from two unentangled qubits
+initialized in the $\ket{0}$ state through the following circuit, which
+enacts a two-qubit gate that we'll call $U_{00}$.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{0}} & \gate{H} & \ctrl{1} & \qw \\
+\lstick{\ket{0}} & \qw      & \targfix & \qw
+}
+\begin{matrix}% matrix for right braces
+\vphantom{a}\\ 
+\coolrightbrace{\ket{\Phi^{+}}}{a \\ a }
+\end{matrix}%
+\end{displaymath}
+\caption{Creating a Bell pair}
+\label{fig:create-bell-pair}
+\end{figure}
+\end{center}
+
+The other three Bell states can be created using similar circuits.
+Furthermore, we can perform a measurement in the Bell-state basis
+(usually simply called the Bell basis) by 
+converting back to the computational basis (by applying $U_{00}^\dag$)
+and measuring in the computational basis. This is shown in Figure
+\ref{fig:measure-bell}, where the classical bits $j$ and $k$ denote
+the outcome measurements and tell us which of the four Bell basis states
+we have projected into.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\begin{array}{ccc}
+
+\begin{array}{c}
+\begin{matrix}% matrix for left braces
+\vphantom{a}\\ 
+\coolleftbrace{\ket{\Phi^{+}}}{a \\ a }
+\end{matrix}
+\Qcircuit @C=1em @R=.7em {
+& \qw & \multimeasure{1}{\text{Bell}} & \cw & j \\
+& \qw & \ghost{\text{Bell}}           & \cw & k 
+}\\
+\end{array}
+&
+\begin{array}{c}
+\equiv
+\end{array}
+&
+\begin{array}{c}
+\begin{matrix}% matrix for left braces
+\vphantom{a}\\ 
+\coolleftbrace{\ket{\Phi^{+}}}{a \\ a }
+\end{matrix}
+\Qcircuit @C=1em @R=.7em {
+& \qw & \ctrl{1} & \gate{H} & \qw & \meter & \cw & j \\
+& \qw & \targfix & \qw      & \qw & \meter & \cw & k
+}\\
+\end{array}
+%\Qcircuit @C=1em @R=.7em {
+%\qw & \qw      & \ctrl{1} & \qw & \meter & \cw & $j$ \\
+%\qw & \gate{H} & \targfix & \qw & \meter & \cw & $k$
+%}
+\end{array}
+\end{displaymath}
+\caption{Measuring in the Bell basis}
+\label{fig:measure-bell}
+\end{figure}
+\end{center}
+
+Then the circuit for teleportation from $A$ to $B$ is performed in Figure
+\ref{fig:normal-teleport}
+using a Bell state $\ket{\Phi^{+}}^{AB}$ that is shared between Alice and
+Bob and a source state $\ket{\psi}^A$ to teleport that belongs to Alice
+only. Note that the state that is teleported to Bob is $\ket{\psi}$ up to
+Pauli corrections, which are measured by Alice and then communicated
+classically to Bob.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{\psi}^A} & \qw      & \qw      & \multimeasure{1}{\text{Bell}} & \cw & \rstick{j} \\
+\lstick{\ket{0}^A}    & \gate{H} & \ctrl{1} & \ghost{\text{Bell}}           & \cw & \rstick{k} \\
+\lstick{\ket{0}^B}    & \qw      & \targfix & \qw                           & \qw & \rstick{X^k Z^j \ket{\psi}} \\
+}
+\end{displaymath}
+\caption{Normal teleportation protocol}
+\label{fig:normal-teleport}
+\end{figure}
+\end{center}
+
+Now then, consider two changes to the above circuit. Instead of Alice and
+Bob being separate parties who may be arbitrarily far away from each other,
+assume now that Alice and Bob are merged
+into an omniscient classical controller which can access all qubits at the
+same time. Further, assume that the qubits are on a regular lattice and
+can only interact via single-qubit and two-qubit nearest neighbor gates.
+This architectural model is called 2D CCNTC.
+
+Our problem now is to
+teleport a state $\ket{\psi}$ from one qubit to another arbitrarily far
+away (say $n$ qubits away) where all the intervening qubits have been
+initialized to $\ket{0}$. These intervening qubits are known as the
+\emph{teleportation channel} and intuitively one can think of it as a road
+or a railway for transmitting qubits which must be kept clear (reinitialized
+back to $\ket{0}$ after use).
+By repeating the normal teleportation procedure
+$n$ times in sequence, it is easy to see that we can perform this task
+in depth $O(n)$. However, because we have a classical controller, we can
+actually interleave Bell measurements, measure all in one step, and then
+apply Pauli corrections in a second step. This will give us the constant-depth
+teleportation (CDT) procedure that we are looking for.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\Qcircuit @C=1em @R=.7em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \multimeasure{1}{\text{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\text{Bell}}           & \cw & \rstick{k_1} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_1}Z^{j_1}\ket{\psi}}               & \qw & \qw & \multimeasure{1}{\text{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\text{Bell}}           & \cw & \rstick{k_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw & \multimeasure{1}{\text{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\text{Bell}}           & \cw & \rstick{k_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw & \gate{X^{k_3}} & \gate{Z^{j_3}} & \gate{X^{k_2}} & \gate{Z^{j_2}} & \gate{X^{k_1}} & \gate{Z^{j_1}} & \qw & \rstick{\ket{\psi}} \\
+}
+\end{displaymath}
+\caption{A constant-depth teleportation circuit due to Aram Harrow.}
+\label{fig:cd-teleport}
+\end{figure}
+\end{center}
+
+It is important to note that after a CDT has happened, all the qubits in the
+channel have been projectively measured into a product state of classical
+bits, including the original source qubit which was in the state $\ket{\psi}$.
+Therefore, these can all be simultaneously corrected back to $\ket{0}$ by the
+classical controller. In this way, we can keep reusing the teleportation
+channel indefinitely. 
+
+If one were to count single-qubit gates,
+two-qubit gates, and single-qubit computational basis measurements as a
+single step, CDT can be executed in depth 6.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Constant-Depth Fanout (\textsc{CDF})}
+
+Now we turn to a harder operation, unbounded quantum fanout in constant depth.
+Classically, we take it for granted that we can create copies of a bit,
+but quantumly we are prevented from doing this by the no-cloning theorem.
+Creating an unentangled copy of a generic quantum state is not even a linear
+operation, let alone unitary. However, we can create entangled copies using
+a CNOT into an initialized qubit.
+
+\begin{equation}
+\ket{\psi} \otimes \ket{0} \equiv
+(\alpha\ket{0} + \beta\ket{1}) \otimes \ket{0} \rightarrow
+\alpha\ket{00} + \beta\ket{11}
+\end{equation}
+
+We will denote the unbounded fanout operation as a variation of CNOT with
+one control but multiple (say $n$) target qubits. Certainly we can create
+$n$ entangled operations in logarithmic depth by apply a tree of CNOTs
+as shown in Figure \ref{fig:fanout-tree}. It doesn't matter that the CNOTs
+operate on non-adjacent qubits, since we can use CDT from the previous
+section to perform a local CNOT and then teleport the target qubit an
+arbitrarily far distance.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\begin{array}{ccc}
+\begin{matrix}% matrix for left braces
+\vphantom{a}\\ 
+\coolleftbrace{n}{a \\ a \\ a \\ a \\ a \\ a \\ a \\ a }
+\end{matrix}
+\vphantom{a}
+\qquad \qquad \qquad
+\underbrace{
+\begin{array}{c}
+\Qcircuit @C=.7em @R=1.2em {
+\lstick{\alpha\ket{0}+\beta\ket{1}} & \qw & \ctrl{4} & \qw & \ctrl{2} & \qw & \ctrl{1} & \qw \\
+                                    & \qw  & \qw      & \qw & \qw      & \qw & \targfix & \qw \\
+                                    & \qw  & \qw      & \qw & \targfix & \qw & \ctrl{1} & \qw \\
+                                    & \qw  & \qw      & \qw & \qw      & \qw & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw & \ctrl{2} & \qw & \ctrl{1} & \qw \\
+                                    & \qw  & \qw      & \qw & \qw      & \qw & \targfix & \qw \\
+                                    & \qw  & \qw      & \qw & \targfix & \qw & \ctrl{1} & \qw \\
+                                    & \qw  & \qw      & \qw & \qw      & \qw & \targfix & \qw
+}\\
+\vphantom{a}
+\end{array}
+}_{\log_2{n}}
+\begin{matrix}% matrix for right braces
+\vphantom{a}\\ 
+\coolrightbrace{\alpha\ket{0}^{\otimes n} + \beta\ket{1}^{\otimes n}}{a \\ a \\ a \\ a \\ a \\ a \\ a \\ a }
+\end{matrix}%
+
+&
+\qquad
+=
+\qquad
+&
+\begin{array}{c}
+\Qcircuit @C=.7em @R=1.2em {
+\lstick{\alpha\ket{0}+\beta\ket{1}} & \qw  & \ctrl{1} & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw \\
+                                    & \qw  & \targfix & \qw
+}
+\end{array}
+\end{array}
+\end{displaymath}
+\caption{The equivalence of unbounded fanout to a logarithmic depth tree of CNOTs.}
+\label{fig:fanout-tree}
+\end{figure}
+\end{center}
+
+How can we improve the depth? To answer that, consider a special
+state called the $n$-qubit \emph{cat state}, which is the maximally-entangled
+state on $n$ qubits. We denote this state as $\ket{\Phi_n}$ as shown in
+Equation \ref{eqn:cat}. Note that the Bell state $\ket{\Phi^{+}}$ from the
+previous section is simply $\ket{\Phi_2}$.
+
+\begin{equation}
+\label{eqn:cat}
+\ket{\Phi_n} = \frac{1}{\sqrt{2}}
+\left(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}\right)
+\end{equation}
+
+Assume that we can create $\ket{\Phi_n}$ efficiently, say in
+constant-depth. (We will describe how to do this in the next section.)
+Then we can perform
+unbounded fanout by entangling the source qubit
+$\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ with the cat state as shown in
+Equation \ref{eqn:copy}. This accomplishes the operation of constant-depth
+fanout (CDF), as shown in Figure \ref{fig:copy}.
+
+\begin{equation}
+(\alpha \ket{0} + \beta \ket{1}) \otimes \ket{0}^{\otimes n} \rightarrow
+\alpha \ket{0}^{\otimes (n+1)} + \beta \ket{1}^{\otimes (n+1)}
+\label{eqn:copy}
+\end{equation}
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\begin{matrix}% matrix for left braces
+\vphantom{a}\\ 
+\coolleftbrace{\ket{\Phi_n}}{a \\ a \\ a \\ a \\ a \\ a \\ a \\ a }
+\end{matrix}
+\vphantom{a}
+\qquad \qquad \qquad
+\underbrace{
+\begin{array}{c}
+\Qcircuit @C=.7em @R=1.2em {
+\lstick{\alpha\ket{0}+\beta\ket{1}} & \qw  & \multimeasure{1}{\text{Bell}} & \cw & \rstick{j} \\
+                                    & \qw  & \ghost{\text{Bell}}           & \cw & \rstick{k} \\
+                                    & \qw  & \qw                           & \qw & \qw \\
+                                    & \qw  & \qw                           & \qw & \qw \\
+                                    & \qw  & \qw                           & \qw & \qw \\
+                                    & \qw  & \qw                           & \qw & \qw \\
+                                    & \qw  & \qw                           & \qw & \qw \\
+                                    & \qw  & \qw                           & \qw & \qw
+}\\
+\vphantom{a}
+\end{array}
+}_{\log_2{n}}
+\begin{matrix}% matrix for right braces
+\vphantom{a}\\ 
+\vphantom{a}\\ 
+\coolrightbrace{X^{k}Z^{j}\left(\alpha\ket{0}^{\otimes {n-1}} + \beta\ket{1}^{\otimes {n-1}}\right)}{ a \\ a \\ a \\ a \\ a \\ a \\ a }
+\end{matrix}%
+\end{displaymath}
+\caption{Entangling a source state with an $n$-qubit cat state to perform unbounded fanout.}
+\label{fig:copy}
+\end{figure}
+\end{center}
+
+When we refer to \textsc{CDF} in the rest of this note, we mean the
+above constant-depth implementation of unbounded quantum fanout on a
+nearest-neighbor
+architecture with a classical controller. This is in contrast to the
+notion of a primitive, unbounded fanout operation which may be available
+in a particular physical technology (e.g. trapped ions).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Constant-Depth Cat State Creation \textsc{CDCSC}}
+
+Now we discuss how to create the $n$-qubit cat state $\ket{\Phi_n}$ in
+constant depth. Note that for some fixed-size, small cat states,
+say $\ket{\Phi_3}$, we can create these simply using a ladder of CNOTs
+as shown in Figure \ref{fig:cat3}.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\Qcircuit @C=.7em @R=1.2em {
+\lstick{\ket{0}} & \qw  & \ctrl{1} & \qw & \qw      & \qw \\
+\lstick{\ket{0}} & \qw  & \targfix & \qw & \ctrl{1} & \qw \\
+\lstick{\ket{0}} & \qw  & \qw      & \qw & \targfix & \qw
+}
+\begin{matrix}% matrix for right braces
+\vphantom{a}\\ 
+\coolrightbrace{\ket{\Phi_3}}{a \\ a \\ a  }
+\end{matrix}%
+\end{displaymath}
+\caption{Circuit for creating the 3-qubit cat state.}
+\label{fig:cat3}
+\end{figure}
+\end{center}
+
+However, this is not scalable for $\ket{\Phi_n}$. We can build an arbitrary-sized
+cat state by using a sequence of fixed-size cat states and Bell basis measurements
+as shown in Figure \ref{fig:cd-cat}. There are several details to note in this
+figure. The first is that the majority of the qubits are used in the
+``scaffolding'' to create the cat state (in this case, the six qubits which
+are measured to obtain a classical outcome $j_i$ and $k_i$). Just like for
+\textsc{CDT}, these classical outcomes are used for simultaneous
+Pauli corrections on the qubits which are actually part of the usable cat
+state (in this case, the four qubits which are labelled with $\ket{\ell}$.
+
+The second detail to note is that the first and last qubit in this chain is
+$\ket{\Phi_2}$, while the intermediate qubits are $\ket{\Phi_3}$. This is
+because the first and last qubit in each $\ket{\Phi_3}$ is involved in a
+Bell measurement that entangles this triplet of qubits with the preceding
+and the succeeding one. Only the middle qubit in each triplet is usable as
+a qubit of the usable cat state. However, after the simultaneous round of
+Bell measurements, the scaffolding qubits are in a classical product state
+to the cat state, and can be corrected back to $\ket{0}$ and reused again in
+the future.
+
+\begin{center}
+\begin{figure}[!h]
+\begin{displaymath}
+\begin{matrix}% matrix for left braces
+\vphantom{a}\\ 
+\coolleftbrace{\ket{\Phi_2}}{a \\ a }\\
+\vphantom{a}\\
+\coolleftbrace{\ket{\Phi_3}}{a \\ a \\ a}\\
+\vphantom{a}\\
+\coolleftbrace{\ket{\Phi_3}}{a \\ a \\ a}\\
+\vphantom{a}\\
+\coolleftbrace{\ket{\Phi_2}}{a \\ a }
+\end{matrix}
+\vphantom{a}
+\begin{array}{c}
+\Qcircuit @C=1em @R=1em {
+ & \qw & \qw                           & \qw & \qw & \qw & \qw & \rstick{\ket{\ell}} \\
+ & \qw & \multimeasure{1}{\text{Bell}} & \cw & \cw & \cw & \cw & \rstick{j_1} \\
+ & \qw & \ghost{\text{Bell}}           & \cw & \cw & \cw & \cw & \rstick{k_1} \\
+ & \qw & \qw                           & \qw & \qw & \qw & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}} \\
+ & \qw & \multimeasure{1}{\text{Bell}} & \cw & \cw & \cw & \cw & \rstick{j_2} \\
+ & \qw & \ghost{\text{Bell}}           & \cw & \cw & \cw & \cw & \rstick{k_2} \\
+ & \qw & \qw                           & \qw & \qw & \qw & \qw & \rstick{X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\ell}}  \\
+ & \qw & \multimeasure{1}{\text{Bell}} & \cw & \cw & \cw & \cw & \rstick{j_3} \\
+ & \qw & \ghost{\text{Bell}}           & \cw & \cw & \cw & \cw & \rstick{k_3} \\
+ & \qw & \qw                           & \qw & \qw & \qw & \qw & \rstick{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\ell}}
+}
+\end{array}
+\end{displaymath}
+\caption{A constant-depth creation circuit for a cat state (in this example, $\ket{\Phi_4}$) due to Aram Harrow.}
+\label{fig:cd-cat}
+\end{figure}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Limitation to \textsc{CDF} and \textsc{CDCSC}}
+
+In contrast to \textsc{CDT}, there is no way to disentangle $\ket{\Phi_n}$ from
+$\ket{\psi}$. Therefore, we say that CDF \emph{consumes the cat state}.
+In order to keep a similar channel clear for unbounded-fanout, we must
+repeatedly shuffle a used cat state off to one side and shuffle in fresh
+ancillae initialized to $\ket{0}$.
+While CDF enables us to compress many circuits to constant-depth, it comes
+as this cost of maintaining these ``garbage'' cat states, which are still
+entangled with our computation state. If any of them
+decoheres, it will corrupt our output. Therefore, \textsc{CDF}
+may not be as efficient
+in practice for physical technologies without efficient multi-qubit gates.
+This is a major limitation of \textsc{CDF} in practice, and indicates that
+minimizing depth at all costs may not be desirable, and that some other
+circuit resource or combination of resources is a better measure of
+architectural efficiency. This is an open problem. See \cite{Pham2012c}
+for one proposed circuit resource.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Further Progress}
+
+In the specific case of factoring, the Browne-Kashefi-Perdrix result
+showed how to combine \textsc{CDF} with the logarithmic-depth implementation
+of H{\o}yer-{\v S}palek to get a constant-depth factoring implementation in
+a \textsc{CCAC} architecture, that is an \textsc{AC} architecture augmented
+with a classical controller. In this section, we examine two additional
+questions.
+
+How does the efficiency of a factoring circuit change if we impose the
+restriction of nearest-neighbor interactions? In particular, for purposes
+of realistic fabrication, what is the efficiency of a factoring circuit in
+\textsc{2D CCNTC}? Pham and Svore showed in 2011 that factoring an $n$-bit
+number can be
+performed in this setting in poly-logarithmic depth and with size
+and width $O(n^6)$. \cite{Pham2012b}. It is an open question whether the
+size and width can be improved, and how the size and width scale if the depth
+is brought down to a constant.
+
+What other kinds of circuits can we efficiently convert
+from \textsc{CCAC} to \textsc{kD CCNTC}? That is, can this conversion
+be done in constant depth and
+polynomial overhead in size and width? In 2012,
+Rosenbaum \cite{Rosenbaum2012} showed this was possible for any $n$-qubit gate
+by using a two-dimensional array of $n^2$ qubits. By using \textsc{CDT} to
+transport each of the qubits to a different column, and then down to the
+same row again, arbitrary pairs of the original qubits can be made
+nearest neighbors. Ordinary \textsc{kD NTC} operations can then be
+performed on these ``projected'' qubits, and then they can be teleported back
+to their original positions if desired. All ancillae qubits can be reused,
+and this entire procedure occurs in constant depth.
+
+We hope these notes provide a useful summary of recent
+constant-depth techniques.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Acknowledgments}
+
+Thanks to Aram Harrow and David Rosenbaum for useful discussions and
+providing many of the circuits that appear in these notes.
+
+\bibliography{constant-depth}
+\bibliographystyle{tocplain}
+
+\end{document}
