@@ -12,6 +12,11 @@
 -<0em,.39em>},<0em,0em>*{\rule{.01em}{.01em}}*+<.8em>\frm{o}
 \endxy}}
 
+\newcommand{\targless}{\qw {\xy {<0em,0em> \ar @{ - } +<.39em,0em>
+\ar @{ - } -<.39em,0em> \ar @{ - } +<0em,.80em> \ar @{ - }
+-<0em,.39em>},<0em,0em>*{\rule{.01em}{.01em}}*+<.8em>\frm{o}
+\endxy}}
+
 \input{Qcircuit}
 
 \newcommand{\braket}[2]{\langle #1|#2 \rangle}
@@ -374,13 +379,13 @@ arbitrarily far distance.
 \Qcircuit @C=.7em @R=1.2em {
 \lstick{\alpha\ket{0}+\beta\ket{1}} & \qw  & \ctrl{1} & \qw \\
                                     & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw \\
-                                    & \qw  & \targfix & \qw
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw \\
+                                    & \qw  & \targless & \qw
 }
 \end{array}
 \end{array}
