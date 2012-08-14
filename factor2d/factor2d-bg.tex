@@ -1,0 +1,154 @@
+\section{Background}
+\label{sec:bg}
+
+Quantum architecture is concerned with the physical layout of
+qubits and constraints on their interactions,
+as well as the efficient execution, in time, space, and other resources, of
+algorithms on a given architecture.
+In this paper, we focus on designing a realistic nearest-neighbor circuit for running
+Shor's factoring algorithm on architectural models of a physical quantum device.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Architectural Models and\\ Circuit Resources}
+\label{subsec:models}
+
+Following Van Meter \cite{VanMeter2005},
+we distinguish between a model and an architectural implementation as follows.
+A \emph{model} is a set of constraints and rules for the placement and
+interaction of qubits.
+An \emph{architecture}, or \emph{implementation}, is a particular
+spatial layout of qubits (as a graph of vertices) and their
+constrained interactions (edges between the vertices),
+following the constraints of a given model.
+
+The most general model is called Abstract Concurrent (\textsc{AC})
+and allows arbitrary, long-range interactions between any qubits and concurrent
+operation of quantum gates.
+This corresponds to a complete graph with an edge between every pair of nodes,
+which is the model assumed in most quantum algorithms.
+
+A more specialized model restricts interactions to nearest-neighbor, two-qubit,
+concurrent gates (\textsc{NTC}) in a regular one-dimensional chain (1D NTC),
+which is sometimes called linear nearest-neighbor (\textsc{LNN}).
+This corresponds to a line graph.
+
+To relieve movement congestion,
+we can extend to a two-dimensional regular grid
+(2D NTC), where each
+qubit has four neighbors and there is an extra degree of freedom
+in which to move data.
+In this paper, we extend the \textsc{2D NTC} model in two ways.
+The first extension allows arbitrary planar graphs
+with bounded degree, rather than a regular square lattice.
+Namely, we assume qubits lie in a plane and edges are not allowed to intersect,
+so that theoretically all qubits are accessible from above
+or below by control and measurement apparatus.
+Whereas 2D NTC conventionally assumes each qubit
+has four neighbors, we consider up to six neighbors in a roughly hexagonal
+layout. The second extension we make is the realistic assumption
+that classical control can
+access every qubit in parallel, and we do not count these classical
+resources in our implementation. We call these augmented models
+\textsc{CCAC} and \textsc{CCNTC} following 
+\cite{Rosenbaum2012}. The classical controller
+corresponds to fast digital computers which are
+available in actual experiments and are necessary for constant-depth
+communication in the next section.
+%, and it allows us to use constant-depth
+%fanout and teleportation.
+
+We measure the efficiency of a circuit on a particular
+architecture in terms of three resources:
+%, depicted in Figure \ref{fig:resources}:
+\emph{circuit size} (number of non-identity gates),
+\emph{circuit depth} (number of time-steps), and
+\emph{circuit width} (number of qubits).
+For circuit depth, a two-qubit gate takes
+one time-step and absorbs any adjacent single-qubit gates.
+Multiple two-qubit gates on disjoint qubits
+can occur in parallel during the same timestep.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Constant-depth Teleportation\\ and Fanout}
+\label{subsec:fanout}
+
+Two key problems in nearest-neighbor architectures deal with communication,
+namely moving and copying quantum information.
+How can we transport quantum information at one site to another over
+arbitrarily long distances?
+%A related problem is how to teleport a qubit an arbitrary distance.
+% in an
+%architecture through ancillae prepared in some initial state.
+To solve this problem, we employ the constant-depth teleportation circuit
+shown in part (a) of Figure \ref{fig:cd}, using standard quantum circuit
+notation from \cite{Nielsen2000}.
+
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+\begin{array}{ccc}
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_1}Z^{j_1}\ket{\psi}}               & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw              & \qw & \qw \\
+}
+& \qquad \qquad \qquad &
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_2}Z^{j_2}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
+}\\
+& & \\
+(a) & & (b)
+\end{array}
+\end{displaymath}
+\centerline{
+}
+\caption{Constant-depth circuits based on \cite{Broadbent2007,Browne2009} for
+(a) teleportation \protect{\cite{Rosenbaum2012}} and
+(b) fanout \cite{Harrow2012}.}
+\label{fig:cd}
+\end{center}\end{figure*}
+
+The second problem is copying information. Although general cloning is
+impossible \cite{Nielsen2000}, we only need to perform unbounded quantum
+fanout, the operation
+$\ket{x,y_1,\ldots,y_n} \rightarrow \ket{x,y_1\oplus x, \ldots, y_n\oplus x}$.
+This is used in our arithmetic circuits when
+a single qubit needs to control (be entangled with) a large quantum register
+(called a \emph{fanout rail}).
+We employ a constant-depth circuit due to insight from
+measurement-based quantum computing \cite{Raussendorf2003}
+that relies on the creation of an
+$n$-qubit cat state \cite{Browne2009}.
+It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width, and is shown in
+part (b) of Figure \ref{fig:cd} for the case of fanning out $\ket{\psi}$ to
+four qubits.
+The technique works by creating multiple small
+cat states of a fixed size (in this case, three qubits) and linking them
+together with Bell measurements. The qubits marked $\ket{\ell}$ are
+entangled into a (slightly) larger cat state, up to Pauli corrections.
+%
+\begin{equation}
+\normtwo X_1^{k_1}Z_1^{j_1}X_2^{k_2}Z_2^{j_2}X_{3}^{k_3}X_{4}^{k_3}Z_{3}^{j_3}Z_{4}^{j_3}
+\left( \ket{0000} + \ket{1111} \right)
+\end{equation}
+%
+The operators $X^k_i$ and $Z^j_{\ell}$ denote Pauli $X$ and $Z$ operators
+on qubits $i$ and $\ell$, controlled by classical bits $k$ and $j$,
+respectively. These corrections are enacted by the classical controller based on
+the Bell measurement outcomes (not depicted). Unfortunately, this
+``consumes'' the cat state in that there is no known way to unentangle the
+source qubit from the cat state after they have been jointly measured \cite{Rosenbaum2012}.

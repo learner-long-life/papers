@@ -1,0 +1,115 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the LaTeX source for
+% "A 2D Nearest-Neighbor Quantum Architecture for Factoring"
+% submitted to the Reversible Computing Workshop (RC 2012)
+% based on Spring-Verlag's Lecture Notes in Computer Sciences template
+% typeinst.tex
+% Paul Pham and Krysta Svore
+% 14 March 2012
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentclass[runningheads]{llncs}
+% Suppress page numbers
+%\documentclass[a4paper]{llncs}
+% For arXiv, and eprint support
+\documentclass[twocolumn]{article}
+
+\usepackage{amssymb}
+\usepackage{amsthm}
+%\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{eprint}
+\usepackage[osf]{mathpazo} % Use Palatino / Euler fonts
+%\usepackage{multirow}
+%\usepackage[retainorgcmds]{IEEEtrantools}
+
+\usepackage{url}
+\urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.beyer, christine.guenther,|
+\urldef{\mailsb}\path|frank.holzwarth, anna.kramer, erika.siebert-cole, lncs}@springer.com|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Right brace for multirows in tables / arrays
+\newcommand\coolrightbrace[2]{%
+\left.\vphantom{\begin{matrix} #1 \end{matrix}}\right\}#2}
+
+% To fix Qcircuit target with new Xypic
+\newcommand{\targfix}{\qw {\xy {<0em,0em> \ar @{ - } +<.39em,0em>
+\ar @{ - } -<.39em,0em> \ar @{ - } +
+<0em,.39em> \ar @{ - }
+-<0em,.39em>},<0em,0em>*{\rule{.01em}{.01em}}*+<.8em>\frm{o}
+\endxy}}
+
+% To get Roman uppercase Greek characters
+\newcommand{\X}[1]{$#1$}
+
+\input{Qcircuit}
+
+\newcommand{\braket}[2]{\langle #1|#2 \rangle}
+\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\theoremstyle{plain} \newtheorem{lemma}{Lemma}
+
+\begin{document}
+
+%\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{A 2D Nearest-Neighbor Quantum Architecture for Factoring}
+
+% a short form should be given in case it is too long for the running head
+%\titlerunning{A 2D Nearest-Neighbor Quantum Architecture for Factoring}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Paul Pham\\
+University of Washington\\
+Quantum Theory Group\\
+Box 352350, Seattle, WA 98195, USA,\\
+\email{ppham@cs.washington.edu},\\
+\url{http://www.cs.washington.edu/homes/ppham/}
+\and
+Krysta M. Svore\\
+Microsoft Research\\
+Quantum Architectures and Computation Group\\
+One Microsoft Way, Redmond, WA 98052, USA\\
+\email{ksvore@microsoft.com},\\
+\url{http://research.microsoft.com/en-us/people/ksvore/}
+}
+% if the list of authors exceeds the space for a headline,
+% an abbreviated author list is needed
+%\authorrunning{P. Pham \and K.M. Svore}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+\maketitle
+
+\input{factor2d-abstract}
+
+\input{factor2d-intro}
+
+\input{factor2d-bg}
+
+\input{factor2d-related}
+
+\input{factor2d-csa}
+
+\input{factor2d-add}
+
+\input{factor2d-mult}
+
+\input{factor2d-modexp}
+
+\input{factor2d-results}
+
+\input{factor2d-conclude}
+
+\bibliography{factor2d}
+\bibliographystyle{tocplain}
+
+\end{document}

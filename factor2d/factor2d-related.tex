@@ -1,0 +1,86 @@
+\section{Related Work}
+\label{sec:related}
+
+We extend the body of work which applies classical ideas to
+quantum logic. Gossett \cite{Gossett1998} uses carry-save techniques to add
+numbers in constant-depth and multiply in logarithmic-depth
+using a special encoding, but at a quadratic
+cost in qubits (circuit width). The underlying idea of encoded adding, sometimes
+called a 3-2 adder, derives from Wallace trees \cite{Wallace1964}.
+
+Choi and Van Meter are the first to discuss 2D architectures by designing an
+adder that runs in $\Theta(\sqrt{n})$-depth on \textsc{2D NTC} \cite{Choi2010}
+using $O(n)$-qubits with dedicated, special-purpose areas of a physical
+circuit layout.
+
+Takahashi and Kunihiro have also discovered a linear-depth
+and linear-size adder using zero ancillae \cite{Takahashi2005}, and also
+an adder with variable tradeoffs between $O(n/d(n))$ ancillae and
+$O(d(n))$-depth for $d(n) = \Omega(\log n)$ \cite{Takahashi2009} which has
+better width but worse depth than our adder. This approach assumes unbounded
+fanout, which has not been mapped to a
+nearest-neighbor circuit until the current work.
+
+Once an adder implementation is chosen, it can be extended to perform
+modular reduction, modular multiplication, modular
+exponentiation, and ultimately
+quantum period finding (QPF), the only quantum part of the factoring algorithm.
+Since Shor's algorithm is a probabilistic algorithm, requiring several rounds of 
+QPF to amplify success probability, it suffices to determine the resources
+required for a single round of QPF with a fixed, modest success probability.
+The original approach to QPF performs controlled
+modular exponentiation followed by an inverse quantum Fourier transform
+(QFT) \cite{Nielsen2000}. We will call this \emph{serial QPF}.
+
+This is the approach taken by all other factoring (QPF)
+implementations on any architectural model before the current work.
+For example, Beauregard \cite{Beauregard2002} uses this QPF approach
+to construct
+a cubic-depth quantum period-finder using only $2n+3$ qubits on AC,
+by combining the ideas of Draper's transform adder \cite{Draper2000},
+Vedral et al.'s modular arithmetic blocks \cite{Vedral1996}, and a
+semi-classical QFT.
+This approach was subsequently adapted to \textsc{1D NTC} by Fowler, Devitt,
+and Hollenberg
+\cite{Fowler2004} to achieve exact resource counts for an $O(n^3)$-depth
+quantum period-finder. Kutin \cite{Kutin2006} later improved this using
+an idea from Zalka for approximate multipliers to get a QPF circuit on
+\textsc{1D NTC}
+in $O(n^2)$-depth. Thus, there is only a constant overhead from
+Zalka's own factoring implementation on \textsc{AC}, also in quadratic depth
+\cite{Zalka1998}.
+Takahashi and Tani extend their earlier $O(n)$-depth adder to a factoring
+circuit in $O(n^3)$-depth but with linear width.
+
+All these works assume qubits are expensive (width) and that
+execution time (depth) is not the limiting constraint.
+We compare our work primarily against Kutin's method, and we make the
+alternative assumption that ancillae are cheap and that fast classical control
+is available which can access all qubits in parallel. Therefore, we optimize
+circuit depth at the expense of width.
+
+Serial QPF is depth-limited by having to the perform an inverse QFT.
+On an AC architecture, even when approximating the (inverse) QFT
+by truncating two-qubit
+$\pi/2^k$ rotations beyond
+$k = O(\log n)$, the depth is $O(n \log n)$ for factoring $n$-bit numbers.
+There is an alternative, parallel version of phase estimation described in
+Section 13 of \cite{Kitaev2002}, which decreases depth in exchange
+for increased width and additional classical post-processing.
+This eliminates the need to do an inverse QFT.
+We refer the reader to \cite{Kitaev2002} and \cite{Pham2011b} for details.
+Our factoring scheme employs our 2D quantum arithmetic circuits and this
+\emph{parallel QPF}, and we will show that it is asymptotically more
+efficient than the other QPF method. We compare the circuit resources
+required by our work with the serial QPF implementations above in Table
+\ref{tab:results} of Section \ref{sec:results}.
+
+Recent results by Browne, Kashefi, and Perdrix (BKP) connect the power of
+measurement-based quantum computing to the quantum circuit model augmented with
+unbounded fanout \cite{Browne2009}. Their model, which we adapt and call
+\textsc{CCNTC}, uses the classical controller mentioned in \ref{subsec:fanout}.
+They describe a constant-depth circuit for
+exact factoring, improving on a constant-depth circuit for approximate factoring
+by H{\o}yer and {\v S}palek \cite{Hoyer2002}.
+A direction for future work is to determine how our approach compares to the
+BKP result in terms of circuit size and width.

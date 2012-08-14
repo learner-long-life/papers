@@ -1,0 +1,58 @@
+\section{Conclusions and Future Work}
+\label{sec:conclude}
+
+In this paper, we have presented a 2D architecture for factoring on a quantum
+computer.
+%While this is only an intermediate progress report, the preliminary
+%results are promising.
+Using a combination of algorithmic
+improvements (carry-save adders and parallelized phase estimation) 
+and architectural improvements (irregular two-dimensional layouts and
+constant-depth communication), we conclude
+that we can run
+the central part of Shor's factoring algorithm (quantum period-finding)
+with asymptotically smaller depth than previous implementations.
+%, both
+%asymptotically and numerically.
+
+%We also provide a constructive upper bound on the overhead
+%of nearest-neighbor (NTC) architectures over AC architectures.
+%The best-known depth for factoring has constant-depth, but it is an open
+%question whether we can satisfy the nearest-neighbor constraint while
+%maintaining this constant depth. Furthermore, the cost of decreasing depth
+%is often that of increasing width or size, and this time-space tradeoff is
+%currently not very well known both for the current work and other
+%implementations mentioned in Section \ref{sec:related}.
+%Characterizing these tradeoffs is the most obvious extension to
+%the current work.
+
+For future work, we would like to determine the exact width, depth, and size of
+our proposed factoring circuit, including the constants, as well as
+further optimizing our depth to be constant.
+%We would also like to determine how our approach compares to the constant-depth
+%results in \cite{Browne2009} in terms of circuit size and width.
+Along those lines, Rosenbaum recently showed how to convert any $n$-qubit CCAC
+circuit to an equivalent CCNTC circuit in constant depth using $n^2$ ancillae
+\cite{Rosenbaum2012}.
+It is an interesting open question how a
+generic conversion of a constant-depth CCAC factoring architecture
+\cite{Browne2009,Hoyer2002} to CCNTC compares to our hand-optimized circuit.
+The depth of our circuit may also be improved by extending the carry-save adder
+from
+a $3\rightarrow 2$ circuit to any $2^{n-1}\rightarrow n$ circuit.
+
+The authors wish to thank Aram Harrow, Austin Fowler, and David Rosenbaum for
+useful discussions.
+P. Pham conducted the factoring part of this work during
+an internship at Microsoft Research.
+He also acknowledges funding of the architecture and layout portions
+of this work from
+the Intelligence Advanced Research Projects Activity
+(IARPA) via Department of Interior National Business Center contract
+number D11PC20167. The U.S. Government is authorized to reproduce and
+distribute reprints for Governmental purposes notwithstanding any
+copyright annotation thereon. Disclaimer: The views and conclusions
+contained herein are those of the authors and should not be
+interpreted as necessarily representing the official policies or
+endorsements, either expressed or implied, of IARPA, DoI/NBC, or the
+U.S. Government.

@@ -1,0 +1,48 @@
+\section{Results}
+\label{sec:results}
+
+The resources required for our approach,
+as well as other nearest-neighbor approaches,
+are listed in Table \ref{tab:results},
+where the asymptotic resource bounds assume some fixed constant error
+probability for each round of period-finding.
+%, say $\epsilon=1/4$.
+% and $\delta' = 1/2$ for KSV-QPF.
+%Note that the
+%number of measurements are included for completeness.
+%, since these are
+%not counted as gates in our model but may be comparable in terms of
+%execution time.
+%Some table cells are blank if the entries are not relevant to the current comparison, or if the entires were not %calculated in the prior work.
+We achieve an exponential
+improvement in nearest-neighbor circuit depth (from quadratic to polylogarithmic)
+with our approach at the cost of a polynomial increase in
+circuit width. Similar depth improvements at the cost of width increases can be achieved using the modular multipliers
+of other factoring implementations
+by arranging them in a parallel, KSV-style modular exponentiator.
+%
+\begin{table*}[htb!]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Implementation             & Architecture      & Depth             & Width     \\
+\hline
+Vedral, Barenco \& Ekert \cite{Vedral1996}   & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
+Gossett \cite{Gossett1998}                   & \textsc{AC}       & $O(n \log n)$ & $O(n^2)$  \\
+Beauregard \cite{Beauregard2002}                & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
+Zalka \cite{Zalka1998}                     & \textsc{AC}       & $O(n^2)$      & $O(n)$     \\
+Takahashi \& Kunihiro \cite{Takahashi2006}     & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
+%Cleve \& Watrous           & \textsc{AC}       & $O(\log L)$   & $O(L)$ \\
+\hline
+Fowler, Devitt, Hollenberg \cite{Fowler2004} & \textsc{1D NTC}   & $O(n^4)$ & $O(n^3)$\\
+% + 40L^3 + 58L^2 + 2L - 2$ & $32L^3 + 80 L^2 - 4L - 2$ \\
+Kutin \cite{Kutin2006}                     & \textsc{1D NTC}   & $O(n^2)$ & $O(n)$\\
+\hline
+%$18L^2 + 12L\log_2^2 L + O(L \log L) $ & $3L + 2\log_2 L + 2$ \\
+Current Work               & \textsc{2D NTC}   & $O(\log^2{n})$ & $O(n^4)$   \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Asymptotic resource usage for quantum factoring of an $n$-bit number.}
+\label{tab:results}
+\end{table*}

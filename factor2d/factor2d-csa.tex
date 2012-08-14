@@ -1,0 +1,136 @@
+\section{The Constant-Depth\\ Carry-Save Technique}
+\label{sec:csa}
+
+Our 2D factoring approach rests on the central technique of the constant-depth
+carry-save adder (CSA) \cite{Gossett1998}, which converts the sum of three
+numbers $a$, $b$, and $c$, to the sum of two numbers $u$ and $v$:
+%\begin{equation}
+$a+b+c = u+v$. To explain this technique and how it achieves constant depth,
+we need the following definitions.
+%\end{equation}
+
+A \emph{conventional number} $x$ can be represented in $n$ bits as
+%\begin{equation}
+$x = \sum_{i=0}^{n-1} 2^i x_i$,
+%\end{equation}
+where $x_i \in \{0,1\}$ denotes the $i$th bit of $x$, which we call
+an $i$-bit.\footnote{It will be clear from the context whether we mean an
+$i$-bit, which has significance $2^i$, or an $i$-bit number.}
+Equivalently, $x$ can be represented as a (non-unique)
+sum of two smaller conventional numbers, $u$ and $v$.
+We say $(u+v)$ is a \emph{carry-save encoded}, or CSE, number.
+The CSE representation itself consists of $2n-2$ individual
+bits where $v_0$ is always $0$ by convention.
+
+At the level of bits, a CSA converts the sum of three
+$i$-bits into the sum of an $i$-bit (the \emph{sum} bit) and an $(i+1)$-bit
+(the \emph{carry} bit):
+%\begin{equation}
+%\label{eqn:csa-3-2}
+$a_i+b_i+c_i = u_i+v_{i+1}$.
+%\end{equation}
+By convention, the bit $u_i$ is the parity of the input bits
+($u_i = a_i \oplus b_i \oplus c_i$) and
+the bit $v_{i+1}$ is the majority of $\{a_i, b_i, c_i\}$.
+See Figure \ref{fig:csa-encoding} for a concrete example, where
+$(u+v)$ has $2n-2 = 8$ bits, not counting $v_0$.
+
+%
+It will also be useful to refer to a subset of the bits in a conventional
+number using subscripts to indicate a range of indices.
+\begin{equation}
+x_{(j,k)} \equiv \sum_{i=j}^k 2^ix_i \qquad
+x_{(i)} \equiv x_{(i,i)} = 2^ix_i
+\end{equation}
+%
+Using this notation, the following identity holds.
+\begin{equation}
+x_{(j,k)} = x_{(j,\ell)} + x_{(\ell+1,k)} \qquad \text{ for all } j \le \ell < k
+\end{equation}
+%
+We can express the relationship between the bits of $x$ and $(u+v)$ as follows.
+%
+\begin{equation}
+x = x_{(0,n-1)} \equiv u+v = u_{(0,n-2)} + v_{(1,n-1)}
+\end{equation}
+%
+Finally, we will denote taking the modular residue of a number as follows:
+$x_{(j,k)}[m] \equiv x_{(j,k)} \bmod m$.
+
+\begin{center}
+\begin{figure*}[tb!]
+\begin{displaymath}
+x = 30 = u+v = 8 + 22 = \left\{
+\begin{array}{ccccc}
+    & u_3 & u_2 & u_1 & u_0 \\
+v_4 & v_3 & v_2 & v_1 &    \\
+\hline
+x_4 & x_3 & x_2 & x_1 & x_0
+\end{array}
+\right\}
+=
+\left\{
+\begin{array}{ccccc}
+    & 1 & 0 & 0 & 0 \\
+  1 & 0 & 1 & 1 &   \\
+\hline
+1 & 1 & 1 & 1 & 0
+\end{array}
+\right\}
+\end{displaymath}
+\caption{An example of carry-save encoding for the 5-bit conventional number 30.}
+\label{fig:csa-encoding}
+\end{figure*}
+\end{center}
+%
+
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+\centerline{
+\Qcircuit @C=2em @R=2em {
+\lstick{\ket{0}} & \qw      & \qw & \qw                 & \qw & \qw                        & \targfix  & \qw & \qw_{\ket{a_i \wedge (b_i \oplus c_i)}} & \targfix  & \qw       & \qw    & \qw_{\ket{(b_i \wedge c_i) \oplus a_i \wedge (b_i \oplus c_i)}} & \qw & \qswap & \qw & \qw & \rstick{\ket{u_i}} \\
+\lstick{\ket{a_i}} & \qw      & \qw & \qw                 & \qw & \qw                        & \ctrl{-1} & \qw & \qw                             & \qw       & \targfix  & \qw  & \qw_{\ket{a_i \oplus b_i \oplus c_i}} & \qw & \qswap \qwx & \qswap & \qw & \rstick{\ket{0}} \\
+\lstick{\ket{b_i}} & \ctrl{1} & \qw & \targfix            & \qw & \qw_{\ket{b_i \oplus c_i}} & \ctrl{-1} & \qw & \qw                             & \qw       & \ctrl{-1} & \targfix  & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{b_i}} \\
+\lstick{\ket{c_i}} & \ctrl{1} & \qw & \ctrl{-1}           & \qw & \qw                        & \qw       & \qw & \qw                             & \qw       & \qw       & \ctrl{-1} & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{c_i}} \\
+\lstick{\ket{0}} & \targfix & \qw & \qw_{\ket{b_i \wedge c_i}} & \qw & \qw                        & \qw       & \qw & \qw                             & \ctrl{-4} & \qw       & \qw       & \targfix & \qw & \qw & \qswap \qwx & \qw & \rstick{\ket{v_{i+1}}} 
+}
+}
+\end{displaymath}
+\caption{Carry-save adder circuit for a single bit position $i$:
+$a_i+b_i+c_i = u_i + v_{i+1}$.}
+\label{fig:csa-circuit}
+\end{center}\end{figure*}
+
+Using a Toffoli gate decomposition (see p.~182 \cite{Nielsen2000}), two control
+qubits and a single target qubit must be
+mutually connected to each other. Given this constraint, and the
+interaction of the CNOTs in Figure \ref{fig:csa-circuit}, we can
+rearrange these qubits on a 2D planar grid and obtain the layout shown
+in Figure \ref{fig:csa-3-2}, which satisfies our 2D NTC model.
+Note that this uses more gates and one more ancilla than the equivalent
+quantum full adder circuit in Figure 5 of \cite{Gossett1998}, but this
+is necessary to meet our architectural constraints and does not change the
+asymptotic results.
+Also in Figure \ref{fig:csa-3-2}
+is a variation called a 2-2 adder, which simply re-encodes two $i$-bits
+into an $i$-bit and an $(i+1)$-bit, which will be useful in the next section.
+
+\begin{figure}[b!]
+\begin{center}
+\includegraphics[width=3in]{./figures/csa-32-22.pdf}
+\end{center}
+\caption{The carry-save adder (CSA), or 3-2 adder, and carry-save 2-2 adder.}
+\label{fig:csa-3-2}
+\end{figure}
+
+At the level of numbers, the sum of three $n$-bit numbers can be converted into
+the sum of two $n$-bit numbers by applying a \emph{CSA layer} of
+$n$ parallel, single-bit
+CSA's. Since each CSA operates in constant depth, the entire layer also
+operates in constant-depth, and we have achieved (non-modular) addition.
+
+An important consideration here is the circuit width. The circuit above
+operates out-of-place and produces two garbage qubits, the original inputs
+$b_i$ and $c_i$. A single addition of three $n$-bit numbers requires a
+$O(n)$ circuit width.
