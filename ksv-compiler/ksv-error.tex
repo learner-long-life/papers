@@ -1,7 +1,12 @@
 \documentclass{article}
 \usepackage{eprint}
+\usepackage{amsfonts}
+\usepackage[osf]{mathpazo}
+\usepackage{amsthm}
 
-\input{QCircuit}
+\input{Qcircuit}
+\theoremstyle{definition} \newtheorem{lemma}{Lemma}
+\theoremstyle{definition} \newtheorem{theorem}{Theorem}
 
 \title{Measurement Error in KSV Phase Estimation}
 
@@ -36,7 +41,9 @@ increases by a square root factor when we projectively measure the garbage
 in the ancillae instead of coherently simulating the measurement.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Measurement Operators}
+\label{sec:meas-ops}
 
 First we introduce some preliminary definitions related to measurement.
 
@@ -78,7 +85,7 @@ Let's begin with a simple but more general case of a measuring operator
 $W$ which operates on a space decomposed into the subsystems $\mathcal{N}$
 (the measurement object) and $\mathcal{K}$ (the measurement instrument)
 according to the orthogonal decomposition
-$\mathcal{N} = \Bigoplus_j \mathcal{L}_j$, so-called because
+$\mathcal{N} = \bigoplus_j \mathcal{L}_j$, so-called because
 each of the $\mathcal{L}_j$ are pairwise orthogonal subspaces.
 $W$ will perform a different unitary
 operator $U_j$ on the subsystem $\mathcal{K}$
@@ -100,17 +107,19 @@ operated
 on by $W$ and by $\tilde{W}$. We can decompose $\ket{\zeta}$ into
 two subsystems $\ket{\psi}$ and $\ket{\phi}$
 corresponding to the spaces $\mathcal{N}$ and $\mathcal{K}$
-above.
+above. We will use this fact later.
 
 \begin{equation}
 \bra{\zeta} W^{\dag} \tilde{W} \ket{\zeta} =
 \bra{\psi} \otimes \bra{\phi} W^{\dag} \tilde{W} \ket{\psi} \otimes \ket{\phi} =
-\sum_{j \in \Omega} \Left( \bra{psi} \Pi_{\mathcal{L}_j} \ket{\psi} \otimes
-\bra{\phi} U^{\dag}_j \tilde{U}_j \ket{\phi} \Right) \le \delta
+\sum_{j \in \Omega} \left( \bra{\psi} \Pi_{\mathcal{L}_j} \ket{\psi} \otimes
+\bra{\phi} U^{\dag}_j \tilde{U}_j \ket{\phi} \right) \le \delta
 \end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Operators That Measure a Function}
+\label{sec:meas-func}
 
 We now introduce the idea that an operator can measure a function
 from the indices of the measurement object space $\mathcal{N}$
@@ -118,25 +127,70 @@ to the measurement instrument space $\mathcal{K}$ with respect to
 some fixed orthogonal decompositions of these spaces.
 
 \begin{equation}
-\mathcal{N} = \Bigotimes_{j \in \Omega} \qquad
-\mathcal{K} = \Bigotimes_{y \in \Delta} \qquad
+\mathcal{N} = \bigotimes_{j \in \Omega} \qquad
+\mathcal{K} = \bigotimes_{y \in \Delta} \qquad
 f:\Omega \rightarrow \Delta
 \end{equation}
 
-Saying that an operator $W$ is measuring with respect to a fixed
+Saying that an operator $Y$ is measuring with respect to a fixed
 orthogonal decomposition $\Omega$ is equivalent to saying that
-$W$ measures the function $f$, which need not even be reversible.
+$Y$ measures the function $f$, which need not even be reversible.
+The simplest, but not the most general, form of such an operator projects
+the first subsystem $\mathcal{N}$ into a subspace $\mathcal{L}_j$
+and performs the
+corresponding operation $Q_{f(j)}$ on the second subsystem $\mathcal{K}$.
+In Equation \ref{eqn:y-ideal}, we define $Y$ as the sum of these projectors,
+and our notation means it operates on the space of $\mathcal{N}$
+tensored with $\mathcal{K}$.
 
+\begin{equation}
+Y = \sum_{j \in \Omega} \Pi_{\mathcal{L}_j} \otimes Q_{f(j)} : \mathcal{N} \otimes \mathcal{K}
+\label{eqn:y-ideal}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Measurement Operators with Ancillae}
 
 However, this is not the most general case of a measurement operator.
-We make two extensions here.
-First, in general, only some of the information computed by $W$ into its
+We make \emph{three extensions} here which require cascading
+two rounds of measurement through
+an ancillary register. We now define a new
+composite measurement operator $\tilde{Y}$
+on this space with three subsystems corresponding to the input register
+$\mathcal{N}$,
+the intermediate ancillary register $\mathcal{B}^N$, and a final output register
+$\mathcal{K}$ which approximates $Y$ from Equation \ref{eqn:y-ideal}.
+
+\begin{equation}
+\tilde{Y} : \mathcal{N} \otimes \mathcal{B}^N \otimes \mathcal{K}
+\end{equation}
+
+We will build up to an operational definition of $\tilde{Y}$ later, but first
+we must motivate what it must achieve.
+
+In the first round, we measure with our object in $\mathcal{N}$ and our
+instrument in $\mathcal{B}^N$. Here we allow for garbage, which is our first
+extension, described in \ref{subsec:garbage}.
+In the second round, we measure with our object being the
+instrument of the first round, in $\mathcal{B}^N$, and our instrument is
+in $\mathcal{K}$. Here we allow for operations other than just copying from
+$\mathcal{B}^N$ to $\mathcal{K}$, which is our second extension, described
+in \ref{subsec:non-copy}. Finally, instead of implementing our ideal
+$Y$ directly, we allow ourselves, and quantify what it means, to
+approximate it as $\tilde{Y}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{First Extension: Measurement with Garbage}
+\label{subsec:garbage}
+
+To motivate why we need this new composite measurement $Y$ instead of just
+using $W$ directly from the previous section, let's consider the problem of
+garbage.
+In general, only some of the information computed by $W$ into its
 target register $\mathcal{K}$ above may be useful, but we generate some
 garbage qubits (say, to make the operation reversible).
-To be concrete, let's
-say that we have the following:
+To be concrete, let's say that we have the following:
 
 \begin{equation}
 W: \mathcal{N} \otimes \mathcal{B}^N =
@@ -149,8 +203,178 @@ where $y \in \mathbb{B}^m$ represents the useful part of the result,
 $z \in \mathbb{B}^{N-m}$ is garbage, and the complex weights
 $c_{y,z} \in \mathbb{C}$
 are functions of the index of the orthogonal decomposition of $\mathcal{N}$,
-the number $j$. In order to use an uncomputing trick due to Charlie Bennett
+the number $j$. In many cases, we would like to uncompute this garbage in
+order to use space efficiently.
+We can do this using an uncomputing trick due to Charlie Bennett
+\cite{Bennett1973} by first running an operation $U$ which may produce
+garbage, copying out the useful part of the result to a
+second register, and finally running $U^{\dagger}$ to uncompute the
+input register.
 
+Now we will give a more concrete definition for $Y$ in terms of
+$W$ and the operation $V$ which simply copies a state $\ket{\psi} \in \mathcal{B}^N$
+from the ancillary register to a state $\ket{\phi} in \mathcal{K}$ in the
+output register using bitwise CNOTs, or bitwise addition modulo $2^n$ for an
+$n$-qubit register. Then $Y = W^{-1}VW$, where $W$ is our operator from above
+which computes a function with garbage, $V$ is our copy operation, and
+$W^{-1}$ uncomputes the original function and it garbage. We make this
+more rigorous in Equation \ref{eqn:wvw}.
+
+\begin{eqnarray}
+Y & = & WVW^{-1} : \mathcal{N} \otimes \mathcal{B}^N \otimes \mathcal{K} \\
+W & = &
+\sum_{j \in \Omega} \Pi_{\mathcal{L}_j} \otimes U_j \otimes I_{mathcal{K}}\\
+V & : & \ket{x} \otimes \ket{y} \otimes \ket{z} \rightarrow \ket{x} \otimes \ket{y} \otimes \ket{z \oplus y}
+\label{eqn:wvw}
+\end{eqnarray}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Second Extension: Measurement with a Non-Copy Operation}
+\label{subsec:non-copy}
+
+Our notion of measurement with garbage is still not the most general it could be.
+For example, there is no reason why the decomposition of $\mathcal{K}$ has to
+be the same as that for $\mathcal{B}^N$ or $\mathcal{N}$, or why we are limited
+to strictly copying the useful output from $\mathcal{B}^N$ into $\mathcal{K}$.
+We don't need to limit the function $f$ measured by $W$ to be invertible.
+Furthermore, for practical reasons, there may be a more efficient way of encoding
+the useful part of $f$'s output, or we may need to do further processing on it
+as part of the algorithm we want to run.
+
+To allow this, in this section, we allow an arbitrary orthogonal decomposition
+$\mathcal{K} = \bigotimes_{y \in \Delta} \mathcal{M}_y$. This is the same as
+allowing $V$ to be an arbitrary sum of projectors onto $\{\mathcal{M}_y\}$
+and corresponding unitary operators $Q_y$ on $\mathcal{K}$.
+
+\begin{equation}
+V = \sum_{y \in \Delta} I_{\mathcal{N}} \otimes Q_y \otimes \Pi_{\mathcal{M}_y}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Third Extension: Approximate Measurement}
+\label{subsec:approx}
+
+We can now allow a very general form of
+measurement which allows garbage, non-copying uncomputation, and finally,
+approximating a function. We will explain this last feature in this section.
+
+We review that in the last two subsections we have been building up a
+composite measurement operator $\tilde{Y} = W^{-1}VW$ which consists of 
+these two operations on a space with three subsystems.
+
+\begin{equation}
+W = \sum_{j \in \Omega} \Pi_{\mathcal{L}_j} \otimes R_j \otimes I_{\mathcal{K}} \qquad
+V = \sum_{y \in \Delta} I_{\mathcal{N}} \otimes \Pi_{\mathcal{M}_y} \otimes Q_y
+\end{equation}
+
+We now reveal that $\tilde{Y}$ approximates $Y$ from Equation \ref{eqn:y-ideal}.
+What does this mean? For one operator, say $\tilde{X}$, to approximate another,
+say $X$, within an error $\delta$ means that the minimum overlap between
+any state $\ket{\eta}$ that is operated on by $\tilde{X}$ and $X$ is at least
+$1 - \delta$. This is shown in Equation \ref{eqn:overlap}.
+
+\begin{equation}
+\bra{\eta} \tilde{X}^{\dagger} X \ket{\eta} \ge 1 - \delta
+\end{equation}
+
+Now how do we relate this to approximating a function
+$f$ between the orthogonal decomposition indices of $\mathcal{N}$ and 
+$\mathcal{K}$? And what does this latter concept mean?
+It means that the conditional probabilities of
+getting a given output index $y \in \Delta$ given an input index $j \in \Omega$,
+namely $P(y \mid j) = \bra{0^N} R^{\dagger}_j \Pi_{\mathcal{M}_y} R_j \ket{0^N}$
+satisfies Equation \ref{eqn:f-approx}. Approximating a function $f$ with
+error probability $\epsilon$ means that the probability of getting the
+correct answer $f(j)$ is bounded below by $1 - \epsilon$, and the probability
+of getting any $y \ne f(j)$ is bounded above by $\epsilon$.
+
+\begin{eqnarray}
+P(f(j) \mid j) & \ge & 1 - \epsilon \\
+\sum_{y \ne f(j)} P(y \mid j) & < & \epsilon
+\label{eqn:f-approx}
+\end{eqnarray}
+
+In the next section, we will delve into detailed calculations of relating
+$\delta$ and $\epsilon$ given the framework we have built up until now.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Error Calculations}
+
+In this section, we will calculate two error probabilities $\delta$ for
+an approximate measuring operator $\tilde{Y}$, given that we are able to
+approximate a function $f$ with error probability $\epsilon$. The first
+error probability, which follows exactly the development in Problem 12.2
+of Ref \cite{Kitaev2002}, assumes that we measure \emph{coherently}, meaning
+that at no point do we projectively measure, and we are able to perfectly
+uncompute all garbage. This is the ideal case, which we calculate in
+\ref{subsec:error-noproj}. The second error probability, which we use in
+\cite{Pham2012a}, involves projectively measuring as part of the operator $W$,
+which involves some purely classical reversible operations that can be
+offloaded to a classical controller. Afterwards, we execute $V$ as before,
+but it is now impossible to run $W^{-1}$ because of the projective measurement.
+This leaves some amount of garbage in the ancillary
+subsystem $\mathcal{B}^N$, and we calculate it in \ref{subsec:error-proj}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Error Probability Without Projective Measurement}
+\label{subsec:error-noproj}
+
+First, we use this preliminary lemma without proof, which is a property of
+the operator norm.
+
+\begin{lemma}
+\label{lemma:sum-norm}
+Let $X_j \in \$ be a collection of unitary operators,
+\end{lemma}
+
+First we use the result that a measuring operator $\tilde{W}$
+which is the sum of
+approximate measuring projectors $\Pi_j \otimes \tilde{U}_j$
+also approximates the operator $W = \sum_{j} \Pi_{\mathcal{L}_j} \otimes U_j$
+with the same error. More rigorously
+
+\begin{lemma}
+\label{lemma:error-sum}
+Let $W$ be a unitary operator which acts on a space with two subsystems
+$\mathcal{N}$ and $\mathcal{K}$, and $\tilde{W}$ which acts on the same space
+but augmented with a third subsystem $\mathcal{B}^N$.
+
+\begin{eqnarray}
+W : \mathcal{N} \otimes \mathcal{K}\\
+\tilde{W} : \mathcal{N} \otimes \mathcal{K} \otimes \mathcal{B}^N
+\end{eqnarray}
+
+Further, let $\mathcalN} = \bigotimes_{j} \mathcal{L}_j$
+be some orthogonal decomposition, and $U_j : \mathcal{K}$ and 
+$\tilde{U}_j : \mathcal{K} \otimes \mathcal{B}^N$ be some unitary operators
+which act on their respective spaces. Suppose that for each $j$,
+$\tilde{U}_j$ approximates $U_j$ with precision $\nu$ according to the
+definition below. We make use of the standard embedding
+$V:\mathcal{K} \rightarrow \mathcal{K} \otimes \mathcal{B}^N$ which simply
+augments a state in $\mathcal{K}$ with ancillae in the state $\ket{0}^N$.
+That is, $V\ket{\zeta} = \ket{\zeta} \otimes \ket{0}^N$.
+
+\begin{equation}
+\forall_j || \tilde{U}_j V - V U_j || \le \delta
+\end{equation}
+
+Then $\tilde{W}$ with ancillae approximates $\tilde{W}$ without ancillae
+according to the following equation.
+
+\begin{equation}
+|| \tilde{W} (I_{\mathcal{N} \otimes V} - (I_{\mathcal{N}} \otimes V) W || \le \nu
+\end{equation}
+
+\end{lemma}
+
+\begin{proof}
+We first use the following fact about 
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Error Probability With Projective Measurement}
+\label{subsec:error-proj}
 
 \bibliography{ksv-error}
 \bibliographystyle{tocplain}
