@@ -1,0 +1,164 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Error Calculations}
+
+In this section, we will calculate two error probabilities $\delta$ for
+an approximate measuring operator $\tilde{Y}$, given that we are able to
+approximate a function $f$ with error probability $\epsilon$. The first
+error probability, which follows exactly the development in Problem 12.2
+of Ref \cite{Kitaev2002}, assumes that we measure \emph{coherently}, meaning
+that at no point do we projectively measure, and we are able to perfectly
+uncompute all garbage. This is the ideal case, which we calculate in
+\ref{subsec:error-noproj}. The second error probability, which we use in
+\cite{Pham2012a}, involves projectively measuring as part of the operator $W$,
+which involves some purely classical reversible operations that can be
+offloaded to a classical controller. Afterwards, we execute $V$ as before,
+but it is now impossible to run $W^{-1}$ because of the projective measurement.
+This leaves some amount of garbage in the ancillary
+subsystem $\mathcal{B}^N$, and we calculate it in \ref{subsec:error-proj}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Error Probability With Coherent Measurement}
+\label{subsec:error-noproj}
+
+First, we use this preliminary lemma. using properties of
+the operator norm.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}[Solution 12.1, p. 230 \cite{ksv02}]
+\label{lemma:sum-norm}
+Let $X_j : \mathcal{N}_j \rightarrow \mathcal{M}_j $
+be a collection of unitary operators which operate on pairwise orthogonal
+subspaces, where each $X_j$ takes $\mathcal{N}_j$ to $\mathcal{M}_j$.
+Then the norm of the operator $X$ formed as a direct product of these
+$X_j$'s has an operator norm equal to the maximum of any of the
+$X_j$'s.
+
+\begin{equation}
+X = \bigoplus_j X_j : \bigoplus_j \mathcal{N}_j \rightarrow \mathcal{M}_j
+\end{equation}
+
+\begin{equation}
+|| X || = \max_{j} ||X_j||
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+This follows from the fact that the operator norm measures how much
+an operator scales any non-zero vector. If the vector comes from the
+space which is the direct sum of the $\mathcal{N}_j$'s, it is in a
+particular fixed subspace $\mathcal{N}_j$. Therefore, it cannot be scaled
+more than the maximum operator norm of any of the $X_j$'s.
+\end{proof}
+
+First we use the result that a measuring operator $\tilde{W}$
+which is the sum of
+approximate measuring projectors $\P_j \otimes \tilde{U}_j$
+also approximates the operator $W = \sum_{j} \Pi_{\mathcal{L}_j} \otimes U_j$
+with the same error. More rigorously
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}[Problem 12.1 \cite{ksv02}]
+\label{lemma:error-sum}
+Let $W$ be a unitary operator which acts on a space with two subsystems
+$\mathcal{N}$ and $\mathcal{K}$, and $\tilde{W}$ which acts on the same space
+but augmented with a third subsystem $\mathcal{B}^N$.
+
+\begin{eqnarray}
+W : \mathcal{N} \otimes \mathcal{K}\\
+\tilde{W} : \mathcal{N} \otimes \mathcal{K} \otimes \mathcal{B}^N
+\end{eqnarray}
+
+Further, let $\mathcal{N} = \bigotimes_{j} \mathcal{L}_j$
+be some orthogonal decomposition, and $U_j : \mathcal{K}$ and 
+$\tilde{U}_j : \mathcal{K} \otimes \mathcal{B}^N$ be some unitary operators.
+Suppose that for each $j$,
+$\tilde{U}_j$ approximates (with ancillae) $U_j$ with error $\nu$
+according to the
+definition below.
+
+\begin{equation}
+\forall_j || \tilde{U}_j - (U_j \otimes I_{\mathcal{B}^{\otimes N}}) || \le \nu
+\end{equation}
+
+Then the measuring operator
+$\tilde{W} = \sum_j \Pi_{\mathcal{L}_j} \otimes \tilde{U}_j$ approximates
+with ancillae the measuring operator
+$W = \sum_j \Pi_{\mathcal{L}_j} \otimes U_j$ with the same error $\nu$.
+
+\begin{equation}
+|| \tilde{W} - (W \otimes I_{\mathcal{B}^{\otimes N}}) || \le \nu ||
+\end{equation}
+
+\end{lemma}
+
+\begin{proof}
+We make use of the standard embedding
+$V:\mathcal{K} \rightarrow \mathcal{K} \otimes \mathcal{B}^N$ which simply
+augments a state in $\mathcal{K}$ with ancillae in the state $\ket{0}^N$.
+That is, $V\ket{\zeta} = \ket{\zeta} \otimes \ket{0}^N$.
+
+\begin{equation}
+\forall_j || \tilde{U}_j V - V U_j || \le \delta
+\end{equation}
+
+Then $\tilde{W}$ \emph{with} ancillae approximates $\tilde{W}$
+\emph{without} ancillae
+according to the following equation.
+
+\begin{equation}
+|| \tilde{W} (I_{\mathcal{N}} \otimes V) - (I_{\mathcal{N}} \otimes V) W || \le \nu
+\end{equation}
+
+\end{proof}
+
+We now return to the setting of Section \ref{subsec:approx} and repeat
+its definitions here. Given a measuring operator $W$ which approximately
+measures a function, what is the error of approximation
+of a two stage measurement using $W$ and intermediate ancillae?
+We will see later that such an approximate two-stage measurement
+corresponds to parallelized phase estimation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{theorem}[Problem 12.2, \cite{ksv02}]
+We consider the space
+$\mathcal{N} \otimes \mathcal{B}^{\otimes N} \otimes \mathcal{K}$ with the
+following orthogonal subsystem decompositions:
+$\mathcal{N} = \bigoplus_{j \in \Omega} \mathcal{L}_j$ and
+$\mathcal{B}^{\otimes N} = \bigoplus_{y \in \Delta} \mathcal{M}_y$. We
+define two operators, $W$ which measures $\mathcal{N}$ as object into
+$\mathcal{B}^{\otimes N}$ as instrument and $V$ which measures
+$\mathcal{B}^{\otimes N}$ as object into $\mathcal{K}$ as instrument.
+
+\begin{eqnarray}
+W : \mathcal{N} \otimes \mathcal{K}\\
+\tilde{W} : \mathcal{N} \otimes \mathcal{K} \otimes \mathcal{B}^N
+\end{eqnarray}
+
+If $W$ approximately measures a function $f : \Omega \rightarrow \Delta$
+with error $\epsilon$, then the operator $\tilde{Y} = W^{-1}VW$ approximates
+the following operator $Y$ with error $2\sqrt{\epsilon}$.
+
+\end{theorem}
+
+\begin{proof}
+
+Alternatively, we can take the norm of the vector difference $\ket{\psi}$
+between an
+arbitrary state $\ket{\xi} \mathcal{N}$ operated on by $W$ and the
+state $\ket{\xi} \otimes \ket{0^N}$ operated on by $\tilde{W}$.
+
+\begin{equation}
+\ket{\eta} = W\ket{\xi} \qquad
+\ket{\tilde{\eta}} = \tilde{W}(\ket{\xi} \otimes \ket{0^N}) \qquad
+\ket{psi} = \ket{\tilde{\eta}} - \ket{\eta} \otimes \ket{0^N}
+\end{equation}
+
+When we take the vector norm of
+
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Error Probability With Projective Measurement}
+\label{subsec:error-proj}
