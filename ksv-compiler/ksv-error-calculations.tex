@@ -29,7 +29,7 @@ the operator norm.
 \begin{lemma}[Solution 12.1, p. 230 \cite{ksv02}]
 \label{lemma:sum-norm}
 Let $X_j : \mathcal{N}_j \rightarrow \mathcal{M}_j $
-be a collection of unitary operators which operate on pairwise orthogonal
+be a collection of operators which operate on pairwise orthogonal
 subspaces, where each $X_j$ takes $\mathcal{N}_j$ to $\mathcal{M}_j$.
 Then the norm of the operator $X$ formed as a direct product of these
 $X_j$'s has an operator norm equal to the maximum of any of the
@@ -52,27 +52,29 @@ particular fixed subspace $\mathcal{N}_j$. Therefore, it cannot be scaled
 more than the maximum operator norm of any of the $X_j$'s.
 \end{proof}
 
-First we use the result that a measuring operator $\tilde{W}$
-which is the sum of
-approximate measuring projectors $\P_j \otimes \tilde{U}_j$
-also approximates the operator $W = \sum_{j} \Pi_{\mathcal{L}_j} \otimes U_j$
-with the same error. More rigorously
+We now apply this to the case of unitary operators
+to show how to approximate a measuring operator with
+ancillae which is the direct sum of projectors onto pairwise othogonal subspaces.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{lemma}[Problem 12.1 \cite{ksv02}]
 \label{lemma:error-sum}
 Let $W$ be a unitary operator which acts on a space with two subsystems
-$\mathcal{N}$ and $\mathcal{K}$, and $\tilde{W}$ which acts on the same space
-but augmented with a third subsystem $\mathcal{B}^N$.
+$\mathcal{N}$ and $\mathcal{K}$ and is the direct sum of projectors onto
+pairwise orthogonal subspaces of $\mathcal{N} = \bigoplus_j \mathcal{L}_j$
+tensored with unitary operators on $\mathcal{K}$.
+Let $\tilde{W}$ be an analogous operator except that the unitaries $\tilde{U}_j$
+now operate on $\mathcal{K}$ tensored with an ancillary subsystem
+$\mathcal{B}^N$.
 
 \begin{eqnarray}
-W : \mathcal{N} \otimes \mathcal{K}\\
-\tilde{W} : \mathcal{N} \otimes \mathcal{K} \otimes \mathcal{B}^N
+U_j : \mathcal{K}\\
+\tilde{U}_j : \mathcal{K} \otimes \mathcal{B}^{\otimes N}\\
+W : \mathcal{N} \otimes \mathcal{K} = \bigoplus_j \Pi_{\mathcal{L}_j} \otimes U_j \\
+\tilde{W} : \mathcal{N} \otimes \mathcal{K} \otimes \mathcal{B}^N =
+\bigoplus_j \Pi_{\mathcal{L}_j} \otimes \tilde{U}_j
 \end{eqnarray}
 
-Further, let $\mathcal{N} = \bigotimes_{j} \mathcal{L}_j$
-be some orthogonal decomposition, and $U_j : \mathcal{K}$ and 
-$\tilde{U}_j : \mathcal{K} \otimes \mathcal{B}^N$ be some unitary operators.
 Suppose that for each $j$,
 $\tilde{U}_j$ approximates (with ancillae) $U_j$ with error $\nu$
 according to the
@@ -80,10 +82,11 @@ definition below.
 
 \begin{equation}
 \forall_j || \tilde{U}_j - (U_j \otimes I_{\mathcal{B}^{\otimes N}}) || \le \nu
+\label{eqn:uj_approx}
 \end{equation}
 
 Then the measuring operator
-$\tilde{W} = \sum_j \Pi_{\mathcal{L}_j} \otimes \tilde{U}_j$ approximates
+$\tilde{W} = \oplus_j \Pi_{\mathcal{L}_j} \otimes \tilde{U}_j$ approximates
 with ancillae the measuring operator
 $W = \sum_j \Pi_{\mathcal{L}_j} \otimes U_j$ with the same error $\nu$.
 
@@ -94,23 +97,35 @@ $W = \sum_j \Pi_{\mathcal{L}_j} \otimes U_j$ with the same error $\nu$.
 \end{lemma}
 
 \begin{proof}
-We make use of the standard embedding
-$V:\mathcal{K} \rightarrow \mathcal{K} \otimes \mathcal{B}^N$ which simply
-augments a state in $\mathcal{K}$ with ancillae in the state $\ket{0}^N$.
-That is, $V\ket{\zeta} = \ket{\zeta} \otimes \ket{0}^N$.
+We decompose $W$ using its definition.
 
-\begin{equation}
-\forall_j || \tilde{U}_j V - V U_j || \le \delta
-\end{equation}
+\begin{eqnarray}
+|| \tilde{W} - (W \otimes I_{\mathcal{B}^{\otimes N}}) || & = &
+|| (\bigoplus_j \Pi_{\mathcal{L}_j} \otimes \tilde{U}_j) -
+   (\bigoplus_j \Pi_{\mathcal{L}_j} \otimes U_j \otimes I_{\mathcal{B}^{\otimes N}}\\
+& = & || \bigoplus_j \Pi_{\mathcal{L}_j} \otimes (\tilde{U}_j - (U_j \otimes I_{\mathcal{B}^{\otimes N}})) || \\
+& \le & \max_j ||    \Pi_{\mathcal{L}_j} \otimes (\tilde{U}_j - (U_j \otimes I_{\mathcal{B}^{\otimes N}})) ||
+\end{eqnarray}
 
-Then $\tilde{W}$ \emph{with} ancillae approximates $\tilde{W}$
-\emph{without} ancillae
-according to the following equation.
+In the last step above, we use Lemma \ref{lemma:error-sum} to reduce the
+error of approximating $W$ with ancillae to the largest error of approximating
+any $U_j$ with ancillae. Now we use Equation \ref{eqn:uj_approx} and continue.
 
-\begin{equation}
-|| \tilde{W} (I_{\mathcal{N}} \otimes V) - (I_{\mathcal{N}} \otimes V) W || \le \nu
-\end{equation}
+\begin{eqnarray}
+|| \tilde{W} - (W \otimes I_{\mathcal{B}^{\otimes N}}) || & \le &
+\max_j || (\tilde{U}_j - (U_j \otimes I_{\mathcal{B}^{\otimes N}}) || \\
+& = & \nu
+\end{eqnarray}
 
+In the step above, we used the fact that when taking the norm of an operator
+which is a projector onto a subspace
+tensored with a unitary, this reduces to taking the norm
+of just the unitary. This is because the vectors outside of the subspace,
+which are projected away to the zero vector, cannot affect the operator norm.
+
+Therefore, we have that $\tilde{W}$ \emph{with} ancillae approximates $\tilde{W}$
+\emph{without} ancillae with the same error $\nu$ of approximating the unitaries
+with ancillae within any subspace.
 \end{proof}
 
 We now return to the setting of Section \ref{subsec:approx} and repeat
@@ -122,6 +137,7 @@ corresponds to parallelized phase estimation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{theorem}[Problem 12.2, \cite{ksv02}]
+\label{thm:coherent}
 We consider the space
 $\mathcal{N} \otimes \mathcal{B}^{\otimes N} \otimes \mathcal{K}$ with the
 following orthogonal subsystem decompositions:
@@ -143,22 +159,171 @@ the following operator $Y$ with error $2\sqrt{\epsilon}$.
 \end{theorem}
 
 \begin{proof}
-
-Alternatively, we can take the norm of the vector difference $\ket{\psi}$
-between an
-arbitrary state $\ket{\xi} \mathcal{N}$ operated on by $W$ and the
-state $\ket{\xi} \otimes \ket{0^N}$ operated on by $\tilde{W}$.
+Even though we have already defined $Y$ and $\tilde{Y}$ in terms of
+operators on the whole space
+$\mathcal{N} \otimes \mathcal{K} \otimes \mathcal{J}$, it is now useful to
+define $\tilde{Y}$ in an alternate way: operators $P_j$ which operate on the
+space $\mathcal{K} \otimes \mathcal{J}$ which can further be expressed
+in terms of operators $Q_y$ operating on $\mathcal{K}$ and operators
+$R_j$ operating on $\mathcal{J}$.
 
 \begin{equation}
-\ket{\eta} = W\ket{\xi} \qquad
-\ket{\tilde{\eta}} = \tilde{W}(\ket{\xi} \otimes \ket{0^N}) \qquad
-\ket{psi} = \ket{\tilde{\eta}} - \ket{\eta} \otimes \ket{0^N}
+\tilde{Y} = \sum_{j \in \Omega} \Pi_{\mathcal{L}_j} \otimes P_j \qquad
+P_j = \sum_{y \in \Delta} Q_y \otimes (R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j)
 \end{equation}
 
-When we take the vector norm of
+Using the results of Lemma \ref{lemma:error-sum}, we only need to show that
+$P_j$ approximates (using ancillae) $Q_{f(j)}$ (without using ancillae) for
+all $j$.
 
+To begin with, let's examine the action of $P_j$ and $Q_{f(j)}$ on
+an arbitrary state $\ket{\xi} \in \mathcal{K}$, possibly augmented with
+ancillae $\ket{0^N}$.
+We further define the following states and the difference between them.
+
+\begin{eqnarray}
+\ket{\eta}         & = & Q_{f(j)} \ket{\xi} \\
+\ket{\tilde{\eta}} & = & P_j(\ket{\xi} \otimes \ket{0^N}) \\
+\ket{\psi}         & = & \ket{\tilde{eta}} - \ket{\eta}
+\end{eqnarray}
+
+We want to minimize the norm of $\ket{\psi}$, which represents the error
+in a state operated on by the desired unitary $Q_{f(j)}$ and the state
+operated on by the approximation with ancillae $P_j$.
+
+That's how we begin these next calculations.
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & = & \left[ \bra{\tilde{\eta}} - (\bra{\eta} \otimes \bra{0^N}) \right]
+                    \left[ \ket{\tilde{\eta}} - (\ket{eta} \otimes \ket{0^N}) \right] \\
+              & = & \left[ \braket{\tilde{\eta}}{\tilde{\eta}} \right ] - \\
+              &   & \left[ (\bra{\eta} \otimes \bra{0^N})(\ket{\tilde{\eta}}) \right] - \\
+              &   & \left[ (\bra{\tilde{\eta}} \otimes (\ket{\eta} \otimes \ket{0^N}) \right] + \\
+              &   & \left[ \braket{\eta}{\eta} \right] \\
+              & = & 2 - \left(\bra{\eta} \otimes \bra{0^N} \right) \ket{\tilde{\eta}} - \\
+              &   & \bra{\tilde{eta}} \left( \ket{\eta} \otimes \ket{0^N} \right)
+\end{eqnarray}
+
+In the last line, we use the fact that $\ket{\eta} \otimes \ket{0^N}$ and
+$\ket{\tilde{\eta}}$ are both normalized states of unit norm. The two braket
+terms remaining are complex conjugates of each other (call them $a+bi$ and
+$a-bi$) so their sum is just $2a$, or the real part of either complex number.
+
+This is where we continue our calculations, using the definition of $\ket{\eta}$
+and $\ket{\tilde{\eta}}$ to express their overlaps in terms of $Q_y$,
+$R_j$, and projectors onto the orthogonal decomposition of $\mathcal{J}$.
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & = & 2 - 2\Re\left[ \left(\bra{\eta} \otimes \bra{0^N}\right) \ket{\tilde{\eta}} \right] \\
+                    & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+                                                             \bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right]
+\end{eqnarray}
+
+In the last line above, we use the fact that we can distribute a braket
+through a tensor product. That is, if $\ket{\alpha}$, $\ket{\beta}$, and
+$\ket{\gamma}$ are normalized vectors, then
+$\left( \bra{\alpha} \otimes \bra{\beta}\right) \ket{\gamma} = 
+ \braket{\alpha}{\gamma}\braket{\beta}{\gamma}$.
+ 
+We can now factor out the braket
+$\bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N}$ from the product
+inside the real operation above since the braket is completely real. This is
+because $\Pi_{\mathcal{M}_y}R_j \ket{0^N}$ is either the zero vector or
+a normalized state. We will henceforce call this projected state
+$\ket{\phi_{(y,j)}}$, and we will write its overlap with itself
+as the braket $\braket{\phi}{\phi}$.
+
+Now we also need to use the fact that the real part of a sum over complex
+numbers is at most the sum of real parts of each complex number.
+
+\begin{equation}
+\Re\left[ \sum_{i} c_i \right] \le \sum_{i} \Re( c_i )
+\end{equation}
+
+Substituting the real part of a sum with the sum of real parts
+back in our original calculation, we get:
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & \le & 2 - 2\sum_{y \in \Delta} \left[ \Re\left(
+  \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+  \braket{\phi_{(y,j)}}{\phi_{(y,h)}} \right) \right] \\
+   & \le & 2 - 2\sum_{y \in Delta} \left[ \Re\left(
+           \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}\Pr(y | j) \right)\right] \\
+   & \le & 2 \sum_{y \in \Delta}\left[
+           1 - \Re\left( \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi} \right)
+           \Pr(y | j) \right]
+\end{eqnarray}
+
+In the last line, we used the definition of
+$\bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} = \braket{\phi_{(y,j)}}{\phi_{(y,h)}}$
+as the probability of getting outcome $y$ in the register
+$\mathcal{J}$ given that we have projected onto outcome $j$ in register
+$\mathcal{N}$ according to Section \ref{subsec:approx}.
+
+Next, we use the fact that the real part of the overlap
+$\bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}$ is between $-1$ and $1$, inclusive,
+because any $Q_y\ket{\xi}$ is a normalized state, and therefore one minus
+this quantity is at most $2$. We also exclude the case where
+$y = f(j)$, since in that case $Q_{f_(j)}^{\dagger}Q_y = I$ and the overlap
+is 1, contributing zero to the sum.
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & \le & 2 \sum_{y \ne f(j)} 2\Pr(y|j) \label{eqn:prob-sum}\\
+                    & \le & 4\epsilon
+\end{eqnarray}
+
+In the final line above, we use the definition of $\Pr(y|j)$ from
+Section \ref{subsec:approx}. The actual answer we want is the norm
+of the difference vector $\ket{\psi}$, which is the square root of the
+magnitude of the overlap.
+
+\begin{equation}
+\lvert\lvert \ket{\psi} \rvert\rvert \le 2\sqrt{\epsilon}
+\end{equation}
+
+This completes the proof.
+
+As an additional note, if $V$ is the copy operator, we have
+$Q_{f(j)}^{\dagger}Q_y = \delta_{y,f(j)}I_{\mathcal{K}}$.
+For each $y = f(j)$, the overlap $\bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}$
+is $1$ and contributes zero to the sum of probabilities.
+For each $y \ne f(j)$, the overlap is exactly $0$, and contributes
+$\Pr(y|j)$ to the sum.
+Therefore, instead of line \ref{eqn:prob-sum} above, we get:
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & \le & 2\sum_{y \ne f(j)} \Pr(y|j)\\
+                    & \le & 2\epsilon
+\end{eqnarray}
+
+And the final error is
+
+\begin{equation}
+\lvert\lvert \ket{\psi} \rvert\rvert \le \sqrt{2\epsilon}
+\end{equation}
+
+This makes intuitive sense, since the first bound is overly general.
+It works for any $V$. If we know $V$, we can actually make additional
+assumptions and get a better (smaller) upper bound for the error, in this
+case by a factor $\sqrt{2}$.
 \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Error Probability With Projective Measurement}
 \label{subsec:error-proj}
+
+Now what happens if we perform the operator $\hat{Y} = VW$? That is, we
+perform $W$ to measure some function $f$ and then we extract the useful
+information using $V$, but we don't wish to uncompute the results by
+performing $W^{-1}$? There are two main reasons we may wish to do this:
+(1) because $W$ may be practically difficult to perform, and we don't wish
+to essentially do it twice or (2) because we have projectively measured
+in the register $\mathcal{K}$ so that we can offload some postprocessing to
+a classical computer, and there is no way to uncompute $W$ at that point.
+
+These are both practical reasons in that they don't affect the
+asymptotic resources required by our algorithm. However, they do affect
+the asymptotic error of our algorithm. In this section, we will calculate
+this error based on Theorem \ref{thm:coherent}.
+
