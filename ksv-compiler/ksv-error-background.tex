@@ -79,6 +79,14 @@ above. We will use this fact later.
 \section{Notation}
 
 A random section on notation. I will find a better place to put this later.
+
+In \cite{ksv02}, ancillae are denoted as $\mathcal{B}^{\otimes N}$ to mean
+appending $N$ qubits to a quantum state. However, we will use the more general
+symbol $\mathcal{J}$ to mean any ancillary register of $N$ qudits of dimension $d$.
+In context,
+when we mean an ancillae state initialized to all zeros, we will write
+$\ket{0^N}$ where $N = \log_d(\dim(\mathcal{J}))$.
+
 In these notes we will mainly deal with unitary operators $U$, which by
 definition operate on
 states from some vector space $\mathcal{V}$
@@ -87,13 +95,13 @@ We can think of them as being square
 $\dim(\mathcal{V}) \times \dim(\mathcal{V})$
 unitary matrices.
 However, mathematically adding ancillae qubits enlarges our Hilbert space
-(say from $\mathcal{V}$ to $\mathcal{V}\otimes \mathcal{B}^{\otimes N}$),
+(say from $\mathcal{V}$ to $\mathcal{V}\otimes \mathcal{J}$),
 and discarding ancillae qubits shrinks our Hilbert space
-(say from $\mathcal{V}\otimes \mathcal{B}^{\otimes N}$ back to $\mathcal{V}$),
+(say from $\mathcal{V}\otimes \mathcal{J}$ back to $\mathcal{V}$),
 and these are more properly represented by isometries $\hat{U}$,
 or non-square matrices
 of dimension
-$\dim(\mathcal{V})\times \dim(\mathcal{V})\cdot\dim(\mathcal{B}^{\otimes N})$
+$\dim(\mathcal{V})\times \dim(\mathcal{V})\cdot\dim(J)$
 (or the transpose of that), which are unital in that
 $\hat{U}\hat{U}^\dagger = I$. To convert between the two matrix sizes,
 so that we can combine unitary and unital operators, we can use the
