@@ -135,7 +135,7 @@ of a two stage measurement using $W$ and intermediate ancillae?
 We will see later that such an approximate two-stage measurement
 corresponds to parallelized phase estimation.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{theorem}[Problem 12.2, \cite{ksv02}]
 \label{thm:coherent}
 We consider the space
@@ -155,9 +155,9 @@ W : \mathcal{N} \otimes \mathcal{K}\\
 If $W$ approximately measures a function $f : \Omega \rightarrow \Delta$
 with error $\epsilon$, then the operator $\tilde{Y} = W^{-1}VW$ approximates
 the following operator $Y$ with error $2\sqrt{\epsilon}$.
-
 \end{theorem}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{proof}
 Even though we have already defined $Y$ and $\tilde{Y}$ in terms of
 operators on the whole space
@@ -184,7 +184,7 @@ We further define the following states and the difference between them.
 \begin{eqnarray}
 \ket{\eta}         & = & Q_{f(j)} \ket{\xi} \\
 \ket{\tilde{\eta}} & = & P_j(\ket{\xi} \otimes \ket{0^N}) \\
-\ket{\psi}         & = & \ket{\tilde{eta}} - \ket{\eta}
+\ket{\psi}         & = & \ket{\tilde{\eta}} - \ket{\eta}
 \end{eqnarray}
 
 We want to minimize the norm of $\ket{\psi}$, which represents the error
@@ -216,7 +216,7 @@ $R_j$, and projectors onto the orthogonal decomposition of $\mathcal{J}$.
 \begin{eqnarray}
 \braket{\psi}{\psi} & = & 2 - 2\Re\left[ \left(\bra{\eta} \otimes \bra{0^N}\right) \ket{\tilde{\eta}} \right] \\
                     & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
-                                                             \bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right]
+                                                             \bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right] \label{eqn:sym-real}
 \end{eqnarray}
 
 In the last line above, we use the fact that we can distribute a braket
@@ -325,5 +325,34 @@ a classical computer, and there is no way to uncompute $W$ at that point.
 These are both practical reasons in that they don't affect the
 asymptotic resources required by our algorithm. However, they do affect
 the asymptotic error of our algorithm. In this section, we will calculate
-this error based on Theorem \ref{thm:coherent}.
+this error based on Theorem \ref{thm:coherent}. This is the main original
+contribution of this work beyond the exposition in \cite{ksv02}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{theorem}
+\label{thm:projective}
+Given the setting in Theorem \ref{thm:coherent}
+where $W$ approximately measures a function $f : \Omega \rightarrow \Delta$
+with error $\epsilon$, then the operator $\hat{Y} = VW$ approximates
+the operator $Y = W^{-1}vW$ with error $\sqrt{2}\sqrt[4]{\epsilon}$.
+\end{theorem}
+
+\begin{proof}
+We will take an almost identical approach to the proof for Theorem \ref{thm:coherent}
+by measuring the difference between vectors which are the results of applying
+$Y$ and $\hat{Y}$. However, now our definition of $P_j$ lacks the
+uncomputation step $R_j^{\dagger}$.
+
+\begin{equation}
+\hat{Y} = \sum_{j \in \Omega} \Pi_{\mathcal{L}_j} \otimes P_j \qquad
+P_j = \sum_{y \in \Delta} Q_y \otimes \Pi_{\mathcal{M}_y}R_j)
+\end{equation}
+
+Now we can jump ahead to equation \ref{eqn:sym-real}, which is the first
+place in the proof of Theorem \ref{thm:coherent} where this asymmetry matters.
+
+\begin{eqnarray}
+\braket{\phi}{\phi} & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+                                                             \bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right]
+\end{eqnarray}
+\end{proof}
