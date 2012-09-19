@@ -1,0 +1,104 @@
+\documentclass[twocolumn,10pt]{article}
+
+\usepackage[dvips]{graphicx}
+%\usepackage{times}
+\usepackage{eprint}
+\usepackage{eepic}
+\usepackage{amsfonts}
+\usepackage{algorithmic}
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+
+\title{Single-qubit rotations}
+\author{Arman, Poya, Paul Pham}
+
+\input{Qcircuit}
+
+\begin{document}
+
+%\newcommand{\ket}[1]{|#1 \rangle}
+%\newcommand{\bra}[1]{\langle #1 |}
+\newcommand{\braket}[2]{\langle #1|#2 \rangle}
+\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+
+\maketitle
+
+\section{Definitions}
+
+In this note, we call a single-qubit rotation
+any single qubit gate (a matrix in $SU(2)$) which
+represents a geometric rotation (a homomorphic operation in $SO(3)$)
+about the Bloch sphere $z$-axis by angle $\theta/2$. We denote the
+$SU(2)$ matrix as follows, noting that the angle which appears as a matrix
+element is twice the angle of the geometric rotation due to the
+double covering between $SU(2)$ and $SO(3)$.
+
+\begin{equation}
+R_Z(\theta / 2) = e^{i\frac{\theta}{2}\sigma_z} = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & e^{i\theta} \\
+  \end{array} \right]
+\end{equation}
+
+There are two special cases of single-qubit rotations which can be done
+fault-tolerantly in many quantum error-correcting codes because they are
+members of the Clifford group. These are 
+the Pauli operator $\sigma_Z$ is a special case of this matrix denoted
+as $R_Z(\pi/2)$ and the phase gate $S$ denoted as $R_Z(\pi/4)$, which can
+also be thought of as the ``square root of $Z$'' gate.
+
+\begin{equation}
+\sigma_z = R_Z(\pi / 2) = e^{i\frac{\pi}{2}\sigma_z} = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & e^{i \pi} \\
+  \end{array} \right]
+=
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & -1 \\
+  \end{array} \right]
+\end{equation}
+
+\begin{equation}
+S = R_Z(\pi / 4) = e^{i\frac{\pi}{4}\sigma_z} = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & e^{i \pi/2} \\
+  \end{array} \right]
+=
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & i \\
+  \end{array} \right]
+\end{equation}
+
+Single-qubit rotations play a key role in quantum compiling and quantum
+algorithms in general since it is only known how to d
+
+We denote by with
+the following form:
+
+\begin{equation}
+\Lambda(e^{i\phi}) = 
+ \left[
+  \begin{array}{cc}
+    1 & 0 \\
+    0 & e^{i\phi} \\
+  \end{array} \right]
+\end{equation}
+
+
+\bibliography{rotations}
+\bibliographystyle{tocplain}
+
+\end{document}
