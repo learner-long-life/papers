@@ -1,0 +1,48 @@
+\begin{figure*}[h!tb]
+\begin{displaymath}
+\renewcommand\arraystretch{1.5}
+\begin{array}{ccccccl}
+        & a_4 & a_3 & a_2 & a_1 & a_0 & 5\text{-bit input number } a\\
+        & b_4 & b_3 & b_2 & b_1 & b_0 & 5\text{-bit input number } b\\
+        & c_4 & c_3 & c_2 & c_1 & c_0 & 5\text{-bit input number } c\\
+\hline
+        & u_4 & u_3 & u_2 & u_1 & u_0 & \text{truncate } u_{4} \\
+    v_5 & v_4 & v_3 & v_2 & v_1 &     & \text{truncate } v_{4},v_{5} \\
+        &     &     & c^{v_4}_2 & c^{v_4}_1 & c^{v_4}_0 & \text{add back } 2^4 \bmod m \text{ controlled on } v_4 \\
+\hline
+        &      & u'_3 & u'_2 & u'_1 & u'_0 & \\
+        & v'_4 & v'_3 & v'_2 & v'_1 &      & \\
+        &      &    & c^{u_4}_2 & c^{u_4}_1 & c^{u_4}_0  & \text{add back } 2^4 \bmod m \text{ controlled on } u_4 \\
+\hline
+        & u''_4 & u''_3 & u''_2 & u''_1 & u''_0 & \text{the bit } u''_4 \text{ is the same as } v'_4 \\
+        & v''_4 & v''_3 & v''_2 & v''_1 &       &  \\
+        &       &    & c^{v_5}_2 & c^{v_5}_1 & c^{v_5}_0 & \text{add back } 2^5 \bmod m \text{ controlled on } v_5 \\
+\hline
+        & u'''_4 & u'''_3 & u'''_2 & u'''_1 & u'''_0 & \text{ Final CSE output with } 5 \text{ bits}\\
+        & v'''_4 & v'''_3 & v'''_2 & v'''_1 &        & \text{ Final CSE output with } 5 \text{ bits}\\
+\end{array}
+%\begin{array}{cccccccr}
+%        & a_{n+1} & a_{n} & a_{n-1} & \ldots & a_1 & a_0 & \text{input number } a\\
+%        & b_{n+1} & b_{n} & b_{n-1} & \ldots & b_1 & b_0 & \text{input number } b\\
+%        & c_{n+1} & c_{n} & c_{n-1} & \ldots & c_1 & c_0 & \text{input number } c\\
+%\hline
+%        & u_{n+1} & u_{n} & u_{n-1} & \ldots & u_1 & u_0 & \text{truncate } u_{n+1} \\
+%v_{n+2} & v_{n+1} & v_{n} & v_{n-1} & \ldots & v_1 & 0   & \text{truncate } v_{n+1},v_{n+2} \\
+%        &         &       & x_{n-1} & \ldots & x_1 & x_0 \\
+%\hline
+%        &         & u'_{n} & u'_{n-1} & \ldots & u'_1 & u'_0 & \\
+%        & v'_{n+1} & v'_{n} & v'_{n-1} & \ldots & v'_1 & 0 &  \\
+%        &         &       & x_{n-1} & \ldots & x_1 & x_0 \\
+%\hline
+%        & u''_{n+1} & u''_{n} & u''_{n-1} & \ldots & u''_1 & u''_0 & \\
+%        & v''_{n+1} & v''_{n} & v''_{n-1} & \ldots & v''_1 & 0 &  \\
+%        &         &       & y_{n-1} & \ldots & y_1 & y_0 \\
+%\hline
+%        & u'''_{n+1} & u'''_{n} & u'''_{n-1} & \ldots & u'''_1 & u'''_0 & \\
+%        & v'''_{n+1} & v'''_{n} & v'''_{n-1} & \ldots & v'''_1 & 0 &  \\
+%\hline
+%\end{array}
+\end{displaymath}
+\caption{A schematic proof of Gossett's constant-depth modular reduction for $n=3$.}
+\label{fig:csa-proof}
+\end{figure*}

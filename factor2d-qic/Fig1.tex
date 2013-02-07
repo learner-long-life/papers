@@ -1,0 +1,38 @@
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+\begin{array}{ccc}
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_1}Z^{j_1}\ket{\psi}}               & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw              & \qw & \qw \\
+}
+& \qquad \qquad \qquad &
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_2}Z^{j_2}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
+}\\
+& & \\
+(a) & & (b)
+\end{array}
+\end{displaymath}
+\centerline{
+}
+\caption{Constant-depth circuits based on \cite{Broadbent2007,Browne2009} for
+(a) teleportation \protect{\cite{Rosenbaum2012}} and
+(b) fanout \cite{Harrow2012}.}
+\label{fig:cd}
+\end{center}\end{figure*}

@@ -1,0 +1,17 @@
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+\centerline{
+\Qcircuit @C=2em @R=2em {
+\lstick{\ket{0}} & \qw      & \qw & \qw                 & \qw & \qw                        & \targfix  & \qw & \qw_{\ket{a_i \wedge (b_i \oplus c_i)}} & \targfix  & \qw       & \qw    & \qw_{\ket{(b_i \wedge c_i) \oplus a_i \wedge (b_i \oplus c_i)}} & \qw & \qswap & \qw & \qw & \rstick{\ket{u_i}} \\
+\lstick{\ket{a_i}} & \qw      & \qw & \qw                 & \qw & \qw                        & \ctrl{-1} & \qw & \qw                             & \qw       & \targfix  & \qw  & \qw_{\ket{a_i \oplus b_i \oplus c_i}} & \qw & \qswap \qwx & \qswap & \qw & \rstick{\ket{0}} \\
+\lstick{\ket{b_i}} & \ctrl{1} & \qw & \targfix            & \qw & \qw_{\ket{b_i \oplus c_i}} & \ctrl{-1} & \qw & \qw                             & \qw       & \ctrl{-1} & \targfix  & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{b_i}} \\
+\lstick{\ket{c_i}} & \ctrl{1} & \qw & \ctrl{-1}           & \qw & \qw                        & \qw       & \qw & \qw                             & \qw       & \qw       & \ctrl{-1} & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{c_i}} \\
+\lstick{\ket{0}} & \targfix & \qw & \qw_{\ket{b_i \wedge c_i}} & \qw & \qw                        & \qw       & \qw & \qw                             & \ctrl{-4} & \qw       & \qw       & \targfix & \qw & \qw & \qswap \qwx & \qw & \rstick{\ket{v_{i+1}}}
+}
+}
+\end{displaymath}
+\caption{Carry-save adder circuit for a single bit position $i$:
+$a_i+b_i+c_i = u_i + v_{i+1}$.}
+\label{fig:csa-circuit}
+\end{center}\end{figure*}
