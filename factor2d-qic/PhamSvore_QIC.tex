@@ -186,7 +186,7 @@ which we then show how to use as a basis for a modular multiplier
 (Section \ref{sec:csa-mod-mult}) and a modular exponentiator
 (Section \ref{sec:modexp}).
 Finally, we analyze the asymptotic circuit resources required by our
-approach and  compare them to previous implementations.
+approach and compare them to previous implementations.
 
 %\input{factor2d-bg}
 \section{Background}
@@ -254,11 +254,11 @@ We measure the efficiency of a circuit on a particular
 architecture in terms of three resources:
 %, depicted in Figure \ref{fig:resources}:
 \emph{circuit size} (number of non-identity gates),
-\emph{circuit depth} (number of time-steps), and
-\emph{circuit width} (number of qubits).
-For circuit depth, a two-qubit gate takes
+\emph{circuit depth} (number of time-steps allowing parallel operations),
+and \emph{circuit width} (number of qubits).
+For circuit depth a two-qubit gate takes
 one timestep and absorbs any adjacent single-qubit gates.
-Multiple two-qubit gates on disjoint qubits
+Multiple gates acting on disjoint qubits
 can occur in parallel during the same timestep.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -278,7 +278,7 @@ notation \cite{Nielsen2000}.
 \begin{figure*}[tb!]
 \begin{center}
 \begin{displaymath}
-\begin{array}{ccc}
+%\begin{array}{ccc}
 \Qcircuit @C=1em @R=1em {
 \lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
@@ -288,27 +288,35 @@ notation \cite{Nielsen2000}.
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_3} \\
 \lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw              & \qw & \qw \\
 }
-& \qquad \qquad \qquad &
-\Qcircuit @C=1em @R=1em {
-\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{\ket{\ell}}\\
-\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
-\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}}\\
-\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
-\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_2}Z^{j_2}\ket{\ell}}\\
-\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
-\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
-\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}\ket{\ell}}\\
-}\\
-& & \\
-(a) & & (b)
-\end{array}
 \end{displaymath}
 \centerline{}
-\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for (a) teleportation \protect{\cite{Rosenbaum2012}} and (b) fanout \protect{\cite{Harrow2012}}.}
-\label{fig:cd}
+\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for teleportation \protect{\cite{Rosenbaum2012}}.}
+\label{fig:cdt}
+\end{center}\end{figure*}
+
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+%& \qquad \qquad \qquad &
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}_1}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
+\lstick{\ket{0}_2}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_2}Z^{j_2}X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
+\lstick{\ket{0}_3}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}X^{k_2} X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_4}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}X^{k_2} X^{k_1}\ket{\ell}}\\
+}
+%& & \\
+%(a) & & (b)
+%\end{array}
+\end{displaymath}
+\centerline{}
+\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for fanout \protect{\cite{Harrow2012}}.}
+\label{fig:cdf}
 \end{center}\end{figure*}
 
 Although general cloning is
@@ -323,7 +331,7 @@ measurement-based quantum computing \cite{Raussendorf2003}
 that relies on the creation of an
 $n$-qubit cat state \cite{Browne2009}.
 It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width, and is shown in
-part (b) of Figure \ref{fig:cd} for the case of fanning out a given single-qubit state $\ket{\psi}$ to
+Figure \ref{fig:cdf} for the case of fanning out a given single-qubit state $\ket{\psi}$ to
 four qubits.
 The technique works by creating multiple small
 cat states of a fixed size (in this case, three qubits) and linking them
@@ -811,7 +819,7 @@ additions controlled on $u_4$ and $v_4$ and
 $2^5[m]$ for the addition controlled on $v_5$.
 
 In layer 2,
-we use a constant-depth fanout rail (see Figure \ref{fig:cd}) to
+we use a constant-depth fanout rail (see Figure \ref{fig:cdf}) to
 distribute the control bit $v_4$ to its modular residue, which we denote as
 %%\begin{equation}
 $\ket{c^{v_4}} \equiv \ket{2^4[m]\cdot v_4}$.
