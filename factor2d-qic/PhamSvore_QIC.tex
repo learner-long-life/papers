@@ -229,7 +229,7 @@ we can consider a two-dimensional regular grid
 qubit has four planar neighbors and 
 there is an extra degree of freedom
 in which to move data.
-In this paper, we extend the \textsc{2D NTC} model in two ways.
+In this paper, we extend the \textsc{2D NTC} model in three ways.
 The first extension allows arbitrary planar graphs
 with bounded degree, rather than a regular square lattice.
 Namely, we assume qubits lie in a plane and edges are not allowed to intersect,
@@ -247,18 +247,60 @@ communication in the next section.
 We call an AC or NTC model augmented by these two extensions
 \textsc{CCAC} and \textsc{CCNTC}, respectively, following
 \cite{Rosenbaum2012}.
+The third extension is that we do not consider a single, contiguous
+2D lattice which may be prohibitively large to manufacture. In practice,
+scalable experiments will probably use many
+smaller quantum computers which communicate by means of shared
+entanglement. We call these individual machines \emph{modules}, each of
+which is a self-contained \textsc{2D CCNTC} lattice. We treat these modules
+and allowed teleportations between them as nodes and edges, respectively,
+in a higher-level planar graph. The teleportations each transmit one qubit
+from one module to another, from any location within the source module and
+to any location within the destination module, making using of the
+omnipresent classical controller. The modules can be arbitrarily far
+apart and have arbitrary
+connectivity with other modules. Teleportations can occur concurrently
+between disjoint modules, just as operations can occur concurrently on
+disjoint qubits in NTC. We call this new model \textsc{2D CCNTCM},
+and we argue that is captures the essential aspects of 2D architectures
+without being overly sensitive to the exact geometry of the lattices involved.
 %, and it allows us to use constant-depth
 %fanout and teleportation.
 
 We measure the efficiency of a circuit on a particular
-architecture in terms of three resources:
+architecture in terms of three conventional resources and three
+new resources based on modules:
 %, depicted in Figure \ref{fig:resources}:
 \emph{circuit size} (number of non-identity gates),
 \emph{circuit depth} (number of time-steps allowing parallel operations),
-and \emph{circuit width} (number of qubits).
-For circuit depth a two-qubit gate takes
-one timestep and absorbs any adjacent single-qubit gates.
-Multiple gates acting on disjoint qubits
+\emph{circuit width} (number of qubits),
+\emph{module size} (number of qubits teleported between modules),
+\emph{module depth} (depth of consecutive teleportations between modules),
+\emph{module width} (number of modules).
+We count the following single-qubit and two-qubit operations as
+having unit size and
+unit depth: the generators of the two-qubit Clifford group
+(the Pauli $X$ gate, the Pauli $Z$ gate, the Hadamard ($H$) gate, and the
+controlled NOT (CNOT) gate), the $T$ gate, single-qubit measurements
+(in the $Z$-basis).
+Together, these gates form a universal set \cite{Kitaev2002}.
+
+A measurement in the Bell basis we interpret as having depth $4$,
+size $4$, and width $2$, of which two of those are reusable according
+to the circuit in Figure \ref{fig:bell-measure}
+
+%%%% TODO
+%%%% Insert figure of qcircuit for Bell basis measurement
+
+This is
+an overestimate compared to the model in \cite{Kutin2006}, in which a
+two-qubit gate has unit size and unit depth and
+absorbs the depth and size of any adjacent single-qubit gates. We intend
+for this more pessimistic estimate to reflect the practical difficulties
+in compiling these gates in a fault-tolerant way, especially the $T$ gate
+\cite{}.
+
+In both models, multiple gates acting on disjoint qubits
 can occur in parallel during the same timestep.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -272,8 +314,31 @@ arbitrarily long distances can be addressed by using
 % in an
 %architecture through ancillae prepared in some initial state.
 the constant-depth teleportation circuit
-shown in part (a) of Figure \ref{fig:cd}, illustrated using standard quantum circuit
-notation \cite{Nielsen2000}.
+shown in Figure \ref{fig:cdt}, illustrated using standard quantum circuit
+notation \cite{Nielsen2000}. This uses the circuit resources shown in
+Table \ref{tab:cdt}. The depth includes a layer of $H$ gates; two interleaved
+layers of CNOTs; a layer of Bell basis measurement; and two layers of
+Pauli corrections ($X$ and $Z$ for each qubit), occurring concurrently with
+resetting the $\ket{j}$ and $\ket{k}$ qubits back to $\ket{0}$.
+
+\begin{table}
+\begin{center}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width}\\
+\hline
+7 & 3n + 4 & n+1\\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for the constant-depth teleportation circuit
+shown in Figure \ref{fig:cdt} for transporting a single qubit across
+$n$ qubits.}
+\label{tab:cdt}
+\end{center}
+\end{table}
 
 \begin{figure*}[tb!]
 \begin{center}
@@ -290,7 +355,7 @@ notation \cite{Nielsen2000}.
 }
 \end{displaymath}
 \centerline{}
-\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for teleportation \protect{\cite{Rosenbaum2012}}.}
+\fcaption{Constant-depth circuit based on \protect{\cite{Broadbent2007,Browne2009}} for teleportation over $n=5$ qubits \protect{\cite{Rosenbaum2012}}.}
 \label{fig:cdt}
 \end{center}\end{figure*}
 
@@ -299,15 +364,15 @@ notation \cite{Nielsen2000}.
 \begin{displaymath}
 %& \qquad \qquad \qquad &
 \Qcircuit @C=1em @R=1em {
-\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
-\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
-\lstick{\ket{0}_1}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_1}Z^{j_1}\ket{\ell}}\\
+\lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \multimeasureD{1}{\mbox{Bell}'} & \cw & \rstick{j_1} \\
+\lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}'}            & \cw & \rstick{k_1} \\
+\lstick{\ket{0}_1}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_1}X^{k_1}\ket{\ell}}\\
 \lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
-\lstick{\ket{0}_2}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_2}Z^{j_2}X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_2}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_2}X^{k_2}X^{k_1}\ket{\ell}}\\
 \lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
-\lstick{\ket{0}_3}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{X^{k_3}Z^{j_3}X^{k_2} X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_3}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_3}X^{k_3}X^{k_2} X^{k_1}\ket{\ell}}\\
 \lstick{\ket{0}_4}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}X^{k_2} X^{k_1}\ket{\ell}}\\
 }
 %& & \\
@@ -315,7 +380,7 @@ notation \cite{Nielsen2000}.
 %\end{array}
 \end{displaymath}
 \centerline{}
-\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for fanout \protect{\cite{Harrow2012}}.}
+\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for fanout \protect{\cite{Harrow2012}} of one qubit to $n=4$ entangled copies.}
 \label{fig:cdf}
 \end{center}\end{figure*}
 
@@ -330,27 +395,90 @@ We employ a constant-depth circuit due to insight from
 measurement-based quantum computing \cite{Raussendorf2003}
 that relies on the creation of an
 $n$-qubit cat state \cite{Browne2009}.
-It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width, and is shown in
-Figure \ref{fig:cdf} for the case of fanning out a given single-qubit state $\ket{\psi}$ to
-four qubits.
+
+% From Notebook 16, p. 66
+\begin{table}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width} \\
+\hline
+9 & 10n - 9 & 3n-1 \\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for the constant-depth fanout circuit
+shown in Figure \ref{fig:cdf} for creating $n$ entangled copies of a
+single qubit.}
+\label{tab:cdf}
+\end{table}
+
+It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width; approximately
+two-thirds of the ancillae are reusable and can be reset to $\ket{0}$ after
+being measured. Numerical upper bounds are given in Figure \ref{tab:cdf}.
+The constant-depth fanout circuit is shown in Figure \ref{fig:cdf} for the case of fanning out a given single-qubit state
+$\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ to four qubits.
 The technique works by creating multiple small
-cat states of a fixed size (in this case, three qubits) and linking them
-together with Bell measurements. The qubits marked $\ket{\ell}$ are
-entangled into a (slightly) larger cat state, up to Pauli corrections:
+cat states of a fixed size (in this case, three qubits), linking them
+together into a larger cat state of unbounded size with Bell basis measurements,
+and finally entangling them with the source qubit to be fanned out.
+The qubits marked $\ket{\ell}$ are
+entangled into the larger fanned out state given in Equation \ref{eqn:cat4}.
+The Pauli corrections from the cat state creation are denoted by
+$X^{k_2}$, $X^{k_3}$, $Z^{j_2}$ and $Z^{j_3}$ on qubits beginning in state $\ket{0}_1$, $\ket{0}_2$,
+$\ket{0}_3$, and $\ket{0}_4$). The Pauli corrections
+$X^{k_1}$ and $Z^{j_1}$ are from the Bell basis measurement
+entangling the cat state with the source qubit (denoted $\text{Bell}'$).
 \begin{equation}
-\normtwo X_1^{k_1}Z_1^{j_1}X_2^{k_2}Z_2^{j_2}X_{3}^{k_3}X_{4}^{k_3}Z_{3}^{j_3}Z_{4}^{j_3}
-\left( \ket{0000} + \ket{1111} \right).
+Z_1^{j_1}X_1^{k_1}Z_2^{j_2}X_2^{k_2}X_2^{k_1}Z_{3}^{j_3}X_{3}^{k_3}X_{3}^{k_2}X_{3}^{k_1}X_{4}^{k_3}X_{4}^{k_2}X_{4}^{k_1}
+\left(\alpha \ket{0}_1\ket{0}_2\ket{0}_3\ket{0}_4 + \beta \ket{1}_1\ket{1}_2\ket{1}_3\ket{1}_4 \right)
+\label{eqn:cat4}
 \end{equation}
 %
-The operators $X^k_i$ and $Z^j_{\ell}$ denote Pauli $X$ and $Z$ operators
-on qubits $i$ and $\ell$, controlled by classical bits $k$ and $j$,
+The operators $X^k_i$ and $Z^j_{h}$ denote Pauli $X$ and $Z$ operators
+on qubits $i$ and $h$, controlled by classical bits $k$ and $j$,
 respectively. These corrections are enacted by the classical controller based on
-the Bell measurement outcomes (not depicted). 
+the Bell measurement outcomes (not depicted).
+Note the cascading nature of these corrections.
+There can be up to
+$n-1$ of these $X$ and $Z$
+corrections on the same qubit, which can be simplified by the classical
+controller to a single $X$ and $Z$ operation and then applied with a circuit of
+depth 2 and size 2. Also, given the symmetric nature of the cat state, there
+is an alternate set of Pauli corrections which would give the same state and
+is of equal size to corrections given above.
+
+Reversing the fanout (un-fanout) in constant depth is an interesting
+open problem.
+In this work it is sufficient to perform alternating rounds of
+teleportation and CNOT among the $n$ fanned-out qubits in a logarithmic-depth
+binary tree. The resources for this are given in
+Table \ref{tab:unfanout}.
+
+% From Notebook #16, p. 212
+\begin{table}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width}\\
+\hline
+$8\log_2(2n)$ & $33n\log_2(2n) + 10\log^2_2(2n)$ & $3n-1$ \\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for un-fanout circuit consisting of
+alternating rounds of constant-depth teleportation and CNOT.}
+\label{tab:unfanout}
+\end{table}
+
 %Unfortunately, this
 %``consumes'' the cat state in that there is no known way to unentangle the
 %source qubit from the cat state after they have been jointly measured \cite{Rosenbaum2012}.
 
 %\input{factor2d-related}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
 \label{sec:related}
 
@@ -536,20 +664,83 @@ x_4 & x_3 & x_2 & x_1 & x_0
 \begin{displaymath}
 \centerline{
 \Qcircuit @C=2em @R=2em {
-\lstick{\ket{0}} & \qw      & \qw & \qw                 & \qw & \qw                        & \targfix  & \qw & \qw_{\ket{a_i \wedge (b_i \oplus c_i)}} & \targfix  & \qw       & \qw    & \qw_{\ket{(b_i \wedge c_i) \oplus a_i \wedge (b_i \oplus c_i)}} & \qw & \qswap & \qw & \qw & \rstick{\ket{u_i}} \\
-\lstick{\ket{a_i}} & \qw      & \qw & \qw                 & \qw & \qw                        & \ctrl{-1} & \qw & \qw                             & \qw       & \targfix  & \qw  & \qw_{\ket{a_i \oplus b_i \oplus c_i}} & \qw & \qswap \qwx & \qswap & \qw & \rstick{\ket{0}} \\
-\lstick{\ket{b_i}} & \ctrl{1} & \qw & \targfix            & \qw & \qw_{\ket{b_i \oplus c_i}} & \ctrl{-1} & \qw & \qw                             & \qw       & \ctrl{-1} & \targfix  & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{b_i}} \\
-\lstick{\ket{c_i}} & \ctrl{1} & \qw & \ctrl{-1}           & \qw & \qw                        & \qw       & \qw & \qw                             & \qw       & \qw       & \ctrl{-1} & \ctrl{1} & \qw & \qw & \qw \qwx & \qw & \rstick{\ket{c_i}} \\
-\lstick{\ket{0}} & \targfix & \qw & \qw_{\ket{b_i \wedge c_i}} & \qw & \qw                        & \qw       & \qw & \qw                             & \ctrl{-4} & \qw       & \qw       & \targfix & \qw & \qw & \qswap \qwx & \qw & \rstick{\ket{v_{i+1}}}}
+\lstick{\ket{0}}   & \qw      & \qw & \qw                        & \qw & \qw                        & \targfix  & \qw & \qw_{\ket{a_i \wedge (b_i \oplus c_i)}} & \targfix  & \qw       & \qw       & \qw_{\ket{(b_i \wedge c_i) \oplus a_i \wedge (b_i \oplus c_i)}} & \qw & \qswap      & \qswap      & \qw & \rstick{\ket{u_i}} \\
+\lstick{\ket{a_i}} & \qw      & \qw & \qw                        & \qw & \qw                        & \ctrl{-1} & \qw & \qw                                     & \qw       & \targfix  & \qw       & \qw_{\ket{a_i \oplus b_i \oplus c_i}}                           & \qw & \qw \qwx    & \qswap \qwx & \qw & \rstick{\ket{0}} \\
+\lstick{\ket{b_i}} & \ctrl{1} & \qw & \targfix                   & \qw & \qw_{\ket{b_i \oplus c_i}} & \ctrl{-1} & \qw & \qw                                     & \qw       & \ctrl{-1} & \targfix  & \ctrl{1}                                                        & \qw & \qw \qwx    & \qw         & \qw & \rstick{\ket{b_i}} \\
+\lstick{\ket{c_i}} & \ctrl{1} & \qw & \ctrl{-1}                  & \qw & \qw                        & \qw       & \qw & \qw                                     & \qw       & \qw       & \ctrl{-1} & \ctrl{1}                                                        & \qw & \qw \qwx    & \qw         & \qw & \rstick{\ket{c_i}} \\
+\lstick{\ket{0}}   & \targfix & \qw & \qw_{\ket{b_i \wedge c_i}} & \qw & \qw                        & \qw       & \qw & \qw                                     & \ctrl{-4} & \qw       & \qw       & \targfix                                                        & \qw & \qswap \qwx & \qw         & \qw & \rstick{\ket{v_{i+1}}}}
 }
 \end{displaymath}
 \fcaption{Carry-save adder circuit for a single bit position $i$: $a_i+b_i+c_i = u_i + v_{i+1}$.}
 \label{fig:csa-circuit}
 \end{center}\end{figure}
 
+\begin{table}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width} \\
+\hline
+33 & 55 & 5 \\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for the carry-save adder circuit from Figure \ref{fig:csa-circuit}.}
+\label{tab:csa-circuit}
+\end{table}
+
+\begin{figure}
+\begin{center}
+\begin{displaymath}
+\begin{tabular}{p{0.5in} m{0.1in} p{2in}}
+
+\Qcircuit @C=1em @R=2.2em { 
+	& \qw & \ctrl{1} & \qw & \qw \\
+	& \qw & \ctrl{1} & \qw & \qw \\
+	& \qw & \targfix & \qw & \qw
+}
+
+&
+\qquad
+=
+\qquad
+&
+
+\Qcircuit @C=1em @R=.7em { 
+	& \gate{T^{\dagger}} & \qw & \targfix  & \qw & \gate{T} & \qw & \targfix  & \qw & \gate{T^{\dagger}} & \qw & \targfix  & \qw & \gate{T}           & \qw & \targfix  & \qw & \qw \\ 
+	& \gate{T^{\dagger}} & \qw & \qw       & \qw & \ctrl{1} & \qw & \ctrl{-1} & \qw & \ctrl{1}           & \qw & \qw       & \qw & \qw                & \qw & \ctrl{-1} & \qw & \qw \\
+	& \gate{H}           & \qw & \ctrl{-2} & \qw & \targfix & \qw & \gate{T}  & \qw & \targfix           & \qw & \ctrl{-2} & \qw & \gate{T^{\dagger}} & \qw & \gate{H}  & \qw & \qw
+}
+\end{tabular}
+\end{displaymath}
+\fcaption{The depth-efficient Toffoli gate decomposition from \cite{Amy2012}.}
+\label{fig:toffoli}
+\end{center}
+\end{figure}
+
+\begin{table}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width} \\
+\hline
+8 & 15 & 3 \\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for the Toffoli circuit given in Figure \ref{fig:toffoli}.}
+\label{tab:toffoli}
+\end{table}
+
 Figure \ref{fig:csa-circuit} gives a circuit description of carry-save addition (CSA) for a single bit position $i$.
+The resources for this circuit are given in Figure \ref{tab:csa-circuit}, using
+the resources for the Toffoli gate in Figure \ref{tab:toffoli}.
+
 We must layout the circuit to satisfy a 2D NTC model.
-The Toffoli gate decomposition in \cite{Nielsen2000} (p.~182) requires two control
+The Toffoli gate decomposition in \cite{Amy2012}, duplicated in
+Figure \ref{fig:toffli}, requires two control
 qubits and a single target qubit to be
 mutually connected to each other. Given this constraint, and the
 interaction of the CNOTs in Figure \ref{fig:csa-circuit}, we can
@@ -779,8 +970,9 @@ modular residues. This can also be done in constant depth, and in this case
 we only need to enlarge all our registers to $(n+1)$ bits instead of $(n+2)$
 as in the proof above. We omit the proof for simplicity.
 
-To summarize,
-the circuit resources for modular addition are $O(1)$ depth and $O(n)$ width.
+In the following two subsections, we give a concrete example to illustrate
+the modular addition circuit as well as a numerical upper bound for the
+general circuit.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{A Concrete Example of Modular Addition}
@@ -856,6 +1048,55 @@ There is no overflow bit $v'''_5$, and no carry bit from $v''_4$ and $v'_4$
 as argued in Lemma 1.
 The final modular sum $(a+b+c)[m]$ is $u'''+v'''$.
 
+\subsection{Quantum Circuit Resources for Modular Addition}
+
+We now calculate numerical upper bounds for the circuit resources of
+the $(n+2)$-bit $3$-to-$2$ modular adder described in the previous section.
+There are four layers of non-modular $n'$-bit $3$-to-$2$ adders, which
+consists of $n'$ parallel single-bit adders whose
+resources are detailed in Figure \ref{tab:csa-circuit}. For factoring
+an $n$-bit modulus, we have $n'=n+2$ in the first and fourth layers
+and $n'=n+1$ in the second and third layers.
+
+After each of the first three layers, we must move the output qubits
+across the fanout rail to be the inputs of the next layer. We use
+two swap gates, which have a depth and size of $6$ CNOTs each, since
+the depth of teleportation is only more efficient for moving more than
+two qubits. The control bit for each modular residue needs to be
+teleported $0$, $4$, and $7$ qubits respectively according to the
+diagram in Figure \ref{fig:csa-add-4}, before being fanned out $n$
+times along the fanout rails, where the fanned out copies will end up
+in the correct position to be added as inputs.
+
+The detailed resources are listed in Figure \ref{tab:csa-tile-resources},
+which is twice the resources described in the previous two paragraphs due
+to reversing the computation.
+The $3n$ garbage qubits left over are
+the fanned out copies of the overflow bits.
+It is not currently known how to uncompute these in constant depth.
+However, we can uncompute them in logarithmic depth using alternating
+layers of constant-depth teleportation and CNOT, and we can this for all
+CSA tile layers in parallel during modular multiplication (see the next
+section), where the logarithmic depth is subsumed by the modular multiplier
+itself.
+
+% From Notebook #16, pp. 68-69
+\begin{table}
+\begin{displaymath}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\text{Depth} & \text{Size} & \text{Width} \\
+\hline
+356 & 572n + 724 & 33n+47 \\
+\hline
+\end{tabular}
+\end{displaymath}
+\centerline{}
+\fcaption{Circuit resources for the $n$-bit modular $3$-to-$2$ adder represented
+by Figure \ref{fig:csa-mod-4}.}
+\label{tab:csa-tile-resources}
+\end{table}
+
 
 %\input{factor2d-mult}
 \section{Quantum Modular Multiplication}
@@ -885,15 +1126,14 @@ We can parallelize the addition of $n$ numbers in a logarithmic depth
 binary tree to get a total depth of $O(\log n)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Modular Multiplication of Two Quantum Numbers}
+\subsection{Modular Multiplication of Two Quantum Integers}
 \label{subsec:csa-mod-mult-qq}
 
 We now consider the problem of multiplying a classical number controlled
 on a quantum bit with a
-\emph{quantum number},\footnote{In this paper, quantum
-numbers often result by entangling a classical number in one register with a
-quantum control bit. This should not be confused with the physics definition
-of a quantum number.} which is a
+\emph{quantum integer},\footnote{In this paper, quantum
+integers often result by entangling a classical number in one register with a
+quantum control bit.} which is a
 quantum superposition of classical numbers:
 %\begin{quote}
 Given an $n$-qubit quantum number $\ket{x}$, a control qubit $\ket{p}$,
@@ -902,16 +1142,17 @@ and $m$,
 compute $\ket{c} = \ket{xa[m]}$, where $c$ is allowed to be in CSE.
 This problem occurs naturally in modular exponentiation (described in
 the next section) and can be considered \emph{serial multiplication},
-in that $t$ quantum numbers are multiplied in series to a single
+in that $t$ quantum integers are multiplied in series to a single
 quantum register.
 %\end{quote}
 
-We first create $n$ quantum numbers $\ket{z^{(i)}}$,
+We first create $n$ quantum integers $\ket{z^{(i)}}$,
 which are shifted multiples of the classical number $a$ controlled on the bits
 of $x$:
 %\begin{equation}
 $\ket{z^{(i)}} \equiv \ket{2^i a[m] \cdot x_i }$.
 %\end{equation}
+These are typically called \emph{partial products} in a classical multiplier.
 How do we create these numbers, and what is the depth of the procedure?
 First, note that $\ket{2^i a[m]}$ is a classical number, so we can
 precompute them classically and prepare them in parallel using single-qubit
@@ -929,14 +1170,14 @@ constant-depth teleportation. This reduces to the task of modular
 multiple addition in order to add these numbers down to a single
 number modulo $m$, which is described in \ref{subsec:mma}.
 
-\begin{figure*}[htp!]
-\centerline{
-\includegraphics[width=4.5in]{./znumbers.pdf}
-}
-\fcaption{Creating $n=4$ shifted values $\{z^{(0)},z^{(1)},z^{(2)},z^{(3)}\}$
-for an input number $x$.}
-\label{fig:mod-mult-create}
-\end{figure*}
+%\begin{figure*}[htp!]
+%\centerline{
+%\includegraphics[width=4.5in]{./znumbers.pdf}
+%}
+%\fcaption{Creating $n=4$ shifted values $\{z^{(0)},z^{(1)},z^{(2)},z^{(3)}\}$
+%for an input number $x$.}
+%\label{fig:mod-mult-create}
+%\end{figure*}
 
 Finally, we tackle the most interesting problem:
 %\begin{quote}
@@ -960,6 +1201,91 @@ We create these numbers using a similar procedure to the previous problem.
 Adding $n^2$ quantum numbers of $n$ qubits each takes depth
 $O(\log(n^2))$, which is still $O(\log n)$.
 Creating $n^2\times n$-bit quantum numbers takes width $O(n^3)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Partial Product Creation}
+\label{subsec:ppc}
+
+This subroutine describes the procedure of creating $t=O(n^2)$ partial products of
+the CSE quantum integers $x$ and $y$, each with $2n+3$ bits each. We will now
+discuss only the case of parallel multiplication. Although we
+will not provide an explicit circuit for this subroutine, we will outline
+our particular construction and give a numerical upper bound on the
+resources required. We do not argue that our construction is optimal, but
+this is an interesting open problem for future work.
+
+Our construction is as follows. First, we need to generate the product bits
+$\ket{x_i\cdot y_j}$ for all possible $(2n+3)^2$ pairs of $\ket{x_i}$ and
+$\ket{y_j}$.
+A particular product bit $\ket{x_i \cdot y_j}$
+controls a particular classical number, the
+$n$-bit modular residue $2^i 2^j [m]$, to form the partial product
+$\ket{z^{(i,j)}}$ defined
+in the previous section. However, some of these partial products
+consist of only a single qubit, if $2^i 2^j < 2^n$, which is the minimum
+value for an $n$-bit modulus $m$. There are at least $2n^2 - 2n + 1$
+such single-bit partial products, which can be grouped into at most
+$2n+3$ $n$-bit numbers. Of the $(2n+3)^2$ possible partial products,
+this leaves the number of remaining $n$-bit partial products as at most
+$2n^2 + 14n +8$. Therefore we have a final maximum number of $n$-bit
+partial products, which we will simply refer to as $t$ from now on.
+
+\begin{equation}
+t=2n^2+16n+11
+\end{equation}
+
+The creation of the product bits $\ket{x_i \cdot y_j}$ occurs on a
+square lattice, with the bits $x_i$ and $y_j$ on adjacent edges. This takes
+place in a single module. In several
+rounds, these bits are copied via a CNOT and teleported to the middle of
+a recursively halved interval of the grid. The copied bits $\ket{x_i}$ and
+$\ket{y_j}$
+first form $1$ line, then $3$ lines, then $7$ lines, and so forth,
+intersecting at $1$ site, then $9$ sites, then $49$ sites, and so forth.
+There are $\lceil \log_2 (2n+3) \rceil$ rounds.
+
+At each intersection, a Toffoli gate is used to create $\ket{x_i \cdot y_j}$
+from the given $\ket{x_i}$ and $\ket{y_j}$. These product bits are then
+teleported away from this site, out of the square lattice, to a different
+location where the $\ket{z^{(i,j)}}$ numbers are later generated. We will
+call these locations $z$-sites. There are $t$ $z$-site modules which each contain 
+an $n$-qubit quantum integer. Any
+round of partial product generation will produce at most as any product
+bits $x_i \cdot y_j$ as in the last round, which is half the total number
+of $(2n+3)^2$.
+%These product bits are teleported out the two sides of the
+%square lattice that are opposite the input numbers $x$ and $y$, which means the
+%square lattice has dimension at most $((2(2n+3)-1)(n+2))^2 = O(n^4)$.
+
+The $z$-sites have total width of $3nt$ qubits, so the maximum total
+teleportation length of all qubits is $(2n+3)^2$ multiplied by the maximum
+length of any single teleportation length,
+Our construction consists of the following steps.
+
+\begin{enumerate}
+\item Initially, the inputs consist of the CSE quantum integers $x$ and $y$,
+each with $2n+3$ bits, sitting on adjacent edges of a square lattice
+$((2n+3)(n+2))^2$.
+\item For each of $\lceil \log_2 (2n+3) \rceil$ rounds
+\begin{enumerate}
+\item Of the existing $\{x_i\}$ and $\{y_j\}$ bits, apply a CNOT to create an
+entangled copy in an adjacent qubit.
+\item Teleport this new copy halfway between its current location and the
+new copy.
+\item At every site where an $\ket{x_i}$ and an $\ket{y_j}$ meet,
+apply a Toffoli gate to create $\ket{x_i \cdot y_j}$.
+\item Teleport $\ket{x_i \cdot y_j}$ to the correct $z$-site module.
+\end{enumerate}
+\item Within each $z$-site module, fanout $\ket{x_i \cdot y_j}$ up to $n$
+times, corresponding to each $1$ in the modular residue $2^i 2^j \bmod m$,
+to create the $n$-qubit quantum integer $\ket{z^{(i,j)}}$
+\item For each triplet of $z$-site modules, teleport the quantum integers
+$\ket{z^{(i,j)}}$ to a CSA tile module, interleaving the three numbers so that
+bits of the same significance are adjacent.
+\item Perform modular multiple addition (described in Section \ref{subsec:mma})
+on $t$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers.
+\item Uncompute all the previous steps to restore ancillae to $\ket{0}$.
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modular Multiple Addition}
@@ -1108,6 +1434,44 @@ section. There are
 $\lceil \log_{3/2}(n^2 / 3) \rceil +1 $ timesteps of modular addition. Therefore
 the entire modular multiplier circuit has depth $O(\log n)$ and width $O(n^3)$.
 
+\subsection{Modular Multiplier Resources}
+
+The circuit depth of the entire modular multiplier is:
+
+\begin{equation}
+D_{MM} = 2205 \log_2 n + 6066
+\end{equation}
+
+The module depth is:
+\begin{equation}
+\overline{D}_MM = 2\log_2 n + 11
+\end{equation}
+
+The circuit size is:
+
+\begin{eqnarray}
+S_{MM} = & (12n^2 + 644n + 288)\log_2^2 (10n) +\\
+        & (74n^3 + 606n^2 + 292n + 41)\log_2^2 (10n) +\\
+        & (1228n^3 + 10151n^2 + 14397n + 4645)
+\end{eqnarray}
+
+The module size is:
+
+\begin{equation}
+\overline{S}_{MM} = 8n^4 + 86n^3 + 276n^2 +325n + 115
+\end{equation}
+
+The circuit width is:
+
+\begin{equation}
+W_{MM} = 66n^3 + 558n^2 + 870n + 290
+\end{equation}
+
+The module width is
+
+\begin{equation}
+\overline{W}_{MM} = 4n^2 + 28n + 15
+\end{equation}
 
 %\input{factor2d-modexp}
 \section{Quantum Modular Exponentiation}
@@ -1180,6 +1544,48 @@ depth $O(\log n)$ and width $O(n^3)$.
 Therefore, the depth of the parallel modular exponentiation circuit above
 is $O(\log^2 n)$ and the width is $O(n^4)$.
 
+According to the Kitaev-Shen-Vyalyi parallelized phase estimation procedure,
+for a constant success probability of $3/4$,
+it is sufficient to multiply together $t' = 2867n$ quantum integers,
+controlled on the qubits $\ket{p_j}$, in parallel.
+
+This leads to the following circuit resources for a modular exponentiator.
+
+The circuit depth is:
+
+\begin{equation}
+D_{ME} = 2205\log_2^2 n + 33586\log_2 n + 75722
+\end{equation}
+
+The module depth is:
+
+\begin{equation}
+\overline{D}_{ME} = \log_2 n + 13
+\end{equation}
+
+The circuit size is:
+
+\begin{equation}
+S_{ME} = 22933n^5 + 244609n^4 + 789182n^3 + 930414n^2 + 329335n - 155
+\end{equation}
+
+The module size is:
+
+\begin{equation}
+\overline{S}_{ME} = 5734n^2 + 8598n - 3
+\end{equation}
+
+The circuit width is:
+
+\begin{equation}
+W_{ME} = 94598n^4 + 799749 n^3 + 1246692 n^2 + 415222 n - 145
+\end{equation}
+
+The module width is:
+
+\begin{equation}
+\overline{W}_{ME} = 1434n
+\end{equation}
 
 %\input{factor2d-results}
 \section{Asymptotic Results}
