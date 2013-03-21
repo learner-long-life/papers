@@ -247,6 +247,7 @@ communication in the next section.
 We call an AC or NTC model augmented by these two extensions
 \textsc{CCAC} and \textsc{CCNTC}, respectively, following
 \cite{Rosenbaum2012}.
+
 The third extension is that we do not consider a single, contiguous
 2D lattice which may be prohibitively large to manufacture. In practice,
 scalable experiments will probably use many
@@ -264,19 +265,33 @@ between disjoint modules, just as operations can occur concurrently on
 disjoint qubits in NTC. We call this new model \textsc{2D CCNTCM},
 and we argue that is captures the essential aspects of 2D architectures
 without being overly sensitive to the exact geometry of the lattices involved.
-%, and it allows us to use constant-depth
-%fanout and teleportation.
+An graphic depiction of three modules in \textsc{2D CCNTCM} is shown in
+Figure \ref{fig:modules}. Each module contains within it a
+\textsc{2D CCNTC} lattice.
+
+\begin{figure}[b!]
+\begin{center}
+\includegraphics[width=5in]{./modules.pdf}
+\end{center}
+\fcaption{Three modules in the \textsc{2D CCNTCM} model}
+\label{fig:modules}
+\end{figure}
 
 We measure the efficiency of a circuit on a particular
 architecture in terms of three conventional resources and three
 new resources based on modules:
+
+\begin{description}
+
 %, depicted in Figure \ref{fig:resources}:
-\emph{circuit size} (number of non-identity gates),
-\emph{circuit depth} (number of time-steps allowing parallel operations),
-\emph{circuit width} (number of qubits),
-\emph{module size} (number of qubits teleported between modules),
-\emph{module depth} (depth of consecutive teleportations between modules),
-\emph{module width} (number of modules).
+\item[circuit size] the number of non-identity gates
+\item[circuit depth] the number of time-steps allowing parallel operations
+\item[circuit width] the total number of qubits, including inputs, outputs, and ancillae
+\item[module size] the number of qubits teleported between modules
+\item[module depth] the depth of consecutive teleportations between modules
+\item[module width] the number of modules
+\end{description}
+
 We count the following single-qubit and two-qubit operations as
 having unit size and
 unit depth: the generators of the two-qubit Clifford group
@@ -1257,7 +1272,7 @@ of $(2n+3)^2$.
 %square lattice that are opposite the input numbers $x$ and $y$, which means the
 %square lattice has dimension at most $((2(2n+3)-1)(n+2))^2 = O(n^4)$.
 
-The $z$-sites have total width of $3nt$ qubits, so the maximum total
+The $z$-sites have total width of $3nt'$ qubits, so the maximum total
 teleportation length of all qubits is $(2n+3)^2$ multiplied by the maximum
 length of any single teleportation length,
 Our construction consists of the following steps.
@@ -1283,7 +1298,7 @@ to create the $n$-qubit quantum integer $\ket{z^{(i,j)}}$
 $\ket{z^{(i,j)}}$ to a CSA tile module, interleaving the three numbers so that
 bits of the same significance are adjacent.
 \item Perform modular multiple addition (described in Section \ref{subsec:mma})
-on $t$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers.
+on $t'$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers.
 \item Uncompute all the previous steps to restore ancillae to $\ket{0}$.
 \end{enumerate}
 
@@ -1295,7 +1310,7 @@ As a subroutine to modular multiplication, we define the operation of
 repeatedly adding multiple numbers down to a single CSE number, called
 \emph{modular multiple addition}.
 
-The modular multiple addition circuit generically adds down $t\times n$-bit
+The modular multiple addition circuit generically adds down $t'\times n$-bit
 conventional numbers to an $n$-bit CSE number:
 %
 \begin{equation}
@@ -1303,129 +1318,45 @@ z^{(0)} + z^{(1)} + \ldots z^{(n-1)} \equiv (u+v)[m].
 \end{equation}
 %
 It does not matter how the
-$t$ numbers are generated, as long as they are divided into groups of three
+$t'$ numbers are generated, as long as they are divided into groups of three
 and have their bits interleaved to be the inputs of a CSA tile.
-In the cases above, serial multiplication results in
-$t = n$ and parallel multiplication results in $t = n^2$.
-At the beginning of the circuit, all CSA tiles are
-\emph{active} in that they have tile input numbers $z^{(i)}$
-to multiply, and their tile outputs will affect the overall circuit output,
-$u+v$.
+From the previous section, serial multiplication results in
+$t' = n$ and parallel multiplication results in $t' = n^2$. Each CSA tile
+is contained in its own module. These modules are arranged in layers within
+a logarithmic depth binary tree, where 
+the first layer contains $\lceil t'/3 \rceil$ modules. A modular addition
+occurs in all the modules of the first layer in parallel. The outputs from this
+first layer are then teleported to be the inputs of the next layer of modules,
+which have at most two-thirds as many modules. This continues until the
+tree terminates in a single module, whose output is a CSE number $u+v$ which
+represents the modular product of all the original $t'$ numbers. The resulting
+height of the tree is $\lceil \log_{3/2}(t'/3) \rceil + 1$.
 
-As the circuit proceeds through a number of timesteps,
-tiles will become \emph{inactive} when they
-do not receive new numbers for their tile inputs; at
-that point, their tile outputs can no longer affect the circuit output.
-Since the CSA tile is a 3-2 adder, one can see that if there are $t$ CSA tiles
-active at the beginning of a timestep, there are $\lceil 2t/3 \rceil$ active
-tiles at the end of the timestep, since there are roughly two-thirds as many
-input numbers left to add down to the circuit output $u+v$. One can see that
-the total number of timesteps
-is therefore $\lceil \log_{3/2}(t/3) \rceil + 1$.
+As the parallel modular additions proceed by layers, all previous layers
+must be maintained in a coherent state, since the modular addition leaves
+garbage bits behind. Only at the end of modular multiple addition, after
+the final answer $u+v$ is obtained, can all the previous layers be
+uncomputed in reverse to free up their ancillae.
 
-To facilitate the discussion below, we will assign colors to each CSA tile,
-which are updated during the circuit execution. Active tiles can either be
-black or gray.
-A \emph{black} tile will keep its two output numbers as inputs and receive
-a third input number. An exception is the rightmost black tile may teleport
-one of its output numbers to its left black nearest neighbor and receive
-two input numbers from its right gray nearest neighbor.
-A \emph{gray} tile will teleport one of its output
-numbers to the nearest active tile to its left and the other output number
-to the nearest active tile to its right. An exception is the rightmost gray
-tile may teleport both output numbers to its left black nearest neighbor.
-We can think of inactive tiles as
-\emph{white} tiles in that they ``fade'' out of the circuit, and numbers
-get teleported through them without stopping to be added. The symbols for
-these colors are shown in Figure \ref{fig:tile-colors}.
-
-\begin{figure*}[htb!]
-\centerline{
-\includegraphics[width=5.5in]{./csa-tile-colors.pdf}
-}
-\fcaption{From left to right, the symbols for a black, gray, and white tile,
-respectively.}
-\label{fig:tile-colors}
-\end{figure*}
-
-
-The rules for
-updating tiles at the end of each timestep are as follows:
-\begin{itemize}
-\item \textbf{Black tiles} are always active for the next timestep, but
-change colors as follows.
-\begin{itemize}
-\item The leftmost tile always stays black.
-\item If a black tile has a gray tile as its nearest active right neighbor in
-the current timestep,
-it stays \textbf{black} in the next timestep.
-\item If a black tile has a black tile as its nearest active neighbor either
-to the right or the left, and it is not the leftmost tile,
-it turns \textbf{gray} in the next timestep.
-\end{itemize}
-\item \textbf{Gray tiles} always turn white (inactive) in the next timestep.
-\end{itemize}
-
-The initial state of the tile colors depends on its index
-$i \in \{0, 1, \ldots, q-1\}$ within $q = \lceil t/3 \rceil$ tiles:
-\begin{itemize}
-\item If $i \bmod 3 = 0$, then it starts out black.
-\item If $i \bmod 3 = 1$, then it starts out gray.
-\item If $i \bmod 3 = 2$, then it starts out black.
-\end{itemize}
-
-Given these rules, one can see that the leftmost tile stays black
-throughout the entire circuit, and holds the final output number $(u+v)$ at
-the end.
-
-Each timestep of the circuit consists of the following operations:
-
-\begin{enumerate}
-\item
-All active CSA tiles execute in
-parallel to transform their three input numbers into two output numbers
-(a CSE number).
-\item
-Gray tiles teleport their output numbers to the left and to the right to
-their black tile neighbors. The exception is the rightmost gray tile
-teleports both of its output numbers to its left black tile nearest neighbor.
-\item
-Tile colors change according to the rules above. Approximately
-two-thirds of the tiles will
-become inactive in the next timestep.
-\item
-Repeat beginning at Step 1 for the next timestep.
-\end{enumerate}
-
-These steps and the above tile color rules are best illustrated with a concrete
-example. In Figure \ref{fig:mod-mult}, we see the circuit for modular
-multiple addition as a series of
-snapshots, separated by heavy dotted lines, with the passage of time going
-downward. The tiles change color over time, and the arrows indicate the
-teleportation of output numbers to neighboring active tiles in each timestep.
-In the initial timestep, the tiles are numbered to show how they are assigned
-their initial color.
-Between Timestep 0 and Timestep 1,
-all $\lceil n/3 \rceil$ CSA tiles are active. After each succeeding timestep,
-$\lfloor 2/3 \rfloor$
-fewer CSA tiles are active until the very end, when only one CSA tile is
-active. By the convention established above,
-we teleport the rightmost output numbers to the left, so that the
-final output is read out from the leftmost CSA tile.
+These steps are best illustrated with a concrete
+example in Figure \ref{fig:mod-mult}. The module for each CSA tile is
+represented by the symbol from Figure \ref{fig:csa-tile-symbol}.
+The arrows indicate the
+teleportation of output numbers from the source tile to be input numbers
+into a destination tile.
 
 \begin{figure*}[htb!]
 \centerline{
 \includegraphics[width=5.5in]{./mod-mult-add.pdf}
 }
 \fcaption{Modular multiple addition of quantum numbers on a CSA tile
-architecture for $t=18$ with depth $(\lceil \log_{\frac{3}{2}}(t/3) \rceil + 1) = 6.$
-timesteps}
+architecture for $t'=18$ in a logarithmic-depth tree with height $(\lceil \log_{\frac{3}{2}}(t/3) \rceil + 1) = 6$.}
 \label{fig:mod-mult}
 \end{figure*}
 %
 
 Now we can analyze the circuit resources for multiplying $n$-bit
-quantum numbers, which requires $(t-2)$ modular additions, for $t=n^2$.
+quantum numbers, which requires $(t'-2)$ modular additions, for $t'=n^2$.
 The circuit width is the sum of the $O(n^3)$ ancillae
 needed for number generation and the ancillae required for $O(n^2)$
 modular additions. Each modular addition has width $O(n)$ and depth $O(1)$
