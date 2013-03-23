@@ -138,9 +138,10 @@ does not seem unreasonable to expect it to appear here.
 
 \end{quote}
 
-{\it We thank the Referee for the valuable feedback. 
-We have included more detailed estimates of the resources required and improved
-the writing in the latter sections of the paper.}
+{\it We thank the referee for the valuable feedback. More detailed numerical
+upper bounds for circuit resources are provided throughout the paper for each
+building block and the overall architecture. To do so, we have clarified our architectural
+model to include modules.}
 
 \section{Other significant technical comments:}
 
@@ -151,7 +152,8 @@ modulo operation results in the same number, allowing us to avoid
 using a full $n$-bit number: $(2^i 2^j \bmod m) x_i y_j = 2^i 2^j x_i y_j$.
 \end{quote}
 
-{\it Thank you for pointing this out.}
+{\it Thank you for pointing this out, it is incorporated into the resource estimates for
+the modular multiplier, in the partial product creation section.}
 
 \section{Section 2.2}
 
@@ -164,7 +166,10 @@ qubit and its fanned-out, entangled copies. We have since discovered
 via personal conversation with Aram Harrow and Dan Browne that this
 statement is no longer true. It is possible to ``un-fanout'' and therefore
 disentangle the cat state from the source and target qubits, allowing us
-to reuse this state.  We have thus removed this sentence.}
+to reuse this state.  However, we have not been able to confirm the
+exact circuit at the time of this writing, so we have removed this sentence.
+Instead, we discuss an alternative method of unfanout, which is alternating
+teleports and CNOTs in a logarithmic-depth binary tree.}
 
 \section{Section 3}
 
@@ -301,8 +306,7 @@ misleading in this section.  Please reread and make sure it is easy
 for the reader to follow your claims.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it Can you please provide specific examples of misleading phrasing?}
 
 \begin{quote}
 Proof of Lemma 1: "O.ur" typo.
@@ -315,16 +319,14 @@ A little attention to classical versus quantum addends in this section
 might help the reader.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it Unfortunately, due to time constraints, we were unable to incorporate this feedback into our revisions.}
 
 \begin{quote}
 Fig. 5: labeling the lines themselves as "Layer 1", "Layer 2",
 etc. might help the reader.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it This is a great improvement and has been incorporated.}
 
 \begin{quote}
 "at no layer generates" --> "no layer generates"?
@@ -339,8 +341,8 @@ correspondence by also labeling the "layers" and the time axis here.
 "FANOUT RAIL" -- of which variable(s)?
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it Unfortunately, due to time constraints, we were not able to incorporate this suggestion.
+The fanout rails are of the only qubits connected to them, namely, $v_4$, $u_4$, and $v_5$, respectively.}
 
 \begin{quote}
 My estimate here is that spatial resources are 29n qubits, temporal
