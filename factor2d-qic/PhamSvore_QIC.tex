@@ -245,14 +245,35 @@ correspond to fast digital computers which are
 available in actual experiments and are necessary for constant-depth
 communication in the next section.
 We call an AC or NTC model augmented by these two extensions
-\textsc{CCAC} and \textsc{CCNTC}, respectively, following
+\textsc{CCAC} and \textsc{CCNTC}, respectively, with definitions
+equivalent to those in 
 \cite{Rosenbaum2012}.
 
-The third extension is that we do not consider a single, contiguous
-2D lattice which may be prohibitively large to manufacture. In practice,
+\begin{definition}
+A 2D CCNTC architecture consists of
+
+\begin{itemize}
+\item a planar graph $(V,E)$ where $V$ represents all qubits and $E$ represents
+allowed two-qubit interactions between qubits
+\item a universal gate set ${X, Z, H, T, T^{\dagger}, CNOT}$
+\item a deterministic machine (classical controller) $M$ that applies 
+\end{itemize}
+
+\end{definition}
+
+At 
+
+The third extension, and the most significant, is to consider
+multiple disconnected planar graphs, each of which is a 2D CCNTC
+architecture. This is described in more detail in the next section.
+
+\subsection{\textsc{2D CCNTCM}: Two-Dimensional Nearest-Neighbor Two-Qubit Concurrent Gates with Modules}
+
+A single, contiguous
+2D lattice which contains an entire quantum architecture which may be prohibitively large to manufacture. In practice,
 scalable experiments will probably use many
 smaller quantum computers which communicate by means of shared
-entanglement. We call these individual machines \emph{modules}, each of
+entanglement (citation needed, scalable NIST architecture, or MUSIQC architecture). We call these individual machines \emph{modules}, each of
 which is a self-contained \textsc{2D CCNTC} lattice. We treat these modules
 and allowed teleportations between them as nodes and edges, respectively,
 in a higher-level planar graph. The teleportations each transmit one qubit
@@ -296,16 +317,35 @@ We count the following single-qubit and two-qubit operations as
 having unit size and
 unit depth: the generators of the two-qubit Clifford group
 (the Pauli $X$ gate, the Pauli $Z$ gate, the Hadamard ($H$) gate, and the
-controlled NOT (CNOT) gate), the $T$ gate, single-qubit measurements
-(in the $Z$-basis).
-Together, these gates form a universal set \cite{Kitaev2002}.
+controlled NOT (CNOT) gate), the $T$ gate and its inverse $T^{\dagger}$, 
+and single-qubit measurements (in the $Z$-basis).
+Together, all of these except the last form a universal set of unitary
+gates \cite{Kitaev2002}.
 
 A measurement in the Bell basis we interpret as having depth $4$,
 size $4$, and width $2$, of which two of those are reusable according
 to the circuit in Figure \ref{fig:bell-measure}
 
-%%%% TODO
-%%%% Insert figure of qcircuit for Bell basis measurement
+\begin{figure*}[tb!]
+\begin{center}
+\begin{displaymath}
+\begin{array}{ccc}
+\Qcircuit @C=1em @R=1em {
+& \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j} \\
+& \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k}
+}
+& = &
+\Qcircuit @C=1em @R=1em {
+& \qw & \ctrl{1} & \qw & \gate{H} & \qw & \meter & \cw & \rstick{j} \\
+& \qw & \targfix & \qw & \qw      & \qw & \meter & \cw & \rstick{k}
+}
+\end{array}
+\end{displaymath}
+\centerline{}
+\fcaption{A circuit for measurement in the Bell state basis.}
+\label{fig:bell-measure}
+\end{center}\end{figure*}
+
 
 This is
 an overestimate compared to the model in \cite{Kutin2006}, in which a
@@ -313,7 +353,8 @@ two-qubit gate has unit size and unit depth and
 absorbs the depth and size of any adjacent single-qubit gates. We intend
 for this more pessimistic estimate to reflect the practical difficulties
 in compiling these gates in a fault-tolerant way, especially the $T$ gate
-\cite{}.
+which cannot be performed transversally in many popular error-correcting codes
+\cite{Fowler2011}.
 
 In both models, multiple gates acting on disjoint qubits
 can occur in parallel during the same timestep.
@@ -488,6 +529,12 @@ alternating rounds of constant-depth teleportation and CNOT.}
 \label{tab:unfanout}
 \end{table}
 
+From an experimental perspective, it is physically efficient to create
+a cat state in trapped ions using the M{\o}lmer-S{\o}rensen gate
+\cite{Sorensen2000}\cite{Benhelm2008}. However, the fanout circuit for
+the 2D CCNTCM model would still be useful or other technologies, such
+as superconducting qubits on a two-dimensional lattice.
+
 %Unfortunately, this
 %``consumes'' the cat state in that there is no known way to unentangle the
 %source qubit from the cat state after they have been jointly measured \cite{Rosenbaum2012}.
@@ -603,7 +650,7 @@ A \emph{conventional number} $x$ can be represented in $n$ bits as
 $x = \sum_{i=0}^{n-1} 2^i x_i$,
 %\end{equation}
 where $x_i \in \{0,1\}$ denotes the $i$-th bit of $x$, which we call
-an $i$-bit and has significance $2^i$, and the $0-$th bit is the low-order bit.\footnote{It will be clear from the context whether we mean an
+an $i$-bit and has significance $2^i$, and the $0$-th bit is the low-order bit.\footnote{It will be clear from the context whether we mean an
 $i$-bit, which has significance $2^i$, or an $i$-bit number.}
 Equivalently, $x$ can be represented as a (non-unique)
 sum of two smaller conventional numbers, $u$ and $v$.
@@ -755,7 +802,7 @@ the resources for the Toffoli gate in Figure \ref{tab:toffoli}.
 
 We must layout the circuit to satisfy a 2D NTC model.
 The Toffoli gate decomposition in \cite{Amy2012}, duplicated in
-Figure \ref{fig:toffli}, requires two control
+Figure \ref{fig:toffoli}, requires two control
 qubits and a single target qubit to be
 mutually connected to each other. Given this constraint, and the
 interaction of the CNOTs in Figure \ref{fig:csa-circuit}, we can
@@ -837,8 +884,8 @@ are $n$-bit numbers, their sum is an $(n+1)$-bit number as desired, equivalent
 to $x[m]$.
 
 Now we must do the same modular reduction on a CSE number $(u+v)$,
-which represents an $(n+1)$-bit conventional number and has
-$2n$ bits.
+which in this case represents an $(n+2)$-bit conventional number and has
+$2n+3$ bits.
 %This is the special case mentioned in the
 %previous
 %section \label{star:csa-special}, where $x$ is the result of a single
@@ -857,12 +904,12 @@ $(v_{(n)}[m], u_{(n-1)}[m], v_{(n-1)}[m])$, and we are guaranteed not to
 generate additional overflow bits (of significance $2^{n-1}$ or higher). This equivalence
 is shown in Eq \ref{eqn:mod-reduce}.
 \begin{eqnarray}
-(u+v)[m] &=& \left(u_{(0,n-1)} + v_{(1,n)}\right)[m] \nonumber \\
- &=& u_{(0,n-2)} +
-     v_{(1,n-2)} + \nonumber \\
- & & u_{(n-1)}[m] +
-     v_{(n-1)}[m] + \nonumber \\
- & & v_{(n)}[m]
+(u+v)[m] &=& \left(u_{(0,n+1)} + v_{(1,n+2)}\right)[m] \nonumber \\
+ &=& u_{(0,n)} +
+     v_{(1,n)} + \nonumber \\
+ & & u_{(n+1)}[m] +
+     v_{(n+1)}[m] + \nonumber \\
+ & & v_{(n+2)}[m]
 \label{eqn:mod-reduce}
 \end{eqnarray}
 
@@ -885,7 +932,7 @@ the modulus to be of size $(n-2)$ bits.) We accomplish the modular addition
 by first performing a layer of non-modular addition, truncating the three high-order
 overflow bits, and then adding back modular residues controlled on these
 bits in three successive layers, where we are guaranteed that no additional
-overflow bits are generated.
+overflow bits are generated in each layer.
 This is illustrated for a $3$-bit modulus and $5$-bit registers
 in Figure \ref{fig:csa-proof}.
 
@@ -966,9 +1013,9 @@ generated in the third modular reduction layer. This bit is the majority of
 $u''_{n+1}$, $v''_{n+1}$, and $c^{v_{n+2}}_{n+1} = 0$. This means we only have
 to guarantee that at most one of $u''_{n+1}$ and $v''_{n+1}$ has value 1.
 This is equivalent to requiring that
-$u''_{(n,n+1)} + v''_{(n+1)} \le 3\cdot 2^{n+1}$, that is, the sum of these
+$u''_{(n,n+1)} + v''_{(n+1)} \le 3\cdot 2^{n}$, that is, the sum of these
 three bits has value at most $3$. Bit $u''_{n+1}$ is copied directly from
-$v'_{n+1}$ by the rules of CSA, which implies the following condition for
+$v'_{n+1}$ by the rules of CSA, which requires the following condition for
 the second modular reduction layer:
 $u'_{(n)} + v'_{(n,n+1)} \le 3\cdot 2^n$. This is true because
 $u'_{(n)} + v'_{(n+1)} = u_{(n)} + v_{(n)} \le 2$ and $v'_{(n)} \le 1$.
@@ -987,7 +1034,7 @@ as in the proof above. We omit the proof for simplicity.
 
 In the following two subsections, we give a concrete example to illustrate
 the modular addition circuit as well as a numerical upper bound for the
-general circuit.
+general circuit resources.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{A Concrete Example of Modular Addition}
@@ -1004,7 +1051,7 @@ modulus.}
 \end{figure*}
 \end{center}
 
-A 2D circuit for modular addition of $5$-bit numbers using
+A \textsc{2D CCNTC} circuit for modular addition of $5$-bit numbers using
 four layers of parallel CSA's is shown graphically in Figure \ref{fig:csa-add-4}
 which corresponds directly to the schematic proof in Figure \ref{fig:csa-proof}.
 Figure \ref{fig:csa-add-4} also represents the approximate
@@ -1063,6 +1110,23 @@ There is no overflow bit $v'''_5$, and no carry bit from $v''_4$ and $v'_4$
 as argued in Lemma 1.
 The final modular sum $(a+b+c)[m]$ is $u'''+v'''$.
 
+The general circuit for adding three $n$-qubit quantum integers to
+two $n$-qubit quantum integers, illustrated in Figure \ref{fig:csa-add-4}
+for $n=3$, is called a \emph{CSA tile}. Each CSA tile in our architecture 
+corresponds to its own module, and it will be represented by the symbol in 
+Figure \ref{fig:csa-tile-symbol} for the rest of this paper.
+
+\begin{center}
+\begin{figure*}[h!bt]
+\centerline{
+\includegraphics[width=3in]{./csa-tile-symbol.pdf}
+}
+\fcaption{Symbol for an $n$-bit 3-to-2 modular adder, also called a CSA tile.}
+\label{fig:csa-tile-symbol}
+\end{figure*}
+\end{center}
+
+
 \subsection{Quantum Circuit Resources for Modular Addition}
 
 We now calculate numerical upper bounds for the circuit resources of
@@ -1108,7 +1172,7 @@ itself.
 \end{displaymath}
 \centerline{}
 \fcaption{Circuit resources for the $n$-bit modular $3$-to-$2$ adder represented
-by Figure \ref{fig:csa-mod-4}.}
+by Figure \ref{fig:csa-add-4}.}
 \label{tab:csa-tile-resources}
 \end{table}
 
@@ -1120,7 +1184,7 @@ by Figure \ref{fig:csa-mod-4}.}
 We can build upon our carry-save adder to implement quantum modular
 multiplication in logarithmic depth. We start with a completely classical
 problem to illustrate the principle of multiplication by repeated addition.
-Then we consider modular multiplication of two quantum numbers in a serial
+Then we consider modular multiplication of two quantum integers in a serial
 and a parallel fashion in
 \ref{subsec:csa-mod-mult-qq}. Both of these problems use as a subroutine the
 generic problem of \emph{modular multiple addition} which we define and solve
@@ -1151,7 +1215,7 @@ integers often result by entangling a classical number in one register with a
 quantum control bit.} which is a
 quantum superposition of classical numbers:
 %\begin{quote}
-Given an $n$-qubit quantum number $\ket{x}$, a control qubit $\ket{p}$,
+Given an $n$-qubit quantum integer $\ket{x}$, a control qubit $\ket{p}$,
 and two $n$-bit classical numbers $a$
 and $m$,
 compute $\ket{c} = \ket{xa[m]}$, where $c$ is allowed to be in CSE.
@@ -1174,13 +1238,13 @@ precompute them classically and prepare them in parallel using single-qubit
 operations
 on $n$ registers, each consisting of $n$ ancillae qubits. Each $n$-qubit
 register will hold a future $\ket{z^{(i)}}$ value.
-We then copy all
+We then fan out each of the
 $n$ bits of $x$, $n$ times each, using an unbounded fanout operation so that
 $n$ copies of each bit $\ket{x_i}$ are next to register $\ket{z^{(i)}}$.
 This takes a total of $O(n^2)$ parallel CNOT operations.
 We then entangle each $\ket{z^{(i)}}$ with the corresponding $x_i$.
-The schematic for this is shown in Figure \ref{fig:mod-mult-create}, not
-showing how we interleave these numbers into groups of three using
+%The schematic for this is shown in Figure \ref{fig:mod-mult-create}.
+After this, we interleave these numbers into groups of three using
 constant-depth teleportation. This reduces to the task of modular
 multiple addition in order to add these numbers down to a single
 number modulo $m$, which is described in \ref{subsec:mma}.
@@ -1196,7 +1260,7 @@ number modulo $m$, which is described in \ref{subsec:mma}.
 
 Finally, we tackle the most interesting problem:
 %\begin{quote}
-given two $n$-qubit quantum numbers $\ket{x}$ and
+given two $n$-qubit quantum integers $\ket{x}$ and
 $\ket{y}$ and a $n$-bit classical number
 $m$,
 compute $\ket{c} = \ket{xy \bmod m}$,
@@ -1205,17 +1269,20 @@ This can be considered \emph{parallel multiplication} and is responsible
 for our logarithmic speedup in modular exponentiation.
 %\end{quote}
 
-Instead of creating $n$ quantum numbers $\ket{z^{(i)}}$, we must create
-$n^2$ numbers
+Instead of creating $n$ quantum integers $\ket{z^{(i)}}$, we must create
+up to $n^2$ numbers
 $\ket{z^{i,j}}$ for all possible pairs of quantum bits $x_i$ and $y_j$,
 $i,j \in \{0,\ldots,n-1\}$:
 %\begin{equation}
 $\ket{z^{i,j}} \equiv \ket{2^i2^j[m]\cdot x_i \cdot y_j}$.
 %\end{equation}
-We create these numbers using a similar procedure to the previous problem.
-Adding $n^2$ quantum numbers of $n$ qubits each takes depth
+We create these numbers using a similar procedure to the previous problem,
+but using a more detailed procedure given in Section \ref{subsec:ppc}.
+Adding $n^2$ quantum integers of $n$ qubits each takes depth
 $O(\log(n^2))$, which is still $O(\log n)$.
-Creating $n^2\times n$-bit quantum numbers takes width $O(n^3)$.
+Creating $n^2\times n$-bit quantum integers takes width $O(n^3)$.
+Numerical constants are given for these resource estimates in
+Section \ref{subsec:mod-mult-resources}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Partial Product Creation}
@@ -1314,14 +1381,14 @@ The modular multiple addition circuit generically adds down $t'\times n$-bit
 conventional numbers to an $n$-bit CSE number:
 %
 \begin{equation}
-z^{(0)} + z^{(1)} + \ldots z^{(n-1)} \equiv (u+v)[m].
+z^{(1)} + z^{(2)} + \ldots z^{(t')} \equiv (u+v)[m].
 \end{equation}
 %
 It does not matter how the
 $t'$ numbers are generated, as long as they are divided into groups of three
 and have their bits interleaved to be the inputs of a CSA tile.
 From the previous section, serial multiplication results in
-$t' = n$ and parallel multiplication results in $t' = n^2$. Each CSA tile
+$t' \le n$ and parallel multiplication results in $t' \le n^2$. Each CSA tile
 is contained in its own module. These modules are arranged in layers within
 a logarithmic depth binary tree, where 
 the first layer contains $\lceil t'/3 \rceil$ modules. A modular addition
@@ -1349,14 +1416,14 @@ into a destination tile.
 \centerline{
 \includegraphics[width=5.5in]{./mod-mult-add.pdf}
 }
-\fcaption{Modular multiple addition of quantum numbers on a CSA tile
-architecture for $t'=18$ in a logarithmic-depth tree with height $(\lceil \log_{\frac{3}{2}}(t/3) \rceil + 1) = 6$.}
+\fcaption{Modular multiple addition of quantum integers on a CSA tile
+architecture for $t'=18$ in a logarithmic-depth tree with height $(\lceil \log_{\frac{3}{2}}(t'/3) \rceil + 1) = 6$.}
 \label{fig:mod-mult}
 \end{figure*}
 %
 
 Now we can analyze the circuit resources for multiplying $n$-bit
-quantum numbers, which requires $(t'-2)$ modular additions, for $t'=n^2$.
+quantum integers, which requires $(t'-2)$ modular additions, for $t'=n^2$.
 The circuit width is the sum of the $O(n^3)$ ancillae
 needed for number generation and the ancillae required for $O(n^2)$
 modular additions. Each modular addition has width $O(n)$ and depth $O(1)$
@@ -1366,6 +1433,7 @@ $\lceil \log_{3/2}(n^2 / 3) \rceil +1 $ timesteps of modular addition. Therefore
 the entire modular multiplier circuit has depth $O(\log n)$ and width $O(n^3)$.
 
 \subsection{Modular Multiplier Resources}
+\label{subsec:mod-mult-resources}.
 
 The circuit depth of the entire modular multiplier is:
 
@@ -1429,8 +1497,8 @@ sections.
 
 Now consider the same procedure, but this time each classical number $a^{(j)}$
 is controlled on a quantum bit $p_j$. This is a special case of
-multiplying by $t$ quantum numbers in series, since a classical number
-entangled with a quantum number is also quantum.
+multiplying by $t$ quantum integers in series, since a classical number
+entangled with a quantum integer is also quantum.
 %This is shown in
 %Figure \ref{fig:modexp-qq-series}.
 It takes the same depth $O(t\log n)$ as the previous case.
@@ -1444,8 +1512,8 @@ It takes the same depth $O(t\log n)$ as the previous case.
 %\label{fig:modexp-qq-series}
 %\end{figure}
 
-Finally, we consider multiplying $t$ quantum numbers
-$\{x^{(0)}, x^{(1)}, \ldots, x^{(n-1)}\}$ in a parallel,
+Finally, we consider multiplying $t$ quantum integers
+$\{x^{(1)}, x^{(2)}, \ldots, x^{(t-1)}, x^{(t)}\}$ in a parallel,
 logarithmic depth, binary tree.
 This is shown in Figure \ref{fig:modexp-qq-parallel}, where arrows indicate multiplication.
 The tree has depth $\log_2(t)$ in modular multiplier operations. Furthermore,
@@ -1462,7 +1530,7 @@ implementation in our 2D nearest-neighbor architecture.
 \centerline{
 \includegraphics[width=5.5in]{./mod-exp-par.pdf}
 }
-\fcaption{Parallel modular exponentiation: multiplying $t$ quantum numbers
+\fcaption{Parallel modular exponentiation: multiplying $t$ quantum integers
 %$\{\ket{x^{(0)}}, \ket{x^{(1)}}, \ldots, \ket{x^{(t-1)}}\}$ in parallel,
 in a $O(\log{(t)}\log{(n)})$-depth binary tree.}
 \label{fig:modexp-qq-parallel}
@@ -1473,9 +1541,11 @@ also $O(n)$ modular multiplications in a tree of depth $O(\log n)$.
 Each modular multiplication has
 depth $O(\log n)$ and width $O(n^3)$.
 Therefore, the depth of the parallel modular exponentiation circuit above
-is $O(\log^2 n)$ and the width is $O(n^4)$.
+is $O(\log^2 n)$ and the width is $O(n^4)$. We will now calculate numerical
+constants to upper bound circuit resources.
 
-According to the Kitaev-Shen-Vyalyi parallelized phase estimation procedure,
+According to the Kitaev-Shen-Vyalyi parallelized phase estimation procedure
+\cite{Kitaev2002},
 for a constant success probability of $3/4$,
 it is sufficient to multiply together $t' = 2867n$ quantum integers,
 controlled on the qubits $\ket{p_j}$, in parallel.
@@ -1545,23 +1615,23 @@ Our approach is the first 2D NTC implementation for factoring.
 %
 \begin{table*}[htb!]
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-Implementation             & Architecture      & Depth             & Width     \\
+Implementation             & Architecture      & Depth   & Size   & Width     \\
 \hline
-Vedral, Barenco \& Ekert \cite{Vedral1996}   & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
-Gossett \cite{Gossett1998}                   & \textsc{AC}       & $O(n \log n)$ & $O(n^2)$  \\
-Beauregard \cite{Beauregard2002}                & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
-Zalka \cite{Zalka1998}                     & \textsc{AC}       & $O(n^2)$      & $O(n)$     \\
-Takahashi \& Kunihiro \cite{Takahashi2006}     & \textsc{AC}       & $O(n^3)$      & $O(n)$ \\
+Vedral, Barenco \& Ekert \cite{Vedral1996}   & \textsc{AC}      & $O(n^3)$ &     & $O(n)$ \\
+Gossett \cite{Gossett1998}                   & \textsc{AC}       & $O(n \log n)$  & & $O(n^2)$  \\
+Beauregard \cite{Beauregard2002}                & \textsc{AC}       & $O(n^3)$      & & $O(n)$ \\
+Zalka \cite{Zalka1998}                     & \textsc{AC}       & $O(n^2)$      & & $O(n)$     \\
+Takahashi \& Kunihiro \cite{Takahashi2006}     & \textsc{AC}       & $O(n^3)$      & & $O(n)$ \\
 %Cleve \& Watrous           & \textsc{AC}       & $O(\log L)$   & $O(L)$ \\
 \hline
-Fowler, Devitt, Hollenberg \cite{Fowler2004} & \textsc{1D NTC}   & $O(n^4)$ & $O(n^3)$\\
+Fowler, Devitt, Hollenberg \cite{Fowler2004} & \textsc{1D NTC}   & $O(n^3)$ & & $O(n)$\\
 % + 40L^3 + 58L^2 + 2L - 2$ & $32L^3 + 80 L^2 - 4L - 2$ \\
-Kutin \cite{Kutin2006}                     & \textsc{1D NTC}   & $O(n^2)$ & $O(n)$\\
+Kutin \cite{Kutin2006}                     & \textsc{1D NTC}   & $O(n^2)$ & & $O(n)$\\
 \hline
 %$18L^2 + 12L\log_2^2 L + O(L \log L) $ & $3L + 2\log_2 L + 2$ \\
-Current Work               & \textsc{2D NTC}   & $O(\log^2{n})$ & $O(n^4)$   \\
+Current Work               & \textsc{2D CCNTCM}   & $O(\log^2{n})$ & & $O(n^4)$   \\
 \hline
 \end{tabular}
 \end{center}
