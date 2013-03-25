@@ -265,7 +265,7 @@ literature.  Papers by Fowler (2004), Miquel (1996), Garcia-Mata
 (2007) and others provide different estimates.
 \end{quote}
 
-{\it Correct.  In this work we only analyze the resource cost for a single round of QPF.  The probability of achieving a correct answer may vary.}
+{\it Correct.  This was a misleading statement and has since been corrected.}
 
 \begin{quote}
 The journal style will ultimately dictate this, but when the
@@ -349,19 +349,19 @@ My estimate here is that spatial resources are 29n qubits, temporal
 resources are 12n Toffoli gates.  Is that about right?
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it This is approximately correct, and we have since added a table with a more accurate
+upper bound of the circuit resources.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Section 6}
 
 \begin{quote}
-If you are worried that "quantum number" will mislead some readers,
-would "quantum integer" be better?
+If you are worried that ``quantum number'' will mislead some readers,
+would ``quantum integer'' be better?
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it This is a great suggestion, and we have changed all mentions of ``quantum number'' to
+``quantum integer.''}
 
 \begin{quote}
 Bottom of 6.1 is the place to expand the discussion to incorporate the
@@ -369,31 +369,32 @@ above on the size of partial products and their impact on resource
 utilization.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it A new section on partial product creation has been added, with more detailed
+discussion of the resources involved.}
 
 \begin{quote}
 Your white tiles are hard to see on my printout.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it The tile colors have since been removed, since the tiles must always be kept around
+during a modular multiplier's operation. Therefore, the notion of colors and active status is
+no longer relevant.}
 
 \begin{quote}
 Important: Your second and third rules under "black tiles" appear to
 conflict.  Reword to be precise.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it Thanks for this observation, please see previous response.}
 
 \begin{quote}
 Bottom of Sec. 6: more discussion of the size and number of addends
 and resource consumption is needed.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it More detailed numerical estimates are added in a new section at the end of
+Section 6. However, we think the number and size of addends for both serial and parallel
+multiplication are self-explanatory.}
 
 \begin{quote}
 Fig. 10: In earlier figures, arrows were used only to indicate addend
@@ -404,12 +405,12 @@ reader.  The tree approach used in this figure is not original, and in
 fact dates to the 2000 paper by Cleve and Watrous, at least.
 \end{quote}
 
-{\it We have clarified the use of arrows in Fig. 10.}
+{\it We have clarified the use of arrows in the parallel modexp figure, as well as the modular multiple addition figure, where the arrows have a different meaning.}
 
 {\it We do not claim that this tree structure is original, merely that it is
 now possible to do the necessary communication (teleportation and fan-out)
 in constant depth. That is, the tree structure before was a theoretical
-construction, and now based on the previous nearest-neighbor implementations
+construction on an abstract architecture, and now based on the previous nearest-neighbor implementations
 of modular arithmetic, correspond to an actual physical tree structure if
 this architecture were to be fabricated and observed to run over time.}
 
