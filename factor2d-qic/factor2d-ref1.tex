@@ -141,7 +141,10 @@ does not seem unreasonable to expect it to appear here.
 {\it We thank the referee for the valuable feedback. More detailed numerical
 upper bounds for circuit resources are provided throughout the paper for each
 building block and the overall architecture. To do so, we have clarified our architectural
-model to include modules.}
+model to include the notion of \emph{modules}, which represent non-contiguous
+lattices (quantum computers) which can communicate and operate in parallel.
+This is described in the new Section 2 (Background).
+}
 
 \section{Other significant technical comments:}
 
@@ -185,14 +188,8 @@ the abstraction of logical qubit connectivity.
 \end{quote}
 
 {\it 
-%We've added a reference to the 2002 Nature paper by Kielpinski et al.
-%We have also included references to several quantum architecture papers in this section.
 We intended to say that Choi and Van Meter were the first to construct an adder explicitly optimized for a 2D architecture of qubits.
 We have reworded this paragraph to accurately reflect their contribution and added appropriate references.}
-
-%KRYSTA TODO: Can you add references to quantum architecture papers by
-%Kubi/Chong/Oskin on 2D implementations, since you are probably more
-%familiar with those works?
 
 \begin{quote}
   I'm not sure a modular adder is "extended" to do modular
@@ -424,8 +421,9 @@ latter papers offer several configurations that may make direct
 comparison tricky.
 \end{quote}
 
-PAUL TODO
-{\it Add response.}
+{\it The requested discussion has been added with resource consumption, and
+the tables with the label ``Figure'' have been corrected. The citation to
+Beckman has been added.}
 
 \begin{quote}
 Overall, as noted, this paper will be a valuable contribution to the
