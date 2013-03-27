@@ -64,7 +64,7 @@
 \begin{document}
 \setlength{\textheight}{8.0truein}    %FOR 2ND PAGE ONWARDS
 
-\runninghead{A 2D Nearest-Neighbor Quantum Architecture for Factoring}
+\runninghead{A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
             {P. Pham and K.M. Svore}
 
 \normalsize\textlineskip
@@ -84,7 +84,7 @@
 %%%%%%%%%%%%%%%%%%%%%
 %Put in titiles here
 %%%%%%%%%%%%%%%%%%%%%
-A 2D Nearest-Neighbor Quantum Architecture for Factoring}
+A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
 \vspace*{0.37truein}
 \centerline{\footnotesize
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -131,10 +131,12 @@ constant-depth carry-save modular addition.
 %and interleave constant-depth fanout and teleportation circuits for
 %nearest-neighbor and long-distance communication channels, and ultimately use
 %our circuit within parallel phase estimation to achieve quantum factoring.
-We derive asymptotic bounds on the circuit depth and width of our architecture
-and provide a comparison to all previous nearest-neighbor factoring
+We derive upper bounds on the circuit resources of our architecture under a
+new 2D model which allows a classical controller and parallel, communicating
+modules.
+We provide a comparison to all previous nearest-neighbor factoring
 implementations.  
-Our circuit results in an exponential improvement in nearest-neighbor circuit depth at the cost of a polynomial increase in width.
+Our circuit results in an exponential improvement in nearest-neighbor circuit depth at the cost of a polynomial increase in circuit size and width.
 }{}{}
 
 \vspace*{10pt}
@@ -166,14 +168,17 @@ the layout and interactions of qubits at an intermediate,
 architectural level of abstraction.
 This gives us a model for measuring circuit resources and their tradeoffs.
 In this work, we present a circuit implementation of prime
-integer factorization
+factorization of an $n$-bit integer
 on a two-dimensional architecture that allows concurrent (parallel) two-qubit operations
-between neighboring qubits.
+between neighboring qubits, an omnipresent classical controller, and
+modules which are allowed to teleport qubits to each other. We call this new
+model \textsc{2D CCNTCM}.
 We show that our circuit construction is asymptotically more efficient in circuit depth than previous state-of-the-art techniques for nearest-neighbor
-architectures, achieving a depth of $O(\log^3 n)$ and a width of $O(n^4)$ qubits, as detailed in Table
+architectures, achieving a depth of $O(\log^3 n)$, a size of
+$O(n^4\log n)$, and a width of $O(n^4)$ qubits, as detailed in Table
 \ref{tab:results} of Section \ref{sec:results}.
 
-Our technique hinges on several key building blocks, which we describe in sequence.
+Our technique hinges on several key building blocks.
 Section \ref{sec:bg} introduces quantum architectural models, circuit
 resources, and constant-depth communication techniques due to
 \cite{Harrow2012,Rosenbaum2012}.
@@ -183,11 +188,13 @@ In Section \ref{sec:csa}, we provide a self-contained pedagogical review
 of the carry-save technique and encoding.
 In Section \ref{sec:csa-mod-add} we modify and extend the carry-save technique to a 2D
 modular adder,
-which we then show how to use as a basis for a modular multiplier
+which we then use as a basis for a modular multiplier
 (Section \ref{sec:csa-mod-mult}) and a modular exponentiator
 (Section \ref{sec:modexp}).
-Finally, we analyze the asymptotic circuit resources required by our
-approach and compare them to previous implementations.
+For each building block, we provide numerical upper bounds for the
+required circuit resources.
+Finally, we compare our asymptotic circuit resource usage
+with other factoring implementations.
 
 %\input{factor2d-bg}
 \section{Background}
@@ -208,10 +215,14 @@ Following Van Meter and Itoh \cite{VanMeter2005},
 we distinguish between a model and an architectural implementation as follows.
 A \emph{model} is a set of constraints and rules for the placement and
 interaction of qubits.
-An \emph{architecture}, or \emph{implementation}, is a particular
+An \emph{architecture} (or interchangeably, an \emph{implementation} 
+or a \emph{circuit}) is a particular
 spatial layout of qubits (as a graph of vertices) and their
 constrained interactions (edges between the vertices),
-following the constraints of a given model.
+following the constraints of a given model. In this section, we describe
+several models which try to incorporate resources of physical interest from
+experimental work. We also introduce a new model,
+\textsc{2D CCNTCM}, which we will use to analyze our current circuit.
 
 The most general model is called Abstract Concurrent (\textsc{AC})
 and allows arbitrary, long-range interactions between any qubits and concurrent
@@ -222,7 +233,9 @@ and is the model assumed in most quantum algorithms.
 A more specialized model restricts interactions to nearest-neighbor, two-qubit,
 concurrent gates (\textsc{NTC}) in a regular one-dimensional chain (1D NTC),
 which is sometimes called linear nearest-neighbor (\textsc{LNN}).
-This corresponds to a line graph.
+This corresponds to a line graph. This is a more realistic model than
+\textsc{AC}, but correspondingly, circuits in this model may incur greater
+resource overheads.
 
 To relieve movement congestion,
 we can consider a two-dimensional regular grid
@@ -231,6 +244,12 @@ qubit has four planar neighbors and
 there is an extra degree of freedom
 in which to move data.
 In this paper, we extend the \textsc{2D NTC} model in three ways.
+The first two extensions are described in Section \ref{subsec:2dccntc},
+and the third extension is described in Section \ref{subsec:2dccntcm}.
+
+\subsection{\textsc{2D CCNTC}: Two-Dimensional Nearest-Neighbor Two-Qubit Concurrent Gates}
+\label{subsec:2dccntc}
+
 The first extension allows arbitrary planar graphs
 with bounded degree, rather than a regular square lattice.
 Namely, we assume qubits lie in a plane and edges are not allowed to intersect,
@@ -241,91 +260,76 @@ has four neighbors, we consider up to six neighbors in a roughly hexagonal
 layout. The second extension is the realistic assumption
 that classical control (CC) can
 access every qubit in parallel, and we do not count these classical
-resources in our implementation. The classical controllers
+resources in our implementation since they are polynomial-time. The classical controllers
 correspond to fast digital computers which are
 available in actual experiments and are necessary for constant-depth
 communication in the next section.
+
+
 We call an AC or NTC model augmented by these two extensions
-\textsc{CCAC} and \textsc{CCNTC}, respectively, with definitions
-equivalent to those in 
+\textsc{CCAC} and \textsc{CCNTC}, respectively. Before we describe the
+third extension, let us formalize our model for \textsc{2D CCNTC}, with definitions that are (asymptotically) equivalent to those in 
 \cite{Rosenbaum2012}.
 
 \begin{definition}
 A 2D CCNTC architecture consists of
 
 \begin{itemize}
-\item a planar graph $(V,E)$ where $V$ represents all qubits and $E$ represents
-allowed two-qubit interactions between qubits
-\item a universal gate set ${X, Z, H, T, T^{\dagger}, CNOT}$
-\item a deterministic machine (classical controller) $M$ that applies 
-\end{itemize}
+\item a quantum computer $QC$ which is represented by a planar graph $(V,E)$. A
+node $v \in V$ represents a qubit which is acted upon in a circuit, and an
+undirected edge $(u,v) \in E$ represents 
+allowed two-qubit interactions between qubits $u,v \in V$. Each node has
+degree at most $6$.
+\item a universal gate set $\mathcal{G} = {X, Z, H, T, T^{\dagger}, CNOT, Measure-Z}$.
 
+\item a deterministic machine (classical controller) $CC$ that applies a sequence
+of concurrent gates in each of $D$ timesteps $\{t_1, \ldots, t_D\}$.
+\item In timestep $i$, $CC$ applies gates $G_i = \{g_{i,j} \in \mathcal{G} \}$.
+Each $g_{i,j}$ operates in one of the following two ways:
+\begin{enumerate}
+\item a gate from $\mathcal{G}$ on a single qubit $v_{i,j} \in V$
+\item
+the gate CNOT from $\mathcal{G}$ on two qubits $v^{(1)}_{i,j}$ and $v^{(2)}_{i,j}$ where
+$(v^{(1)}_{i,j}, v^{(2)}_{i,j}) \in E$
+\end{enumerate}
+All $g_{i,j}$ can only operate on
+disjoint qubits for a given timestep $i$. We define the support of $G_i$
+as $V_i$, the set of all qubits acted upon by any $g_{i.j}$.
+\end{itemize}
 \end{definition}
 
-At 
-
-The third extension, and the most significant, is to consider
-multiple disconnected planar graphs, each of which is a 2D CCNTC
-architecture. This is described in more detail in the next section.
-
-\subsection{\textsc{2D CCNTCM}: Two-Dimensional Nearest-Neighbor Two-Qubit Concurrent Gates with Modules}
-
-A single, contiguous
-2D lattice which contains an entire quantum architecture which may be prohibitively large to manufacture. In practice,
-scalable experiments will probably use many
-smaller quantum computers which communicate by means of shared
-entanglement (citation needed, scalable NIST architecture, or MUSIQC architecture). We call these individual machines \emph{modules}, each of
-which is a self-contained \textsc{2D CCNTC} lattice. We treat these modules
-and allowed teleportations between them as nodes and edges, respectively,
-in a higher-level planar graph. The teleportations each transmit one qubit
-from one module to another, from any location within the source module and
-to any location within the destination module, making using of the
-omnipresent classical controller. The modules can be arbitrarily far
-apart and have arbitrary
-connectivity with other modules. Teleportations can occur concurrently
-between disjoint modules, just as operations can occur concurrently on
-disjoint qubits in NTC. We call this new model \textsc{2D CCNTCM},
-and we argue that is captures the essential aspects of 2D architectures
-without being overly sensitive to the exact geometry of the lattices involved.
-An graphic depiction of three modules in \textsc{2D CCNTCM} is shown in
-Figure \ref{fig:modules}. Each module contains within it a
-\textsc{2D CCNTC} lattice.
-
-\begin{figure}[b!]
-\begin{center}
-\includegraphics[width=5in]{./modules.pdf}
-\end{center}
-\fcaption{Three modules in the \textsc{2D CCNTCM} model}
-\label{fig:modules}
-\end{figure}
-
-We measure the efficiency of a circuit on a particular
-architecture in terms of three conventional resources and three
-new resources based on modules:
+We can then define the three conventional circuit resources in this model.
 
 \begin{description}
-
-%, depicted in Figure \ref{fig:resources}:
-\item[circuit size] the number of non-identity gates
-\item[circuit depth] the number of time-steps allowing parallel operations
-\item[circuit width] the total number of qubits, including inputs, outputs, and ancillae
-\item[module size] the number of qubits teleported between modules
-\item[module depth] the depth of consecutive teleportations between modules
-\item[module width] the number of modules
+\item[circuit depth ($D$):] is the number of concurrent timesteps.
+\item[circuit size ($S$):] is the total number of non-identity gates applies
+from $\mathcal{G}$, equal to $\sum_{i=1}^D |G_i|$.
+\item[circuit width ($W$):] is the total number of qubits operated upon by
+any gate, including inputs, outputs, and ancillae. It is equal to $| \bigcup_{i=1}^D V_i$|.
 \end{description}
 
-We count the following single-qubit and two-qubit operations as
-having unit size and
-unit depth: the generators of the two-qubit Clifford group
-(the Pauli $X$ gate, the Pauli $Z$ gate, the Hadamard ($H$) gate, and the
-controlled NOT (CNOT) gate), the $T$ gate and its inverse $T^{\dagger}$, 
-and single-qubit measurements (in the $Z$-basis).
-Together, all of these except the last form a universal set of unitary
+We observe that the following relationship holds between the circuit resources.
+The circuit size is bounded above by
+the product of circuit depth and circuit width, since in the worst case,
+every qubit is acted upon by a gate for every timestep of a circuit.
+The circuit depth is also bounded above by the size, since in the worst case,
+every gate is executed serially without any concurrency.
+
+\begin{equation}
+D \le S \le D\cdot W
+\label{eqn:depth-width}
+\end{equation}
+
+The set $\mathcal{G}$ includes measurement in the $Z$ basis. In this paper we
+will treat the operations in $\mathcal{G}$ as \emph{elementary gates}.
+All other gates
+in $\mathcal{G}$ form a universal set of unitary
 gates \cite{Kitaev2002}.
 
-A measurement in the Bell basis we interpret as having depth $4$,
-size $4$, and width $2$ according
-to the circuit in Figure \ref{fig:bell-measure}
+We also find it useful to define a Bell basis measurement using operations
+from $\mathcal{G}$. A circuit performing this measurement is shown
+in Figure \ref{fig:bell-measure} and has depth $4$,
+size $4$, and width $2$.
 
 \begin{figure*}[tb!]
 \begin{center}
@@ -335,7 +339,7 @@ to the circuit in Figure \ref{fig:bell-measure}
 & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j} \\
 & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k}
 }
-& = &
+& \qquad \equiv \qquad &
 \Qcircuit @C=1em @R=1em {
 & \qw & \ctrl{1} & \qw & \gate{H} & \qw & \meter & \cw & \rstick{j} \\
 & \qw & \targfix & \qw & \qw      & \qw & \meter & \cw & \rstick{k}
@@ -347,17 +351,144 @@ to the circuit in Figure \ref{fig:bell-measure}
 \label{fig:bell-measure}
 \end{center}\end{figure*}
 
+The third extension to our model, and the most significant, is to consider
+multiple disconnected planar graphs, each of which is a 2D CCNTC
+architecture. This is described in more detail in the next section.
 
-This is
+\subsection{\textsc{2D CCNTCM}: Two-Dimensional Nearest-Neighbor Two-Qubit Concurrent Gates with Modules}
+\label{subsec:2dccntcm}
+
+A single, contiguous
+2D lattice which contains an entire quantum architecture which may be prohibitively large to manufacture. In practice,
+scalable experiments will probably use many
+smaller quantum computers which communicate by means of shared
+entanglement \cite{Monroe2012}.
+We call these individual machines \emph{modules}, each of
+which is a self-contained \textsc{2D CCNTC} lattice. This should not be
+confused with the word ``modular'' as in ``modular arithmetic'' or as
+referring to the modulus $m$ which we are trying to factor.
+
+We treat these modules
+and allowed teleportations between them as nodes and edges, respectively,
+in a higher-level planar graph. The teleportations each transmit one qubit
+from one module to another, from any location within the source module and
+to any location within the destination module, making using of the
+omnipresent classical controller. The modules can be arbitrarily far
+apart and have arbitrary
+connectivity with other modules.
+
+Teleportations can occur to
+intersecting modules, in contrast to concurrent gates operating on
+qubits in NTC. We justify this assumption in that it is
+possible to establish entanglement between multiple
+quantum computers
+in parallel. We call this new model \textsc{2D CCNTCM},
+and we argue that is captures the essential aspects of 2D architectures
+without being overly sensitive to the exact geometry of the lattices involved.
+An graphic depiction of three modules in \textsc{2D CCNTCM} is shown in
+Figure \ref{fig:modules}. Each module contains within it a
+\textsc{2D CCNTC} lattice.
+
+It is notable that none of the classical controllers for each
+module need to communicate with each other (through classical
+channels) or with the classical controller that teleports
+in between modules.
+
+\begin{figure}[btp!]
+\begin{center}
+\includegraphics[width=5in]{./modules.pdf}
+\end{center}
+\fcaption{Three modules in the \textsc{2D CCNTCM} model}
+\label{fig:modules}
+\end{figure}
+
+\begin{definition}
+A \textsc{2D CCNTCM} architecture consists of
+
+\begin{itemize}
+\item a quantum computer $QC$ which is represented by a planar graph $(\overline{V},\overline{E})$. A
+node $\overline{v} \in \overline{V}$ represents a module, or a graph $(V,E)$
+from a \textsc{2D CCNTC} architecture defined previously. It can have
+unbounded degree.
+An
+undirected edge $(\overline{u},\overline{v}) \in \overline{E}$ represents an
+allowed teleportation from any qubit in module $\overline{u}$ to
+module $\overline{v}$.
+\item All modules are restricted to be linear in the number of their qubits:
+$|V| = O(n) \forall (V,E) \in \overline{V}$.
+\item a universal gate set $\mathcal{G} = {X, Z, H, T, T^{\dagger}, CNOT}$
+for the qubits \emph{within the same} modules which is the same as for \textsc{2D CCNTC},
+and an additional operation $Teleport$ which only operates on qubits
+\emph{in
+different modules}.
+\item a deterministic machine (classical controller) $\overline{CC}$ that applies a sequence
+of concurrent gates in each of $D+\overline{D}$ timesteps $\{t_1, \ldots, t_{D+\overline{D}}\}$. This can be a separate classical controller
+for every pair of modules; no communication between them is
+necessary.
+\item In timestep $i$, $\overline{CC}$ applies
+gates $G_i = \{g_{i,j} : g_{i,j} \in \mathcal{G} \lor g_{i,j} = Teleport \}$.
+That is, within each timestep gates operate in one of two ways.
+\begin{enumerate}
+\item They are exclusively from $\mathcal{G}$ operating within modules, as described
+for \textsc{2D CCNTC} above. We say there are $D$ such timesteps.
+\item They are exclusively $Teleport$ gates between two qubits $v^{(1)}_{i,j} \in \overline{v}_1$ and $v^{(2)}_{i,j} \in \overline{v}_2$ for
+(possibly non-distinct) modules $\overline{v}_1, \overline{v}_2 \in \overline{V}$.
+Again, all such qubits much be distinct within a timestep.
+We say there are $\overline{D}$ such timesteps.
+\end{enumerate}
+
+Again, we define the support of $G_i$
+as $V_i$, the set of all qubits acted upon by any $g_{i.j}$, which
+includes all the modules.
+\end{itemize}
+\end{definition}
+
+We measure the efficiency of a circuit in this new module using not just
+the three conventional circuit resources, but with three novel resources
+based on modules.
+
+\begin{description}
+
+%, depicted in Figure \ref{fig:resources}:
+\item[module depth ($\overline{D}$):] the depth of consecutive teleportations between modules
+\item[module size ($\overline{S}$):] the number of total qubits teleported between any two modules over all timesteps.
+\item[module width ($\overline{W}$):] the number of modules whose qubits are
+acted upon during any timestep.
+
+\end{description}
+
+%We can make an observation analogous to Equation \ref{eqn:depth-width} but
+%for modules in Equation \ref{eqn:module-depth-width}.
+
+%\begin{equation}
+%\overline{D} \le \overline{S} \le \overline{D}\cdot \overline{W}
+%\label{eqn:module-depth-width}
+%\end{equation}
+
+We note the following relationship between circuit width and
+module width.
+
+\begin{equation}
+W = O(n\overline{W})
+\label{eqn:module-width}
+\end{equation}
+
+\subsection{Circuit Resource Comparisons}
+
+Counting gates from $\mathcal{G}$ has having unit size and unit depth
+is
 an overestimate compared to the model in \cite{Kutin2006}, in which a
 two-qubit gate has unit size and unit depth and
 absorbs the depth and size of any adjacent single-qubit gates. We intend
 for this more pessimistic estimate to reflect the practical difficulties
-in compiling these gates in a fault-tolerant way, especially the $T$ gate
-which cannot be performed transversally in many popular error-correcting codes
+in compiling these gates using a non-Clifford gate in a fault-tolerant way,
+such as the $T$ gate or the Toffoli gate
 \cite{Fowler2011}.
+%However, these difficulties may be mitigated by using
+%Toffoli gates directly, which can be fault-tolerantly implemented using
+%magic-state distillation according to recent works \cite{Eastin2012,Jones2013a}.
 
-In both models, multiple gates acting on disjoint qubits
+In both our resource counting method and that of \cite{Fowler2004,Kutin2006}, multiple gates acting on disjoint qubits
 can occur in parallel during the same timestep. For each building block,
 from modular addition to modular multiplication and finally to modular
 exponentiation, we provide closed form equations for the required circuit
@@ -373,11 +504,19 @@ However, we have chosen instead to simplify the number of terms in the formulae
 for the current work. We do not intend for these upper bounds to represent
 the optimal or final work in this area.
 
+The modular adder in Section \ref{sec:csa-mod-add} and its carry-save
+subcomponents only occur within a single module, so we only give their
+circuit resources in terms of circuit depth, circuit size, and circuit width. 
+For the modular multiplier in
+Section \ref{sec:csa-mod-mult} and the modular exponentiator in
+Section \ref{sec:modexp}, we also give circuit resources in
+terms of module depth, module size, and module width.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Constant-depth Teleportation and Fanout}
 \label{subsec:fanout}
 
-Communication, namely the moving and copying of quantum information, in nearest-neighbor quantum architectures is challenging.
+Communication, namely the \emph{moving} and \emph{copying} of quantum information, in nearest-neighbor quantum architectures is challenging.
 The first challenge of moving quantum information from one site to another over
 arbitrarily long distances can be addressed by using
 %A related problem is how to teleport a qubit an arbitrary distance.
@@ -398,11 +537,11 @@ These correction layers are not shown in the circuit.
 \Qcircuit @C=1em @R=1em {
 \lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_1} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_1} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_1}Z^{j_1}\ket{\psi}}               & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{Z^{j_1}X^{k_1}\ket{\psi}}               & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_2} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw_{Z^{j_2}Z^{j_1}X^{k_2}X^{k_1}\ket{\psi}} & \qw & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw                                          & \qw & \qw & \ghost{\mbox{Bell}}            & \cw & \rstick{k_3} \\
-\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{X^{k_3}Z^{j_3}X^{k_2}Z^{j_2}X^{k_1}Z^{j_1}\ket{\psi}} & \qw & \qw              & \qw & \qw \\
+\lstick{\ket{0}}    & \qw      & \targfix & \qw & \qw & \qw & \qw & \qw & \qw_{Z^{j_1}Z^{j_2}Z^{j_3}X^{k_3}X^{k_2}X^{k_1}\ket{\psi}} & \qw & \qw              & \qw & \qw \\
 }
 \end{displaymath}
 \centerline{}
@@ -417,14 +556,14 @@ These correction layers are not shown in the circuit.
 \Qcircuit @C=1em @R=1em {
 \lstick{\ket{\psi}}	& \qw      & \qw      & \qw & \qw & \qw & \multimeasureD{1}{\mbox{Bell}'} & \cw & \rstick{j_1} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}'}            & \cw & \rstick{k_1} \\
-\lstick{\ket{0}_1}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_1}X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_1}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_1}X^{k_1}\ket{\ell}_1}\\
 \lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_2} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_2} \\
-\lstick{\ket{0}_2}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_2}X^{k_2}X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_2}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_2}X^{k_2}X^{k_1}\ket{\ell}_2}\\
 \lstick{\ket{0}}	& \qw      & \qw      & \qw & \targfix & \qw & \multimeasureD{1}{\mbox{Bell}} & \cw & \rstick{j_3} \\
 \lstick{\ket{0}}    & \gate{H} & \ctrl{1} & \qw & \qw      & \qw & \ghost{\mbox{Bell}}           & \cw & \rstick{k_3} \\
-\lstick{\ket{0}_3}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_3}X^{k_3}X^{k_2} X^{k_1}\ket{\ell}}\\
-\lstick{\ket{0}_4}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}X^{k_2} X^{k_1}\ket{\ell}}\\
+\lstick{\ket{0}_3}    & \qw      & \targfix & \qw & \ctrl{1} & \qw & \qw      & \qw & \rstick{Z^{j_3}X^{k_3}X^{k_2} X^{k_1}\ket{\ell}_3}\\
+\lstick{\ket{0}_4}	& \qw      & \qw      & \qw & \targfix & \qw & \qw      & \qw & \rstick{X^{k_3}X^{k_2} X^{k_1}\ket{\ell}_4}\\
 }
 %& & \\
 %(a) & & (b)
@@ -436,7 +575,7 @@ These correction layers are not shown in the circuit.
 \end{center}\end{figure*}
 
 Although general cloning is
-impossible \cite{Nielsen2000}, the second problem of copying information can be addressed by performing an unbounded quantum
+impossible \cite{Nielsen2000}, the second challenge of copying information can be addressed by performing an unbounded quantum
 fanout operation:
 $\ket{x,y_1,\ldots,y_n} \rightarrow \ket{x,y_1\oplus x, \ldots, y_n\oplus x}$.
 This is used in our arithmetic circuits when
@@ -447,7 +586,7 @@ measurement-based quantum computing \cite{Raussendorf2003}
 that relies on the creation of an
 $n$-qubit cat state \cite{Browne2009}.
 
-It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width; approximately
+It requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width. Approximately
 two-thirds of the ancillae are reusable and can be reset to $\ket{0}$ after
 being measured. Numerical upper bounds are given in Table \ref{tab:cd-resources}.
 The constant-depth fanout circuit is shown in Figure \ref{fig:cdf} for the case of fanning out a given single-qubit state
@@ -507,7 +646,7 @@ Table \ref{tab:cd-resources}.
 \end{tabular}
 \end{displaymath}
 \centerline{}
-\fcaption{Circuit resources for teleportation, fanout, and un-fanout
+\tcaption{Circuit resources for teleportation, fanout, and un-fanout
 (consisting of
 alternating rounds of constant-depth teleportation and CNOT).}
 \label{tab:cd-resources}
@@ -538,14 +677,14 @@ called a 3-2 adder, and derives from classical Wallace trees \cite{Wallace1964}.
 Takahashi and Kunihiro discovered a linear-depth
 and linear-size quantum adder using zero ancillae \cite{Takahashi2005}.
 They also developed an adder with tradeoffs between $O(n/d(n))$ ancillae and
-$O(d(n))$-depth for $d(n) = \Omega(\log n)$ \cite{Takahashi2009}, which has
-better width at the cost of worse depth than our present work. 
+$O(d(n))$-depth for $d(n) = \Omega(\log n)$ \cite{Takahashi2009}. 
 Their approach assumes unbounded fanout, which had not previously been mapped to a
 nearest-neighbor circuit until our present work.
 
 Studies of architectural constraints, namely restriction to a 2D planar layout, 
-were experimentally motivated, for example by early ion trap proposals \cite{Kielpinski2002}, 
-and later analyzed at the level of physical qubits and error correction in the context of Shor's algorithm \cite{Kubi09}.
+were experimentally motivated. For example, these layouts correspond
+to early ion trap proposals \cite{Kielpinski2002}
+and were later analyzed at the level of physical qubits and error correction in the context of Shor's algorithm \cite{Kubi09}.
 Choi and Van Meter designed one of the first adders targeted to a 2D architecture 
 and showed it runs in $\Theta(\sqrt{n})$-depth on \textsc{2D NTC} \cite{Choi2010}
 using $O(n)$-qubits with dedicated, special-purpose areas of a physical
@@ -555,10 +694,13 @@ circuit layout.
 %To perform modular reduction, modular multiplication, 
 %Modular exponentiation, and ultimately
 %quantum period finding (QPF), the only quantum part of the factoring algorithm.
-Modular exponentiation is a key component of quantum period-finding (QPF) and relies on the underlying adder implementation.
-Since Shor's algorithm is a probabilistic algorithm, requiring several rounds of
-QPF to amplify success probability, it suffices to determine the resources
-required for a single round of QPF with a fixed, modest success probability.
+Modular exponentiation is a key component of quantum period-finding (QPF),
+and its efficiency relies on that of its underlying adder implementation.
+Since Shor's algorithm is a probabilistic algorithm, several rounds of
+QPF are required to amplify success probability above a constant fraction.
+It suffices to determine the resources
+required for a single round of QPF with a fixed, modest success probability
+(in the current work, $3/4$).
 
 The most common approach to QPF performs controlled
 modular exponentiation followed by an inverse quantum Fourier transform
@@ -578,8 +720,8 @@ quantum period-finder. Kutin \cite{Kutin2006} later improved this using
 an idea from Zalka for approximate multipliers to produce a QPF circuit on
 \textsc{1D NTC}
 in $O(n^2)$-depth. Thus, there is only a constant overhead from
-Zalka's own factoring implementation on \textsc{AC}, also in quadratic depth
-\cite{Zalka1998}.
+Zalka's own factoring implementation on \textsc{AC}, which also has
+quadratic depth \cite{Zalka1998}.
 Takahashi and Kunihiro extended their earlier $O(n)$-depth adder to a factoring
 circuit in $O(n^3)$-depth with linear width \cite{Takahashi2006}.
 Van Meter and Itoh explore many different approaches for serial QPF,
@@ -604,7 +746,7 @@ In all the previous works,
 it is assumed that qubits are expensive (width) and that
 execution time (depth) is not the limiting constraint.
 We make the alternative assumption that ancillae are cheap and that fast classical control
-is available and allows access to all qubits in parallel.
+is available which allows access to all qubits in parallel.
 Therefore, we optimize circuit depth at the expense of width.
 We compare our work primarily to Kutin's method \cite{Kutin2006}.
 
@@ -620,7 +762,8 @@ QFT using only Clifford gates and a Toffoli gate in $O(\log^2 n)$ expected depth
 This would allow us to
 greatly improve the constants in our circuit resource upper bounds in Section \ref{sec:modexp}.
 
-There is an alternative, parallel version of phase estimation \cite{Kitaev2002}, which we call \emph{parallel QPF} (we refer the reader to Section 13 of \cite{Kitaev2002} for details), which decreases depth in exchange
+There is an alternative, parallel version of phase estimation 
+\cite{Cleve2000,Kitaev2002}, which we call \emph{parallel QPF} (we refer the reader to Section 13 of \cite{Kitaev2002} for details), which decreases depth in exchange
 for increased width and additional classical post-processing.
 This eliminates the need to do an inverse QFT.
 %We refer the reader to \cite{Kitaev2002} 
@@ -634,7 +777,7 @@ We compare the circuit resources required by our work with existing serial QPF i
 We also note that recent results by Browne, Kashefi, and Perdrix (BKP) connect the power of
 measurement-based quantum computing to the quantum circuit model augmented with
 unbounded fanout \cite{Browne2009}. Their model, which we adapt and call
-\textsc{CCNTC}, uses the classical controller mentioned in \ref{subsec:fanout}.
+\textsc{CCNTC}, uses the classical controller mentioned in Section \ref{subsec:fanout}.
 Using results by H{\o}yer and {\v S}palek \cite{Hoyer2002} that
 unbounded quantum fanout would allow or a constant-depth factoring algorithm,
 they conclude that a probabilistic polytime classical machine with access
@@ -779,7 +922,7 @@ the resources for the Toffoli gate (in the same table) based on
 that a more efficient decomposition for the Toffoli is possible using a
 distillation approach described in \cite{Jones2013a}.
 
-We must layout the circuit to satisfy a 2D NTC model.
+We must lay out the circuit to satisfy a 2D NTC model.
 The Toffoli gate decomposition in \cite{Amy2012}, duplicated in
 Figure \ref{fig:toffoli}, requires two control
 qubits and a single target qubit to be
@@ -892,10 +1035,10 @@ is shown in Eq \ref{eqn:mod-reduce}.
 \label{eqn:mod-reduce}
 \end{eqnarray}
 
-\begin{lemma}[Modular Reduction in Constant Depth \cite{Gossett1998}]
+\begin{lemma}[Modular Reduction in Constant Depth]
 The modular addition of three $n$-bit numbers to two $n$-bit numbers can be
 accomplished
-in constant depth.
+in constant depth with $O(n)$ width in \textsc{2D CCNTC}.
 \end{lemma}
 
 %\begin{proof}
@@ -904,6 +1047,8 @@ in constant depth.
 {\bf Proof:}
 Our goal is to show how to perform modular addition while keeping our numbers
 of a fixed size by treating overflow bits correctly.
+We map the proof of \cite{Gossett1998} to \textsc{2D CCNTC} and show that
+we meet our required depth and width.
 First, we enlarge our registers to allow the addition of $(n+2)$-bit numbers,
 while keeping our modulus of size $n$ bits.
 (In Gossett's original approach, he takes the equivalent step of restricting
@@ -1038,6 +1183,9 @@ modulus.}
 A \textsc{2D CCNTC} circuit for modular addition of $5$-bit numbers using
 four layers of parallel CSA's is shown graphically in Figure \ref{fig:csa-add-4}
 which corresponds directly to the schematic proof in Figure \ref{fig:csa-proof}.
+Note that in Figure \ref{fig:csa-add-4}, the least significant qubits are
+on the left, and in Figure \ref{fig:csa-proof}, the least significant qubits are
+on the right.
 Figure \ref{fig:csa-add-4} also represents the approximate
 physical layout of the qubits as they would look if this
 circuit were to be fabricated.
@@ -1056,7 +1204,7 @@ a running total. We can classically precompute $2^4[m]$ for the two
 additions controlled on $u_4$ and $v_4$ and
 $2^5[m]$ for the addition controlled on $v_5$.
 
-In layer 2,
+In Layer 2,
 we use a constant-depth fanout rail (see Figure \ref{fig:cdf}) to
 distribute the control bit $v_4$ to its modular residue, which we denote as
 %%\begin{equation}
@@ -1104,7 +1252,7 @@ Figure \ref{fig:csa-tile-symbol} for the rest of this paper.
 \begin{center}
 \begin{figure*}[h!bt]
 \centerline{
-\includegraphics[width=3in]{./csa-tile-symbol.pdf}
+\includegraphics[width=1.5in]{./csa-tile-symbol.pdf}
 }
 \fcaption{Symbol for an $n$-bit 3-to-2 modular adder, also called a CSA tile.}
 \label{fig:csa-tile-symbol}
@@ -1132,13 +1280,32 @@ diagram in Figure \ref{fig:csa-add-4}, before being fanned out $n$
 times along the fanout rails, where the fanned out copies will end up
 in the correct position to be added as inputs.
 
-The detailed resources are listed in Table \ref{tab:csa-tile-resources},
-which is twice the resources described in the previous two paragraphs due
-to reversing the computation. There is one exception to this.
-The $3n$ garbage qubits left over are
-the fanned out copies of the overflow bits.
-However, we can uncompute them in logarithmic depth using alternating
-layers of constant-depth teleportation and CNOT.
+The detailed resources for a Toffoli gate and the single-bit adder that uses
+them are given in Table \ref{tab:csa-tile-resources}.
+
+The resources for the $n$-bit $3$-to-$2$ modular adder depicted in Figure
+\ref{fig:csa-add-4} is more complicated due to the un-fanout procedure.
+The formulae below reflect the resources needed for both computing the output
+in the forward direction and also uncomputing ancillae in the backward
+direction.
+
+The circuit depth is:
+
+\begin{equation}
+356 + 8\log_2(2n+4)\text{.}
+\end{equation}
+
+The circuit size is:
+
+\begin{equation}
+33n\log_2 n + 40\log^2 n + 575n + 752\text{.}
+\end{equation}
+
+The circuit width is:
+
+\begin{equation}
+33n + 47\text{.}
+\end{equation}
 
 % From Notebook #16, pp. 68-69
 \begin{table}
@@ -1150,13 +1317,13 @@ layers of constant-depth teleportation and CNOT.
 \text{Toffoli gate from \cite{Amy2012}} & 8 & 15 & 3 \\
 \hline
 \text{Single-bit } 3\text{-to-}2 \text{ adder from Figure \ref{fig:csa-circuit}} & 33 & 55 & 5 \\
-\hline
-$n$ \text{-bit modular } 3\text{-to-}2 \text{ adder from Figure \ref{fig:csa-add-4}} & 356 & 572n + 724 & 33n+47 \\
+%\hline
+%$n$ \text{-bit modular } 3\text{-to-}2 \text{ adder from Figure \ref{fig:csa-add-4}} & 356 & 572n + 724 & 33n+47 \\
 \hline
 \end{tabular}
 \end{displaymath}
 \centerline{}
-\fcaption{Circuit resources for modular addition.}
+\tcaption{Circuit resources for Toffoli and single-bit addition.}
 \label{tab:csa-tile-resources}
 \end{table}
 
@@ -1205,7 +1372,8 @@ compute $\ket{c} = \ket{xa[m]}$, where $c$ is allowed to be in CSE.
 This problem occurs naturally in modular exponentiation (described in
 the next section) and can be considered \emph{serial multiplication},
 in that $t$ quantum integers are multiplied in series to a single
-quantum register.
+quantum register. This is the approach used in serial QPF as mentioned in
+Section \ref{sec:related}.
 %\end{quote}
 
 We first create $n$ quantum integers $\ket{z^{(i)}}$,
@@ -1249,7 +1417,7 @@ $m$,
 compute $\ket{c} = \ket{xy \bmod m}$,
 where $\ket{c}$ is allowed to be in CSE.
 This can be considered \emph{parallel multiplication} and is responsible
-for our logarithmic speedup in modular exponentiation.
+for our logarithmic speedup in modular exponentiation and parallel QPF.
 %\end{quote}
 
 Instead of creating $n$ quantum integers $\ket{z^{(i)}}$, we must create
@@ -1290,18 +1458,22 @@ in the previous section. However, some of these partial products
 consist of only a single qubit, if $2^i 2^j < 2^n$, which is the minimum
 value for an $n$-bit modulus $m$. There are at least $2n^2 - 2n + 1$
 such single-bit partial products, which can be grouped into at most
-$2n+3$ $n$-bit numbers. Of the $(2n+3)^2$ possible partial products,
+$(2n+3)\times n$-bit numbers. Of the $(2n+3)^2$ possible partial products,
 this leaves the number of remaining $n$-bit partial products as at most
 $2n^2 + 14n +8$. Therefore we have a final maximum number of $n$-bit
-partial products, which we will simply refer to as $t$ from now on.
+partial products, which we will simply refer to as $t'$ from now on.
 
 \begin{equation}
-t=2n^2+16n+11
+t'=2n^2+16n+11
+\label{eqn:tprime}
 \end{equation}
 
 The creation of the product bits $\ket{x_i \cdot y_j}$ occurs on a
-square lattice, with the bits $x_i$ and $y_j$ on adjacent edges. This takes
-place in a single module. In several
+square lattice of $(3(2n+3))^2$, with the bits $x_i$ and $y_j$ on adjacent edges. The size of the lattice is not just $(2n+3)^2$ in order to allow
+the $\ket{x_i}$ and $\ket{y_j}$ bits move past each other, as they are
+teleported along axes that are perpendicular to each other.
+Product bit creation, and this square lattice, comprise a single module.
+In several
 rounds, these bits are copied via a CNOT and teleported to the middle of
 a recursively halved interval of the grid. The copied bits $\ket{x_i}$ and
 $\ket{y_j}$
@@ -1311,9 +1483,9 @@ There are $\lceil \log_2 (2n+3) \rceil$ rounds.
 
 At each intersection, a Toffoli gate is used to create $\ket{x_i \cdot y_j}$
 from the given $\ket{x_i}$ and $\ket{y_j}$. These product bits are then
-teleported away from this site, out of the square lattice, to a different
-location where the $\ket{z^{(i,j)}}$ numbers are later generated. We will
-call these locations $z$-sites. There are $t$ $z$-site modules which each contain 
+teleported away from this qubit, out of this product bit module, to a different
+module where the $\ket{z^{(i,j)}}$ numbers are later generated,
+called $z$-sites. There are $t'$ $z$-site modules which each contain 
 an $n$-qubit quantum integer. Any
 round of partial product generation will produce at most as any product
 bits $x_i \cdot y_j$ as in the last round, which is half the total number
@@ -1322,10 +1494,10 @@ of $(2n+3)^2$.
 %square lattice that are opposite the input numbers $x$ and $y$, which means the
 %square lattice has dimension at most $((2(2n+3)-1)(n+2))^2 = O(n^4)$.
 
-The $z$-sites have total width of $3nt'$ qubits, so the maximum total
-teleportation length of all qubits is $(2n+3)^2$ multiplied by the maximum
-length of any single teleportation length,
-Our construction consists of the following steps:
+%The $z$-sites have total width of $3nt'$ qubits, so the maximum total
+%teleportation length of all qubits is $(2n+3)^2$ multiplied by the maximum
+%length of any single teleportation length,
+%Our construction consists of the following steps:
 
 \begin{enumerate}
 \item Initially, the inputs consist of the CSE quantum integers $x$ and $y$,
@@ -1348,9 +1520,49 @@ to create the $n$-qubit quantum integer $\ket{z^{(i,j)}}$.
 $\ket{z^{(i,j)}}$ to a CSA tile module, interleaving the three numbers so that
 bits of the same significance are adjacent.
 \item Perform modular multiple addition (described in Section \ref{subsec:mma})
-on $t'$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers.
+on $t'$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers (one CSE number).
 \item Uncompute all the previous steps to restore ancillae to $\ket{0}$.
 \end{enumerate}
+
+We now present the resources for partial product creation, the first half of
+a modular multiplier, including the reverse computation.
+
+The circuit depth is:
+
+\begin{equation}
+D_{PPC} = 40\log_2 10 n\text{.}
+\end{equation}
+
+The module depth is:
+
+\begin{equation}
+\overline{D}_{PPC} = 8\text{.}
+\end{equation}
+
+The circuit size is:
+
+\begin{eqnarray}
+S_{PPC} & = & (8n^3 + 76n^2 + 178n + 89)\log^2_2 (10n) +\\
+        &   & (78n^3 + 597n^2 + 419n + 133)\text{.}
+\end{eqnarray}
+
+The module size is:
+
+\begin{eqnarray}
+\overline{S}_{PPC} = 6n^2 + 26n + 19\text{.}
+\end{eqnarray}
+
+The circuit width is:
+
+\begin{eqnarray}
+W_{PPC} = 6n^3 + 48n^2 - 8n + 1\text{.}
+\end{eqnarray}
+
+The module width is:
+
+\begin{eqnarray}
+\overline{W}_{PPC} = 2n^2 + 14n + 9\text{.}
+\end{eqnarray}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modular Multiple Addition}
@@ -1380,7 +1592,7 @@ first layer are then teleported to be the inputs of the next layer of modules,
 which have at most two-thirds as many modules. This continues until the
 tree terminates in a single module, whose output is a CSE number $u+v$ which
 represents the modular product of all the original $t'$ numbers. The resulting
-height of the tree is $\lceil \log_{3/2}(t'/3) \rceil + 1$.
+height of the tree is $(\lceil \log_{3/2}(t'/3) \rceil + 1)$ modules.
 
 As the parallel modular additions proceed by layers, all previous layers
 must be maintained in a coherent state, since the modular addition leaves
@@ -1407,9 +1619,10 @@ in between modules.}
 %
 
 Now we can analyze the circuit resources for multiplying $n$-bit
-quantum integers, which requires $(t'-2)$ modular additions, for $t'=n^2$.
+quantum integers, which requires $(t'-2)$ modular additions, for $t'$ from
+Equation \ref{eqn:tprime}.
 The circuit width is the sum of the $O(n^3)$ ancillae
-needed for number generation and the ancillae required for $O(n^2)$
+needed for partial product creation and the ancillae required for $O(n^2)$
 modular additions. Each modular addition has width $O(n)$ and depth $O(1)$
 from the previous
 section. There are
@@ -1422,12 +1635,12 @@ the entire modular multiplier circuit has depth $O(\log n)$ and width $O(n^3)$.
 The circuit depth of the entire modular multiplier is:
 
 \begin{equation}
-D_{MM} = 3.4 \log_3^2 n + 1295 \log_2 n + 6911
+D_{MM} = 3.4 \log_2^3 n + 1295 \log_2 n + 6911\text{.}
 \end{equation}
 
 The module depth is:
 \begin{equation}
-\overline{D}_MM = 2\log_2 n + 11
+\overline{D}_{MM} = 2\log_2 n + 11\text{.}
 \end{equation}
 
 The circuit size is:
@@ -1435,25 +1648,25 @@ The circuit size is:
 \begin{eqnarray}
 S_{MM} = & (12n^2 + 644n + 288)\log_2^2 (10n) +\\
         & (74n^3 + 606n^2 + 292n + 41)\log_2 (10n) +\\
-        & (1228n^3 + 10151n^2 + 14397n + 4645)
+        & (1228n^3 + 10151n^2 + 14397n + 4645)\text{.}
 \end{eqnarray}
 
 The module size is:
 
 \begin{equation}
-\overline{S}_{MM} = 8n^4 + 86n^3 + 276n^2 +325n + 115
+\overline{S}_{MM} = 15n^3 + 127n^2 + 178n + 50{.}
 \end{equation}
 
 The circuit width is:
 
 \begin{equation}
-W_{MM} = 66n^3 + 558n^2 + 870n + 290
+W_{MM} = 66n^3 + 558n^2 + 870n + 290\text{.}
 \end{equation}
 
 The module width is
 
 \begin{equation}
-\overline{W}_{MM} = 4n^2 + 28n + 15
+\overline{W}_{MM} = 4n^2 + 28n + 15\text{.}
 \end{equation}
 
 %\input{factor2d-modexp}
@@ -1463,7 +1676,7 @@ The module width is
 We now extend our arithmetic to modular exponentiation, which is repeated
 modular multiplication controlled on qubits supplied by a phase estimation
 procedure.
-If we wish to multiply a $n$-qubit quantum input number $\ket{x}$ by
+If we wish to multiply an $n$-qubit quantum input number $\ket{x}$ by
 $t$ classical numbers $a^{(j)}$, we can multiply them in series.
 % as shown in
 %Figure \ref{fig:modexp-qc-series}.
@@ -1498,7 +1711,7 @@ It takes the same depth $O(t\log n)$ as the previous case.
 
 Finally, we consider multiplying $t$ quantum integers
 $\{x^{(1)}, x^{(2)}, \ldots, x^{(t-1)}, x^{(t)}\}$ in a parallel,
-logarithmic depth, binary tree.
+logarithmic-depth binary tree.
 This is shown in Figure \ref{fig:modexp-qq-parallel}, where arrows indicate multiplication.
 The tree has depth $\log_2(t)$ in modular multiplier operations. Furthermore,
 each
@@ -1526,7 +1739,7 @@ also $O(n)$ modular multiplications in a tree of depth $O(\log n)$.
 Each modular multiplication has
 depth $O(\log n)$ and width $O(n^3)$.
 Therefore, the depth of the parallel modular exponentiation circuit above
-is $O(\log^2 n)$ and the width is $O(n^4)$. We will now calculate numerical
+is $O(\log^2 n)$ in elementary gates and the width is $O(n^4)$. We will now calculate numerical
 constants to upper bound circuit resources.
 
 According to the Kitaev-Shen-Vyalyi parallelized phase estimation procedure
@@ -1566,7 +1779,7 @@ we can calculate the following resources.
 The circuit depth is:
 
 \begin{equation}
-56\log_2 n + 28
+56\log_2 n + 28\text{.}
 \end{equation}
 
 The circuit size is:
@@ -1574,13 +1787,13 @@ The circuit size is:
 \begin{eqnarray}
 96 \log_2^3 n & - & (384n + 624)\log_2^2 n \nonumber \\
               & + & (384n^2 + 1152n + 840) \log_2 n \nonumber \\
-              & + & (192n^2 + 672n + 588)
+              & + & (192n^2 + 672n + 588)\text{.}
 \end{eqnarray}
 
 The circuit width is:
 
 \begin{equation}
-4 \log_2^2 n - (16n + 30)\log_2 n + 16n^2 + 60n + 56
+4 \log_2^2 n - (16n + 30)\log_2 n + 16n^2 + 60n + 56\text{.}
 \end{equation}
 
 
@@ -1594,13 +1807,13 @@ The circuit depth is:
 
 % From Notebook #16 p. 225
 \begin{equation}
-D_{ME} = 3.4\log_2^3 n + 1337\log_2^2 n + 23070\log_2 n + 86279
+D_{ME} = 3.4\log_2^3 n + 1337\log_2^2 n + 23070\log_2 n + 86279\text{.}
 \end{equation}
 
 The module depth is:
 
 \begin{equation}
-\overline{D}_{ME} = \log_2 n + 13
+\overline{D}_{ME} = 3\log_2 n + 24
 \end{equation}
 
 The circuit size is:
@@ -1609,49 +1822,43 @@ The circuit size is:
 S_{ME} & = & 96 \log_2^3 n + \nonumber \\
        &   & (34400 n^3 + 1846079 n^2 + 824937 n - 288)\log_2^2 10n + \nonumber \\
        &   & (212129 n^4 + 1737086 n^3 + 836442 n^2 + 117239 n - 41) \log_2 10n + \nonumber \\
-       &   & 3520185 n^4 + 29097629 n^3 + 41260290 n^2 + 13300960 n - 4645
+       &   & 3520185 n^4 + 29097629 n^3 + 41260290 n^2 + 13300960 n - 4645\text{.}
 \end{eqnarray}
 
 The module size is:
 
 \begin{equation}
-\overline{S}_{ME} = 5734n^2 + 8598n - 3
+\overline{S}_{ME} = 5749n^2 + 8725n +175\text{.}
 \end{equation}
 
 The circuit width is:
 
 \begin{equation}
-W_{ME} = 94598n^4 + 799749 n^3 + 1246692 n^2 + 415222 n - 145
+W_{ME} = 94598n^4 + 799749 n^3 + 1246692 n^2 + 415222 n - 145\text{.}
 \end{equation}
 
 The module width is:
 
 \begin{equation}
-\overline{W}_{ME} = 1434n
+\overline{W}_{ME} = 1434n\text{.}
 \end{equation}
 
 %\input{factor2d-results}
 \section{Asymptotic Results}
 \label{sec:results}
 
-The resources required for our approach,
-as well as other nearest-neighbor approaches,
+The asymptotic resources required for our approach,
+as well as the resources for other nearest-neighbor approaches,
 are listed in Table \ref{tab:results},
-where the asymptotic resource bounds assume some fixed constant error
-probability for each round of period-finding. Not all resources are
+where we assume some fixed constant error
+probability for each round of QPF. Not all resources are
 provided directly by the referenced source.
 
 Resources in square brackets
-are inferred using the observation that circuit size is bounded above by
-the product of circuit depth and circuit width. Moreover, the maximum
-depth of a circuit is the size, since all gates can be applied in sequence
-in the worst case. These upper bounds are correct,
+are inferred using Equation \ref{eqn:depth-width}.
+These upper bounds are correct,
 but may not be tight with the upper bounds
 calculated by their respective authors.
-
-\begin{equation}
-D \le S \le D\cdot W
-\end{equation}
 
 A more detailed analysis
 could give a better upper bound for circuit size. Also note that the
@@ -1672,14 +1879,14 @@ asymptotic improvement \textsc{1D NTC}.
 We achieve an exponential
 improvement in nearest-neighbor circuit depth (from quadratic to polylogarithmic)
 with our approach at the cost of a polynomial increase in
-circuit width. Similar depth improvements at the cost of width increases can be achieved using the modular multipliers
+circuit size and width. Similar depth improvements at the cost of width increases can be achieved using the modular multipliers
 of other factoring implementations
 by arranging them in a parallel, KSV-style modular exponentiator.
 Our approach is the first \textsc{2D NTC} implementation for factoring, with the
 modifications of allowing a classical controller and parallel, communicating
 modules (\textsc{2D CCNTCM}).
 %
-\begin{table*}[htb!]
+\begin{table}[htb!]
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
@@ -1702,24 +1909,25 @@ Current Work               & \textsc{2D CCNTCM}   & $O(\log^3{n})$ & $O(n^4)$ & 
 \hline
 \end{tabular}
 \end{center}
-\fcaption{Asymptotic circuit resource usage for quantum factoring of an $n$-bit number.}
+\tcaption{Asymptotic circuit resource usage for quantum factoring of an $n$-bit number.}
 \label{tab:results}
-\end{table*}
-
-Resources in 
+\end{table}
 
 %\input{factor2d-conclude}
 \section{Conclusions and Future Work}
 \label{sec:conclude}
 
 In this paper, we have presented a 2D architecture for factoring on a quantum
-computer.
+computer using a model of nearest-neighbor, concurrent two-qubit
+interactions, a classical controller, and communication between
+independent modules. We call this new model
+\textsc{2D CCNTCM}.
 %While this is only an intermediate progress report, the preliminary
 %results are promising.
 Using a combination of algorithmic
 improvements (carry-save adders and parallelized phase estimation)
 and architectural improvements (irregular two-dimensional layouts and
-constant-depth communication), we conclude
+constant-depth communication, and parallel modules), we conclude
 that we can run
 the central part of Shor's factoring algorithm (quantum period-finding)
 with asymptotically smaller depth than previous implementations.
@@ -1737,20 +1945,14 @@ with asymptotically smaller depth than previous implementations.
 %Characterizing these tradeoffs is the most obvious extension to
 %the current work.
 
-For future work, we would like to determine the exact width, depth, and size of
-our proposed factoring circuit, including the constants, as well as
-further optimizing our depth to be constant.
-%We would also like to determine how our approach compares to the constant-depth
-%results in \cite{Browne2009} in terms of circuit size and width.
-Along those lines, Rosenbaum recently showed how to convert any $n$-qubit CCAC
-circuit to an equivalent CCNTC circuit in constant depth using $n^2$ ancillae
-\cite{Rosenbaum2012}.
-It is an interesting open question how a
-generic conversion of a constant-depth CCAC factoring architecture
-\cite{Browne2009,Hoyer2002} to CCNTC compares to our hand-optimized circuit.
-The depth of our circuit may also be improved by extending the carry-save adder
-from
-a $3\rightarrow 2$ circuit to any $2^{n-1}\rightarrow n$ circuit.
+A natural extension of the current work is to improve its
+depth to constant using the approach outlined in
+\cite{Hoyer2002,Siu1993}, generalizing the carry-save adder to
+a block-save adder using threshold gates. It would also be
+beneficial to determine lower bounds for the
+time-space tradeoffs involved in Shor's factoring algorithm.
+These results would tell us whether we have found an
+optimal nearest-neighbor circuit.
 
 \nonumsection{Acknowledgements}
 \noindent
