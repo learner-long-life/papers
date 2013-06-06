@@ -1,51 +1,31 @@
-% a sample file for Journal of Quantum Information and Computation (QIC) in
-% LaTex2e by inputing macro file "qic.sty" with command \usepackage{qic},
-% all the macros have been defined in the style file, so it is no need to
-% put many macros at the beginning of the text file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the LaTeX source for
+% "A 2D Nearest-Neighbor Quantum Architecture for Factoring"
+% submitted to http://arxiv.org/abs/1207.6655
+% Paul Pham and Krysta Svore
+% 21 April 2013
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[twoside]{article}
-\usepackage{qic,epsfig}
+%\documentclass[runningheads]{llncs}
+% Suppress page numbers
+%\documentclass[a4paper]{llncs}
+% For arXiv, and eprint support
+\documentclass{article}
 
-%%%%%%% starting the text file
-
-\usepackage{graphicx}% Include figure files
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{eprint}
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
-%\usepackage{amsthm} %theorem package
-%\usepackage{titlesec} %title section
-\usepackage{hyperref}% add hypertext capabilities
-%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
-%\linenumbers\relax % Commence numbering lines
-
-%\usepackage[showframe,%Uncomment any one of the following lines to test
-%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
-%%text={7in,10in},centering,
-%%margin=1.5in,
-%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
-%%height=10in,a5paper,hmargin={3cm,0.8in},
-%]{geometry}
-
-%\titlespacing*{<cmd>}{<left sep>}{<before sep>}{<after sep>}[<right sep>]
-\setcounter{secnumdepth}{3}
-
-%\newtheorem*{example}{Example}
-%\newtheorem*{mydef}{Definition}
-%\newtheorem*{problem}{Problem}
-%\newtheorem{thm}{Theorem}
-%\newtheorem{proposition}{Proposition}
-%\newtheorem{lemma}{Lemma}
-%\newtheorem{observation}{Observation}
-%\newtheorem{query}{Query}X
-
-%\newtheorem{conjecture}{Conjecture}
-%\newtheorem{corol}{Corollary}
-
-\newcommand{\braket}[2]{\langle #1|#2 \rangle}
-\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
-\newcommand{\norm}[1]{\parallel #1 \parallel}
-\newcommand{\card}[1]{\left| #1 \right|}
-\newcommand{\ci}{\perp\!\!\!\perp}
-%\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage[osf]{mathpazo} % Use Palatino / Euler fonts
+\usepackage{url}
+\urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.beyer, christine.guenther,|
+\urldef{\mailsb}\path|frank.holzwarth, anna.kramer, erika.siebert-cole, lncs}@springer.com|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
 
 \textwidth=5.6truein
 \textheight=8.0truein
@@ -61,56 +41,54 @@
 
 \input{Qcircuit}
 
+\newcommand{\braket}[2]{\langle #1|#2 \rangle}
+\newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+\newcommand{\card}[1]{\left| #1 \right|}
+\newcommand{\ci}{\perp\!\!\!\perp}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+\newtheorem{definition}{Definition}
+\theoremstyle{plain} \newtheorem{lemma}{Lemma}
+
 \begin{document}
-\setlength{\textheight}{8.0truein}    %FOR 2ND PAGE ONWARDS
 
-\runninghead{A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
-            {P. Pham and K.M. Svore}
+% first the title is needed
+\title{A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
 
-\normalsize\textlineskip
-\thispagestyle{empty}
-\setcounter{page}{1}
+% a short form should be given in case it is too long for the running head
+%\titlerunning{A 2D Nearest-Neighbor Quantum Architecture for Factoring}
 
-%\copyrightheading{Vol.}{No.}{Year}{Page Nos.}
-\copyrightheading{0}{0}{2003}{000--000}
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Paul Pham\\
+University of Washington\\
+Quantum Theory Group\\
+Box 352350, Seattle, WA 98195, USA,\\
+\email{ppham@cs.washington.edu},\\
+\url{http://www.cs.washington.edu/homes/ppham/}
+\and
+Krysta M. Svore\\
+Microsoft Research\\
+Quantum Architectures and Computation Group\\
+One Microsoft Way, Redmond, WA 98052, USA\\
+\email{ksvore@microsoft.com},\\
+\url{http://research.microsoft.com/en-us/people/ksvore/}
+}
+% if the list of authors exceeds the space for a headline,
+% an abbreviated author list is needed
+%\authorrunning{P. Pham \and K.M. Svore}
+% (feature abused for this document to repeat the title also on left hand pages)
 
-\vspace*{0.88truein}
-
-\alphfootnote
-
-\fpage{1}
-
-\centerline{\bf
-%%%%%%%%%%%%%%%%%%%%%
-%Put in titiles here
-%%%%%%%%%%%%%%%%%%%%%
-A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
-\vspace*{0.37truein}
-\centerline{\footnotesize
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%put authors' name and address here
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Paul Pham\footnote{ppham@cs.washington.edu}}
-\vspace*{0.015truein}
-\centerline{\footnotesize\it Quantum Theory Group, University of Washington, Box 352350,}
-\baselineskip=10pt
-\centerline{\footnotesize\it Seattle, WA 98195, USA}
-\vspace*{10pt}
-\centerline{\footnotesize
-Krysta M. Svore\footnote{ksvore@microsoft.com}}
-\vspace*{0.015truein}
-\centerline{\footnotesize\it Quantum Architectures and Computation Group, Microsoft Research, One Microsoft Way,}
-\baselineskip=10pt
-\centerline{\footnotesize\it Redmond, WA 98052, USA}
-\vspace*{0.225truein}
-\publisher{(received date)}{(revised date)}
-
-\vspace*{0.21truein}
+\maketitle
 
 %% \abstracts{first paragraph}{second paragraph}{third paragraph}
 %% If there is only one paragraph, just keep the second and third empty
 %% like the following one
-\abstracts{
+\begin{abstract}
 %%%%%%%%%%%%%%%%%%%%
 % put abstract here
 %%%%%%%%%%%%%%%%%%%%
@@ -139,22 +117,8 @@ unbounded quantum \emph{unfanout} in our new model.
 Finally, we provide a comparison to all previous nearest-neighbor factoring
 implementations.  
 Our circuit results in an exponential improvement in nearest-neighbor circuit depth at the cost of a polynomial increase in circuit size and width.
-}{}{}
+\end{abstract}
 
-\vspace*{10pt}
-
-\keywords{quantum architecture, prime factorization, Shor's algorithm,
-nearest-neighbor, carry-save addition}
-\vspace*{3pt}
-\communicate{to be filled by the Editorial}
-
-\vspace*{1pt}\textlineskip    %) USE THIS MEASUREMENT WHEN THERE IS
-   %) A SECTION HEADING
-%\vspace*{-0.5pt}
-%\noindent
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%put the text of the paper here
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}
 
@@ -362,7 +326,7 @@ size $4$, and width $2$.
 \end{array}
 \end{displaymath}
 \centerline{}
-\fcaption{A circuit for measurement in the Bell state basis.}
+\caption{A circuit for measurement in the Bell state basis.}
 \label{fig:bell-measure}
 \end{center}\end{figure*}
 
@@ -411,7 +375,7 @@ classically and share a clock.
 \begin{center}
 \includegraphics[width=4in]{./modules.pdf}
 \end{center}
-\fcaption{Three modules in the \textsc{2D CCNTCM} model}
+\caption{Three modules in the \textsc{2D CCNTCM} model}
 \label{fig:modules}
 \end{figure}
 
@@ -577,7 +541,7 @@ These correction layers are not shown in the circuit.
 }
 \end{displaymath}
 \centerline{}
-\fcaption{Constant-depth circuit based on \protect{\cite{Broadbent2007,Browne2009}} for teleportation over $n=5$ qubits \protect{\cite{Rosenbaum2012}}.}
+\caption{Constant-depth circuit based on \protect{\cite{Broadbent2007,Browne2009}} for teleportation over $n=5$ qubits \protect{\cite{Rosenbaum2012}}.}
 \label{fig:cdt}
 \end{center}\end{figure*}
 
@@ -602,7 +566,7 @@ These correction layers are not shown in the circuit.
 %\end{array}
 \end{displaymath}
 \centerline{}
-\fcaption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for fanout \protect{\cite{Harrow2012}} of one qubit to $n=4$ entangled copies.}
+\caption{Constant-depth circuits based on \protect{\cite{Broadbent2007,Browne2009}} for fanout \protect{\cite{Harrow2012}} of one qubit to $n=4$ entangled copies.}
 \label{fig:cdf}
 \end{center}\end{figure*}
 
@@ -669,7 +633,7 @@ is of equal size to the corrections given above.
 }
 \end{displaymath}
 \centerline{}
-\fcaption{A novel, constant-depth circuit for unbounded quantum unfanout on
+\caption{A novel, constant-depth circuit for unbounded quantum unfanout on
 CCNTC, from the $7$-qubit entangled state $\alpha\ket{0}^{\otimes 7} + \beta\ket{1}^{\otimes 7}$ to the
 target product state $(\alpha\ket{0} + \beta\ket{1})\otimes\ket{0}^{\otimes 6}$.}
 \label{fig:cdu}
@@ -741,7 +705,7 @@ Table \ref{tab:cd-resources}.
 \end{tabular}
 \end{displaymath}
 \centerline{}
-\tcaption{Circuit resources for teleportation, fanout, and unfanout
+\caption{Circuit resources for teleportation, fanout, and unfanout
 (consisting of
 alternating rounds of constant-depth teleportation and CNOT).}
 \label{tab:cd-resources}
@@ -967,7 +931,7 @@ x_4 & x_3 & x_2 & x_1 & x_0
 \end{array}
 \right\}
 \end{displaymath}
-\fcaption{An example of carry-save encoding for the 5-bit conventional number 30.}
+\caption{An example of carry-save encoding for the 5-bit conventional number 30.}
 \label{fig:csa-encoding}
 \end{figure*}
 \end{center}
@@ -985,7 +949,7 @@ x_4 & x_3 & x_2 & x_1 & x_0
 \lstick{\ket{0}}   & \targfix & \qw & \qw_{\ket{b_i \wedge c_i}} & \qw & \qw                        & \qw       & \qw & \qw                                     & \ctrl{-4} & \qw       & \qw       & \targfix                                                        & \qw & \qswap \qwx & \qw         & \qw & \rstick{\ket{v_{i+1}}}}
 }
 \end{displaymath}
-\fcaption{Carry-save adder circuit for a single bit position $i$: $a_i+b_i+c_i = u_i + v_{i+1}$.}
+\caption{Carry-save adder circuit for a single bit position $i$: $a_i+b_i+c_i = u_i + v_{i+1}$.}
 \label{fig:csa-circuit}
 \end{center}\end{figure}
 
@@ -1013,7 +977,7 @@ x_4 & x_3 & x_2 & x_1 & x_0
 }
 \end{tabular}
 \end{displaymath}
-\fcaption{The depth-efficient Toffoli gate decomposition from \cite{Amy2012}.}
+\caption{The depth-efficient Toffoli gate decomposition from \cite{Amy2012}.}
 \label{fig:toffoli}
 \end{center}
 \end{figure}
@@ -1034,7 +998,7 @@ x_4 & x_3 & x_2 & x_1 & x_0
 \end{tabular}
 \end{displaymath}
 \centerline{}
-\tcaption{Circuit resources for Toffoli and single-bit addition.}
+\caption{Circuit resources for Toffoli and single-bit addition.}
 \label{tab:csa-tile-resources}
 \end{table}
 
@@ -1069,7 +1033,7 @@ It will be useful in the next section.
 \begin{center}
 \includegraphics[width=3in]{./csa-32-22.pdf}
 \end{center}
-\fcaption{The carry-save adder (CSA), or 3-2 adder, and carry-save 2-2 adder.}
+\caption{The carry-save adder (CSA), or 3-2 adder, and carry-save 2-2 adder.}
 \label{fig:csa-3-2}
 \end{figure}
 
@@ -1230,7 +1194,7 @@ in Figure \ref{fig:csa-proof}.
 %\hline
 %\end{array}
 \end{displaymath}
-\fcaption{A schematic proof of Gossett's constant-depth modular reduction for $n=3$.}
+\caption{A schematic proof of Gossett's constant-depth modular reduction for $n=3$.}
 \label{fig:csa-proof}
 \end{figure*}
 \end{center}
@@ -1278,7 +1242,7 @@ we use the fact that the modular residues are restricted to $n$ bits.
 Therefore, the modular sum is computed as the sum of two $(n+2)$-bit numbers
 with no overflows in constant-depth.
 %\end{proof}
-\square\,
+$\square$\,
 
 As a side note, we can perform modular reduction in one layer instead of
 three by decoding the three overflow bits into one of seven different
@@ -1299,7 +1263,7 @@ general circuit resources.
 \centerline{
 \includegraphics[width=6.5in]{./mod-add-fixed.pdf}
 }
-\fcaption{Addition and three rounds of modular reduction for a 3-bit
+\caption{Addition and three rounds of modular reduction for a 3-bit
 modulus.}
 \label{fig:csa-add-4}
 \end{figure*}
@@ -1380,7 +1344,7 @@ the size of the modulus is still $n$ bits.
 \centerline{
 \includegraphics[width=1.5in]{./csa-tile-symbol.pdf}
 }
-\fcaption{Symbol for an $n$-bit 3-to-2 modular adder, also called a CSA tile.}
+\caption{Symbol for an $n$-bit 3-to-2 modular adder, also called a CSA tile.}
 \label{fig:csa-tile-symbol}
 \end{figure*}
 \end{center}
@@ -1520,7 +1484,7 @@ multiple addition in order to add these numbers down to a single
 %\centerline{
 %\includegraphics[width=4.5in]{./znumbers.pdf}
 %}
-%\fcaption{Creating $n=4$ shifted values $\{z^{(0)},z^{(1)},z^{(2)},z^{(3)}\}$
+%\caption{Creating $n=4$ shifted values $\{z^{(0)},z^{(1)},z^{(2)},z^{(3)}\}$
 %for an input number $x$.}
 %\label{fig:mod-mult-create}
 %\end{figure*}
@@ -1733,7 +1697,7 @@ into a destination tile.
 \centerline{
 \includegraphics[width=5.5in]{./mod-mult-add.pdf}
 }
-\fcaption{Modular multiple addition of quantum integers on a CSA tile
+\caption{Modular multiple addition of quantum integers on a CSA tile
 architecture for $t'=18$ in a logarithmic-depth tree with height $(\lceil \log_{\frac{3}{2}}(t'/3) \rceil + 1) = 6$. Arrows represent teleportation
 in between modules.}
 \label{fig:mod-mult}
@@ -1849,7 +1813,7 @@ depth.
 \centerline{
 \includegraphics[width=5.5in]{./mod-exp-par.pdf}
 }
-\fcaption{Parallel modular exponentiation: multiplying $t$ quantum integers
+\caption{Parallel modular exponentiation: multiplying $t$ quantum integers
 %$\{\ket{x^{(0)}}, \ket{x^{(1)}}, \ldots, \ket{x^{(t-1)}}\}$ in parallel,
 in a $O(\log{(t)}\log{(n)})$-depth binary tree. Arrows indicate modular
 multiplication.}
@@ -2028,7 +1992,7 @@ Current Work               & \textsc{2D CCNTCM}   & $O(\log^2{n})$ & $O(n^4)$ & 
 \hline
 \end{tabular}
 \end{center}
-\tcaption{Asymptotic circuit resource usage for quantum factoring of an $n$-bit number.}
+\caption{Asymptotic circuit resource usage for quantum factoring of an $n$-bit number.}
 \label{tab:results}
 \end{table}
 
@@ -2073,7 +2037,7 @@ time-space tradeoffs involved in Shor's factoring algorithm.
 These results would tell us whether we have found an
 optimal nearest-neighbor circuit.
 
-\nonumsection{Acknowledgements}
+\section*{Acknowledgements}
 \noindent
 The authors wish to thank Aram Harrow, Austin Fowler, and David Rosenbaum for
 useful discussions.
@@ -2091,11 +2055,7 @@ interpreted as necessarily representing the official policies or
 endorsements, either expressed or implied, of IARPA, DoI/NBC, or the
 U.S. Government.
 
-\nonumsection{References}
-\noindent
-
-
-\bibliography{PhamSvore_QIC}
+\bibliography{PhamSvore_arXiv}
 \bibliographystyle{ieeetr}
 %\appendix
 %\noindent

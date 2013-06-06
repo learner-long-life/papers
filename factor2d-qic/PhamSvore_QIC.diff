@@ -1,0 +1,997 @@
+diff --git a/factor2d-qic/PhamSvore_QIC.bib b/factor2d-qic/PhamSvore_QIC.bib
+index f456e26..2defec0 100644
+--- a/factor2d-qic/PhamSvore_QIC.bib
++++ b/factor2d-qic/PhamSvore_QIC.bib
+@@ -8,14 +8,14 @@
+ %% Saved with string encoding Unicode (UTF-8)
+ 
+ @misc{Harrow2012,
+-    Author = {Harrow, Aram and Fowler, Austin},
++    Author = {Aram Harrow and Fowler, Austin},
+     Month = {Oct},
+     Title = {Private communication},
+     Year = {2011}
+ }
+ 
+ @article{Harrow02,
+-author = {Harrow, Aram W. and Recht, Benjamin and Chuang, Isaac L.},
++author = {Aram W. Harrow, Benjamin Recht, Isaac L. Chuang},
+ title = {Efficient Discrete Approximations of Quantum Gates},
+ journal = {J. Math. Phys.},
+ volume = {43},
+@@ -26,17 +26,16 @@ eprint = {quant-ph/0111031},
+ arxivid = {quant-ph/0111031},
+ }
+ 
+-@article{Rosenbaum2012,
++@unpublished{Rosenbaum2012,
+ 	Abstract = {We show that the depth of quantum circuits in a realistic architecture where a classical controller determines which local interactions to apply on the (k)D grid ($\backslash$bbZ\^{}k) where (k $\backslash$geq 2) is the same (up to a constant factor) as in the standard model where arbitrary interactions are allowed. This allows minimum-depth circuits for the nearest-neighbor architecture to be obtained from minimum-depth circuits in the standard abstract model. Our work therefore justifies the standard assumption that quantum algorithms can perform interactions between arbitrary pairs of qubits. In particular, our results imply that Shor's algorithm, controlled operations and fan-outs can be implemented in constant depth, polynomial size and polynomial width in this architecture.   We also present optimal non-adaptive quantum circuits for controlled operations and fan-outs on a (k)D grid. These circuits have depth ($\backslash$Theta($\backslash$sqrt[k]\{n\})), size ($\backslash$Theta(n)) and width ($\backslash$Theta(n)). Our lower bound is for a general class of operations which includes controlled operations and fan-outs as special cases.},
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {1205.0036},
+ 	Author = {Rosenbaum, David},
+ 	Eprint = {1205.0036},
+-	Journal = {8th Conference on Theory of Quantum Computation, Communication and Cryptography},
+-	Month = May,
++	Month = apr,
+ 	Title = {{Optimal Quantum Circuits for Nearest-Neighbor Architectures}},
+ 	Url = {http://arxiv.org/abs/1205.0036},
+-	Year = {2013},
++	Year = {2012},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/1205.0036}}
+ 
+ @article{Hoyer2002,
+@@ -126,17 +125,16 @@ arxivid = {quant-ph/0111031},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/quant-ph/0301052},
+ 	Bdsk-Url-2 = {http://dx.doi.org/10.1103/PhysRevA.68.022312}}
+ 
+-@article{Beauregard2002,
++@unpublished{Beauregard2002,
+ 	Abstract = {We try to minimize the number of qubits needed to factor an integer of n bits using Shor's algorithm on a quantum computer. We introduce a circuit which uses 2n+3 qubits and O(n\^{}3 lg(n)) elementary quantum gates in a depth of O(n\^{}3) to implement the factorization algorithm. The circuit is computable in polynomial time on a classical computer and is completely general as it does not rely on any property of the number to be factored.  Keywords: Factorization, quantum circuits, modular arithmetics},
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {quant-ph/0205095},
+ 	Author = {Beauregard, Stephane},
+ 	Eprint = {0205095},
+ 	File = {::},
+-	Journal = {arXiv:quant-ph/0205095},
+ 	Keywords = {Quantum Physics},
+ 	Month = may,
+-	Pages = {},
++	Pages = {14},
+ 	Primaryclass = {quant-ph},
+ 	Title = {{Circuit for Shor's algorithm using 2n+3 qubits}},
+ 	Url = {http://arxiv.org/abs/quant-ph/0205095},
+@@ -176,14 +174,13 @@ arxivid = {quant-ph/0111031},
+     Publisher = {Rinton Press},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/quant-ph/0406142}}
+ 
+-@article{Choi2010,
++@unpublished{Choi2010,
+ 	Abstract = {In this work, we propose an adder for the 2D NTC architecture, designed to match the architectural constraints of many quantum computing technologies. The chosen architecture allows the layout of logical qubits in two dimensions and the concurrent execution of one- and two-qubit gates with nearest-neighbor interaction only. The proposed adder works in three phases. In the first phase, the first column generates the summation output and the other columns do the carry-lookahead operations. In the second phase, these intermediate values are propagated from column to column, preparing for computation of the final carry for each register position. In the last phase, each column, except the first one, generates the summation output using this column-level carry. The depth and the number of qubits of the proposed adder are \$\backslash Theta(\backslash sqrt\{n\})\$ and O(n), respectively. The proposed adder executes faster than the adders designed for the 1D NTC architecture when the length of the input registers \$n\$ is larger than 58.},
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {1008.5093},
+ 	Author = {Choi, Byung-Soo and {Van Meter}, Rodney},
+ 	Eprint = {1008.5093},
+ 	File = {::},
+-	Journal = {arXiv:1008.5093},
+ 	Keywords = {Architecture,Quantum Physics},
+ 	Month = aug,
+ 	Title = {{``$\Theta(\sqrt{n})$''-depth Quantum Adder on a 2D NTC Quantum Computer Architecture}},
+@@ -191,17 +188,16 @@ arxivid = {quant-ph/0111031},
+ 	Year = {2010},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/1008.5093}}
+ 
+-@article{Draper2000,
++@unpublished{Draper2000,
+ 	Abstract = {A new method for computing sums on a quantum computer is introduced. This technique uses the quantum Fourier transform and reduces the number of qubits necessary for addition by removing the need for temporary carry bits. This approach also allows the addition of a classical number to a quantum superposition without encoding the classical number in the quantum register. This method also allows for massive parallelization in its execution.},
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {quant-ph/0008033},
+ 	Author = {Draper, Thomas G.},
+ 	Eprint = {0008033},
+ 	File = {::},
+-	Journal = {arXiv:quant-ph/0008033},
+ 	Keywords = {Quantum Physics},
+ 	Month = aug,
+-	Pages = {},
++	Pages = {8},
+ 	Primaryclass = {quant-ph},
+ 	Title = {{Addition on a Quantum Computer}},
+ 	Url = {http://arxiv.org/abs/quant-ph/0008033},
+@@ -226,35 +222,33 @@ arxivid = {quant-ph/0111031},
+ 	Volume = {4},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/quant-ph/0402196}}
+ 
+-@article{Gossett1998,
++@unpublished{Gossett1998,
+ 	Abstract = {This paper shows how to design efficient arithmetic elements out of quantum gates using "carry-save" techniques borrowed from classical computer design. This allows bit-parallel evaluation of all the arithmetic elements required for Shor's algorithm, including modular arithmetic, deferring all carry propagation until the end of the entire computation. This reduces the quantum gate delay from O(N\^{}3) to O(N log N) at a cost of increasing the number of qubits required from O(N) to O(N\^{}2).},
+ 	Author = {Gossett, Phil},
+ 	File = {:Users/ppham/Documents/arXiv/9808061v2.pdf:pdf},
+ 	Title = {{Quantum Carry-Save Arithmetic}},
+     Arxivid = {quant-ph/9808061},
+-    Journal = {arXiv:quant-ph/9808061},
+ 	Url = {http://arxiv.org/abs/quant-ph/9808061},
+ 	Year = {1998},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/quant-ph/9808061}}
+ 
+ @book{Kitaev2002,
+ 	Address = {Providence, Rhode Island},
+-	Author = {Kitaev, A. Yu. and Shen, A.H. and Vyalyi, M.N.},
++	Author = {A. Yu. Kitaev, A.H. Shen, M.N. Vyalyi},
+ 	Publisher = {American Mathematical Society},
+ 	Title = {Classical and Quantum Computation},
+ 	Year = {2002}}
+ 
+-@article{Kutin2006,
++@unpublished{Kutin2006,
+ 	Abstract = {We give a new ``nested adds'' circuit for implementing Shor's algorithm in linear width and quadratic depth on a nearest-neighbor machine. Our circuit combines Draper's transform adder with approximation ideas of Zalka. The transform adder requires small controlled rotations. We also give another version, with slightly larger depth, using only reversible classical gates. We do not know which version will ultimately be cheaper to implement.},
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {quant-ph/0609001},
+ 	Author = {Kutin, Samuel A.},
+ 	Eprint = {0609001},
+-	Journal = {arXiv:quant-ph/0609001},
+ 	File = {:Users/ppham/Library/Application Support/Mendeley Desktop/Downloaded/Kutin - 2006 - Shor's algorithm on a nearest-neighbor machine.pdf:pdf},
+ 	Keywords = {Quantum Physics},
+ 	Month = aug,
+-	Pages = {},
++	Pages = {11},
+ 	Primaryclass = {quant-ph},
+ 	Title = {{Shor's algorithm on a nearest-neighbor machine}},
+ 	Url = {http://arxiv.org/abs/quant-ph/0609001},
+@@ -439,13 +433,12 @@ arxivid = {quant-ph/0111031},
+ 	Bdsk-Url-1 = {http://arxiv.org/abs/quant-ph/9511018},
+ 	Bdsk-Url-2 = {http://dx.doi.org/10.1103/PhysRevA.54.147}}
+ 
+-@article{Zalka1998,
++@unpublished{Zalka1998,
+ 	Archiveprefix = {arXiv},
+ 	Arxivid = {arXiv:quant-ph/9806084v1},
+ 	Author = {Zalka, Christof},
+ 	Eprint = {9806084v1},
+-	Journal = {arXiv:quant-ph/9806084v1},
+-	Pages = {},
++	Pages = {1--37},
+ 	Primaryclass = {arXiv:quant-ph},
+ 	Title = {{Fast versions of Shor's quantum factoring algorithm}},
+ 	Year = {1998}}
+@@ -482,6 +475,20 @@ arxivid = {quant-ph/0111031},
+ 	Bdsk-Url-1 = {http://ieeexplore.ieee.org/xpl/freeabs%5C_all.jsp?arnumber=4038071},
+ 	Bdsk-Url-2 = {http://dx.doi.org/10.1109/PGEC.1964.263830}}
+ 
++@unpublished{Pham2011a,
++	Author = {Paul Pham},
++	Month = Feb,
++	Note = {Unpublished manuscript},
++	Title = {Parallelized finite automata for reversible circuits},
++	Year = 2011}
++
++@unpublished{Pham2011b,
++	Author = {Paul Pham},
++	Month = Feb,
++	Note = {Unpublished manuscript},
++	Title = {Quantum compiling with parallelized phase estimation},
++	Year = 2011}
++
+ @article{Haffner2008,
+ 	Abstract = {Quantum computers hold the promise to solve certain computational task much more efficiently than classical computers. We review the recent experimental advancements towards a quantum computer with trapped ions. In particular, various implementations of qubits, quantum gates and some key experiments are discussed. Furthermore, we review some implementations of quantum algorithms such as a deterministic teleportation of quantum information and an error correction scheme.},
+ 	Archiveprefix = {arXiv},
+@@ -594,7 +601,6 @@ arxivId = {1206.0758},
+ author = {Amy, Matthew and Maslov, Dmitri and Mosca, Michele and Roetteler, Martin},
+ eprint = {1206.0758},
+ file = {:Users/ppham/Dropbox/arXiv/1206.0758v1.pdf:pdf},
+-journal = {arXiv:1206.0758},
+ month = jun,
+ pages = {},
+ title = {{A meet-in-the-middle algorithm for fast synthesis of depth-optimal quantum circuits}},
+@@ -639,7 +645,7 @@ year = {2008}
+ 
+ @article{Sorensen2000,
+ abstract = {With bichromatic fields, it is possible to deterministically produce entangled states of trapped ions. In this paper we present a unified analysis of this process for both weak and strong fields, for slow and fast gates. Simple expressions for the fidelity of creating maximally entangled states of two or an arbitrary number of ions under nonideal conditions are derived and discussed.},
+-author = {S{\o}rensen, Anders and M{\o}lmer, Klaus},
++author = {S\o rensen, Anders and M\o lmer, Klaus},
+ doi = {10.1103/PhysRevA.62.022311},
+ issn = {1050-2947},
+ journal = {Physical Review A},
+@@ -700,9 +706,8 @@ arxivId = {1303.3066},
+ author = {Jones, Cody},
+ eprint = {1303.3066},
+ file = {:Users/ppham/Library/Application Support/Mendeley Desktop/Downloaded/Jones - 2013 - Distillation protocols for Fourier states in quantum computing.pdf:pdf},
+-journal = {arXiv:1303.3066},
+ month = mar,
+-pages = {},
++pages = {18},
+ title = {{Distillation protocols for Fourier states in quantum computing}},
+ url = {http://arxiv.org/abs/1303.3066},
+ year = {2013}
+@@ -748,19 +753,20 @@ volume = {75},
+ year = {2007}
+ }
+ 
+-@inproceedings{Cleve2000,
+-    author = {Richard Cleve and John Watrous},
+-    title = { Fast parallel circuits for the quantum Fourier transform},
+-    booktitle = {Proceedings of the 41st Annual Symposium on Foundations of Computer Science (FOCS’00)},
+-    year = {2000},
+-    pages = {526--536},
+-    publisher = {},
+-    abstract = {We give new bounds on the circuit complexity of the quantum Fourier transform (QFT). We give an upper bound of O(log n + log log (1/epsilon)) on the circuit depth for computing an approximation of the QFT with respect to the modulus 2\^{}n with error bounded by epsilon. Thus, even for exponentially small error, our circuits have depth O(log n). The best previous depth bound was O(n), even for approximations with constant error. Moreover, our circuits have size O(n log (n/epsilon)). We also give an upper bound of O(n (log n)\^{}2 log log n) on the circuit size of the exact QFT modulo 2\^{}n, for which the best previous bound was O(n\^{}2).   As an application of the above depth bound, we show that Shor's factoring algorithm may be based on quantum circuits with depth only O(log n) and polynomial-size, in combination with classical polynomial-time pre- and post-processing. In the language of computational complexity, this implies that factoring is in the complexity class ZPP\^{}BQNC, where BQNC is the class of problems computable with bounded-error probability by quantum circuits with poly-logarithmic depth and polynomial size.   Finally, we prove an Omega(log n) lower bound on the depth complexity of approximations of the QFT with constant error. This implies that the above upper bound is asymptotically optimal (for a reasonable range of values of epsilon).},
+-	archivePrefix = {arXiv},
+-	arxivId = {quant-ph/0006004},
+-	eprint = {0006004},
+-	primaryClass = {quant-ph},
+-	url = {http://arxiv.org/abs/quant-ph/0006004}
++@article{Cleve2000,
++abstract = {We give new bounds on the circuit complexity of the quantum Fourier transform (QFT). We give an upper bound of O(log n + log log (1/epsilon)) on the circuit depth for computing an approximation of the QFT with respect to the modulus 2\^{}n with error bounded by epsilon. Thus, even for exponentially small error, our circuits have depth O(log n). The best previous depth bound was O(n), even for approximations with constant error. Moreover, our circuits have size O(n log (n/epsilon)). We also give an upper bound of O(n (log n)\^{}2 log log n) on the circuit size of the exact QFT modulo 2\^{}n, for which the best previous bound was O(n\^{}2).   As an application of the above depth bound, we show that Shor's factoring algorithm may be based on quantum circuits with depth only O(log n) and polynomial-size, in combination with classical polynomial-time pre- and post-processing. In the language of computational complexity, this implies that factoring is in the complexity class ZPP\^{}BQNC, where BQNC is the class of problems computable with bounded-error probability by quantum circuits with poly-logarithmic depth and polynomial size.   Finally, we prove an Omega(log n) lower bound on the depth complexity of approximations of the QFT with constant error. This implies that the above upper bound is asymptotically optimal (for a reasonable range of values of epsilon).},
++archivePrefix = {arXiv},
++arxivId = {quant-ph/0006004},
++author = {Cleve, Richard and Watrous, John},
++eprint = {0006004},
++file = {:Users/ppham/Library/Application Support/Mendeley Desktop/Downloaded/Cleve, Watrous - 2000 - Fast parallel circuits for the quantum Fourier transform.pdf:pdf},
++keywords = {Quantum Physics},
++month = jun,
++pages = {22},
++primaryClass = {quant-ph},
++title = {{Fast parallel circuits for the quantum Fourier transform}},
++url = {http://arxiv.org/abs/quant-ph/0006004},
++year = {2000}
+ }
+ 
+ @article{Eastin2012,
+@@ -783,31 +789,9 @@ archivePrefix = {arXiv},
+ arxivId = {1208.0391},
+ author = {Monroe, C. and Raussendorf, R. and Ruthven, A. and Brown, K. R. and Maunz, P. and Duan, L. -M. and Kim, J.},
+ eprint = {1208.0391},
+-journal = {arXiv:1208.0391},
+ file = {::},
+ month = aug,
+ title = {{Large Scale Modular Quantum Computer Architecture with Atomic Memory and Photonic Interconnects}},
+ url = {http://arxiv.org/abs/1208.0391},
+ year = {2012}
+ }
+-
+-@article{DiVincenzo2007,
+-abstract = {How important is fast measurement for fault-tolerant quantum computation? Using a combination of existing and new ideas, we argue that measurement times as long as even 1,000 gate times or more have a very minimal effect on the quantum accuracy threshold. This shows that slow measurement, which appears to be unavoidable in many implementations of quantum computing, poses no essential obstacle to scalability.},
+-archivePrefix = {arXiv},
+-arxivId = {quant-ph/0607047},
+-author = {DiVincenzo, David and Aliferis, Panos},
+-doi = {10.1103/PhysRevLett.98.020501},
+-eprint = {0607047},
+-file = {::},
+-issn = {0031-9007},
+-journal = {Physical Review Letters},
+-keywords = {Quantum Physics},
+-month = jan,
+-number = {2},
+-pages = {9},
+-primaryClass = {quant-ph},
+-title = {{Effective Fault-Tolerant Quantum Computation with Slow Measurements}},
+-url = {http://arxiv.org/abs/quant-ph/0607047},
+-volume = {98},
+-year = {2007}
+-}
+diff --git a/factor2d-qic/PhamSvore_QIC.pdf b/factor2d-qic/PhamSvore_QIC.pdf
+index 1c1d36e..5221966 100644
+Binary files a/factor2d-qic/PhamSvore_QIC.pdf and b/factor2d-qic/PhamSvore_QIC.pdf differ
+diff --git a/factor2d-qic/PhamSvore_QIC.tex b/factor2d-qic/PhamSvore_QIC.tex
+index d854ba3..c940873 100644
+--- a/factor2d-qic/PhamSvore_QIC.tex
++++ b/factor2d-qic/PhamSvore_QIC.tex
+@@ -114,8 +114,8 @@ Krysta M. Svore\footnote{ksvore@microsoft.com}}
+ %%%%%%%%%%%%%%%%%%%%
+ % put abstract here
+ %%%%%%%%%%%%%%%%%%%%
+-We contribute a 2D nearest-neighbor
+-quantum architecture for Shor's algorithm to factor an $n$-bit number in $O(\log^2(n))$ depth.
++We present a 2D nearest-neighbor
++quantum architecture for Shor's algorithm to factor an $n$-bit number in $O(\log^3n)$ depth.
+ Our implementation uses
+ %(1)
+ parallel phase estimation,
+@@ -132,11 +132,9 @@ constant-depth carry-save modular addition.
+ %nearest-neighbor and long-distance communication channels, and ultimately use
+ %our circuit within parallel phase estimation to achieve quantum factoring.
+ We derive upper bounds on the circuit resources of our architecture under a
+-new 2D nearest-neighbor model
+-which allows a classical controller and parallel, communicating
+-modules. We also contribute a novel constant-depth circuit for
+-unbounded quantum \emph{unfanout} in our new model.
+-Finally, we provide a comparison to all previous nearest-neighbor factoring
++new 2D model which allows a classical controller and parallel, communicating
++modules.
++We provide a comparison to all previous nearest-neighbor factoring
+ implementations.  
+ Our circuit results in an exponential improvement in nearest-neighbor circuit depth at the cost of a polynomial increase in circuit size and width.
+ }{}{}
+@@ -169,22 +167,21 @@ the theoretical algorithm and a physical implementation by describing
+ the layout and interactions of qubits at an intermediate,
+ architectural level of abstraction.
+ This gives us a model for measuring circuit resources and their tradeoffs.
+-In this work, we contribute a circuit implementation for prime
++In this work, we present a circuit implementation for prime
+ factorization of an $n$-bit integer
+ on a two-dimensional architecture that allows concurrent (parallel) two-qubit operations
+ between neighboring qubits, an omnipresent classical controller, and
+ modules which are allowed to teleport qubits to each other. We call this new
+ model \textsc{2D CCNTCM}.
+ We show that our circuit construction is asymptotically more efficient in circuit depth than previous state-of-the-art techniques for nearest-neighbor
+-architectures, achieving a depth of $O(\log^2 n)$, a size of
+-$O(n^4)$, and a width of $O(n^4)$ qubits, as detailed in Table
++architectures, achieving a depth of $O(\log^3 n)$, a size of
++$O(n^4\log n)$, and a width of $O(n^4)$ qubits, as detailed in Table
+ \ref{tab:results} of Section \ref{sec:results}.
+ 
+ Our technique hinges on several key building blocks.
+ Section \ref{sec:bg} introduces quantum architectural models, circuit
+ resources, and constant-depth communication techniques due to
+-\cite{Harrow2012,Rosenbaum2012}, including a circuit for
+-constant-depth unfanout which is unique to the current work.
++\cite{Harrow2012,Rosenbaum2012}.
+ Section \ref{sec:related} places our work in the context of existing
+ results.
+ In Section \ref{sec:csa}, we provide a self-contained pedagogical review
+@@ -222,7 +219,8 @@ A \emph{model} is a set of constraints and rules for the placement and
+ interaction of qubits.
+ An \emph{architecture} (or interchangeably, an \emph{implementation} 
+ or a \emph{circuit}) is a particular
+-spatial layout of qubits (as a graph of vertices) and allowed interactions (edges between the vertices),
++spatial layout of qubits (as a graph of vertices) and their
++constrained interactions (edges between the vertices),
+ following the constraints of a given model. In this section, we describe
+ several models which try to incorporate resources of physical interest from
+ experimental work. We also introduce a new model,
+@@ -231,8 +229,8 @@ experimental work. We also introduce a new model,
+ The most general model is called Abstract Concurrent (\textsc{AC})
+ and allows arbitrary, long-range interactions between any qubits and concurrent
+ operation of quantum gates.
+-This corresponds to a complete graph with an edge between every pair of nodes.
+-It is the model assumed in most quantum algorithms.
++This corresponds to a complete graph with an edge between every pair of nodes,
++and is the model assumed in most quantum algorithms.
+ 
+ A more specialized model restricts interactions to nearest-neighbor, two-qubit,
+ concurrent gates (\textsc{NTC}) in a regular one-dimensional chain (1D NTC),
+@@ -244,8 +242,8 @@ resource overheads.
+ To relieve movement congestion,
+ we can consider a two-dimensional regular grid
+ (2D NTC), where each
+-qubit has four planar neighbors, and 
+-there is an extra degree of freedom over the 1D model
++qubit has four planar neighbors and 
++there is an extra degree of freedom
+ in which to move data.
+ In this paper, we extend the \textsc{2D NTC} model in three ways.
+ The first two extensions are described in Section \ref{subsec:2dccntc},
+@@ -261,8 +259,7 @@ All qubits are accessible from above
+ or below by control and measurement apparatus.
+ Whereas 2D NTC conventionally assumes each qubit
+ has four neighbors, we consider up to six neighbors in a roughly hexagonal
+-layout. The edge length in this model is no more than twice the edge length
+-in a regular 2D NTC lattice. The second extension is the realistic assumption
++layout. The second extension is the realistic assumption
+ that classical control (CC) can
+ access every qubit in parallel, and we do not count these classical
+ resources in our implementation since they are polynomially bounded. The
+@@ -313,9 +310,9 @@ We can then define the three conventional circuit resources in this model.
+ 
+ \begin{description}
+ \item[circuit depth ($D$):] the number of concurrent timesteps.
+-\item[circuit size ($S$):] the total number of non-identity gates applied
++\item[circuit size ($S$):] the total number of non-identity gates applies
+ from $\mathcal{G}$, equal to $\sum_{i=1}^D |G_i|$.
+-\item[circuit width ($W$):] the total number of qubits operated upon by
++\item[circuit width ($W$):] is the total number of qubits operated upon by
+ any gate, including inputs, outputs, and ancillae. It is equal to $| \bigcup_{i=1}^D V_i|$.
+ \end{description}
+ 
+@@ -332,16 +329,14 @@ D \le S \le D\cdot W
+ \end{equation}
+ 
+ The set $\mathcal{G}$ includes measurement in the $Z$ basis, which is
+-actually not a unitary operation but which may be slower than unitary
+-operations in actual practice \cite{DiVincenzo2007}.
+-Therefore we count it in our resource
+-estimates.
++actually not a unitary operation, or gate per se.
+ All other gates
+ in $\mathcal{G}$ form a universal set of unitary
+ gates \cite{Kitaev2002}.
+  In this paper we
+ will treat the operations in $\mathcal{G}$ as \emph{elementary gates}.
+-We can also define a Bell basis measurement using operations
++
++We also find it useful to define a Bell basis measurement using operations
+ from $\mathcal{G}$. A circuit performing this measurement is shown
+ in Figure \ref{fig:bell-measure} and has depth $4$,
+ size $4$, and width $2$.
+@@ -386,11 +381,11 @@ referring to the modulus $m$ which we are trying to factor.
+ We treat these modules
+ and teleportations between them as nodes and edges, respectively,
+ in a higher-level planar graph. The teleportations each transmit one qubit
+-from one module to another, from any location within the source module
++from one module to another, from any location within the source module and
+ to any location within the destination module, making use of the
+ omnipresent classical controller. The modules can be arbitrarily far
+-apart physically, but they have bounded-degree connectivity with other
+-modules, and their edges are planar (they cannot intersect).
++apart and have arbitrary
++connectivity with other modules.
+ 
+ A single module can be part of multiple teleportation operations in a single timestep, as long as they involve disjoint qubits within the module.
+ We justify this assumption in that it is
+@@ -428,7 +423,7 @@ undirected edge $(\overline{u},\overline{v}) \in \overline{E}$ represents an
+ allowed teleportation from any qubit in module $\overline{u}$ to
+ another qubit in module $\overline{v}$.
+ \item All modules are restricted to be linear in the number of their qubits:
+-$|V| = \Theta(n)$ for all $(V,E) \in \overline{V}$.
++$|V| = O(n)$ for all $(V,E) \in \overline{V}$.
+ \item a universal gate set $\mathcal{G} = \{X, Z, H, T, T^{\dagger}, CNOT,
+ MeasureZ\}$
+ for the qubits \emph{within the same} modules which is the same as for \textsc{2D CCNTC},
+@@ -444,8 +439,7 @@ gates $G_i = \{g_{i,j} : g_{i,j} \in \mathcal{G} \lor g_{i,j} = Teleport \}$.
+ That is, there are two kinds of timesteps with respect to the kinds of gates
+ which operate within them.
+ \begin{enumerate}
+-\item In the first kind, gates are exclusively from $\mathcal{G}$, and
+-they operate within modules as described
++\item In the first kind, gates are exclusively from $\mathcal{G}$ operating within modules, as described
+ for \textsc{2D CCNTC} above. We say there are $D$ such timesteps.
+ \item In the second kind, gates are exclusively $Teleport$ gates between two qubits $v^{(1)}_{i,j} \in \overline{v}_1$ and
+ $v^{(2)}_{i,j} \in \overline{v}_2$ for
+@@ -458,7 +452,7 @@ Again, we define the support of $G_i$
+ as $V_i$, the set of all qubits acted upon by any $g_{i.j}$, which
+ includes all the modules.
+ \begin{equation}
+-V_i = \bigcup_{j: g_{i,j} \in G_i} v_{i,j} \cup v^{(1)}_{i,j} \cup v^{(2)}_{i,j} 
++V_i = \bigcup_{j: g_{i,j} \in G_i} v_{i,j} \cup v^{(1)}_{i,j} \cup v^{(2)}_{i,j} \cup \overline{v}_1 \cup \overline{v}_2
+ \end{equation}
+ 
+ \end{itemize}
+@@ -494,14 +488,6 @@ W = O(n\overline{W})
+ \label{eqn:module-width}
+ \end{equation}
+ 
+-This restriction imposes some locality on our model by constraining it to
+-nearest-neighbor gates within a linear-sized group of qubits, but allowing
+-it long-range teleportation to circumvent onerous geometric constraints.
+-Using the constant-depth communication in Section \ref{subsec:fanout}, and for
+-the specific case of factoring, we
+-can simulate arbitrary connectivity between modules with only a polynomial
+-increase in the module size and a constant increase in module depth.
+-
+ \subsection{Circuit Resource Comparisons}
+ 
+ Counting gates from $\mathcal{G}$ as having unit size and unit depth
+@@ -541,21 +527,17 @@ Section \ref{sec:modexp}, we also give circuit resources in
+ terms of module depth, module size, and module width.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-\subsection{Constant-depth Teleportation, Fanout, and Unfanout}
++\subsection{Constant-depth Teleportation and Fanout}
+ \label{subsec:fanout}
+ 
+ Communication, namely the \emph{moving} and \emph{copying} of quantum information, in nearest-neighbor quantum architectures is challenging.
+-In this section we quote known results for teleportation and
+-fanout in constant depth while also contributing a novel construction
+-for unfanout.
+-
+ The first challenge of moving quantum information from one site to another over
+ arbitrarily long distances can be addressed by using
+ %A related problem is how to teleport a qubit an arbitrary distance.
+ % in an
+ %architecture through ancillae prepared in some initial state.
+ the constant-depth teleportation circuit
+-shown in Figure \ref{fig:cdt} due to Rosenbaum \cite{Rosenbaum2012}, illustrated using standard quantum circuit
++shown in Figure \ref{fig:cdt}, illustrated using standard quantum circuit
+ notation \cite{Nielsen2000}. This requires the circuit resources shown in
+ Table \ref{tab:cd-resources}. The depth includes a layer of $H$ gates; a layer of CNOTs; an interleaved layer of Bell basis measurements; and two layers of
+ Pauli corrections ($X$ and $Z$ for each qubit), occurring concurrently with
+@@ -616,8 +598,7 @@ a single qubit needs to control (be entangled with) a large quantum register
+ We employ a constant-depth circuit due to insight from
+ measurement-based quantum computing \cite{Raussendorf2003}
+ that relies on the creation of an
+-$n$-qubit cat state \cite{Browne2009} which was communicated to
+-us by Harrow and Fowler \cite{Harrow2012}.
++$n$-qubit cat state \cite{Browne2009}.
+ 
+ This circuit requires $O(1)$-depth, $O(n)$-size, and $O(n)$-width. Approximately
+ two-thirds of the ancillae are reusable and can be reset to $\ket{0}$ after
+@@ -653,75 +634,14 @@ corrections on the same qubit, which can be simplified by the classical
+ controller to a single $X$ and $Z$ operation and then applied with a circuit of
+ depth 2 and size 2. Also, given the symmetric nature of the cat state, there
+ is an alternate set of Pauli corrections which would give the same state and
+-is of equal size to the corrections given above.
+-
+-\begin{figure*}[tb!]
+-\begin{center}
+-\begin{displaymath}
+-\Qcircuit @C=1em @R=1em {
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \qw      & \qw &  \measureD{Z} & \cw & \rstick{j_1} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_2} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \targfix & \qw & \measureD{Z} & \cw & \rstick{j_3} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_4} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \targfix & \qw & \measureD{Z} & \cw & \rstick{j_5} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_6} & \\
+-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \qw      & \qw & \targfix & \qw & \gate{H} & \qw & \rstick{Z^{j_2 \oplus j_4}(\alpha\ket{0} + \beta\ket{1})}
+-}
+-\end{displaymath}
+-\centerline{}
+-\fcaption{A novel, constant-depth circuit for unbounded quantum unfanout on
+-CCNTC, from the $7$-qubit entangled state $\alpha\ket{0}^{\otimes 7} + \beta\ket{1}^{\otimes 7}$ to the
+-target product state $(\alpha\ket{0} + \beta\ket{1})\otimes\ket{0}^{\otimes 6}$.}
+-\label{fig:cdu}
+-\end{center}\end{figure*}
+-
+-Reversing the fanout is an operation called \emph{unfanout}. Unfanout
+-takes as input 
+-the following entangled $n$-qubit state which is the result of a fanout.
+-
+-\begin{equation}
+-\normtwo (\ket{0}^{\otimes n} + \ket{1}^{\otimes n})
+-\label{eqn:fanned-out}
+-\end{equation}
+-
+-The output of unfanout, after Pauli corrections, is the product state
+-consisting of all $\ket{0}$'s except for a single target qubit $\alpha\ket{0} + \beta\ket{1}$, which is in the
+-same state as the original source qubit of the fanout.
+-
+-In the model of \cite{Hoyer2002}, the fanout and unfanout were identical, elementary
+-operations. In CCNTC, the operations are not identical due to
+-the one-way nature of the measurement and the
+-constraints of NTC. In Figure \ref{fig:cdu}, we contribute a novel quantum circuit for unbounded quantum
+-unfanout for $n=7$ in constant depth on 2D CCNTC.
+-Note that the state in Equation \ref{eqn:fanned-out}
+-is completely symmetric in that all qubits are
+-equivalent entangled copies of each other. Therefore, the asymmetry 
+-of the final target qubit is entirely determined by the unfanout circuit,
+-which in this case selects the bottom qubit in the figure.
+-
+-The initial fanned out state lives in a $2$-dimensional subspace. The
+-round of Hadamard gates increases its dimension to $2^n$, and the two
+-interleaved layers of CNOTs in a sense ``disentangle'' the qubits from
+-one another, up to a Pauli $Z$ correction. This correction, on the
+-final target qubit, is controlled by the parity of the classical measurements
+-on every ``even'' qubit ($j_2$ and $j_4$ in the figure), excluding the 
+-next-to-last qubit ($j_6$ in the figure). Each measurement projects the state of the
+-target qubit
+-into a subspace with half the dimension, so $n-1$ measurements project
+-the target qubit into a final $2$-dimensional subspace, which is the
+-qubit $\alpha\ket{0} + \beta\ket{1}$.
+-
+-Although the circuit show works for odd $n$, we can easily take into
+-account even $n$ with an initial CNOT to ``uncopy'' one qubit from its
+-neighbors. The unfanout circuit in Figure \ref{fig:cdu} is the
+-functional inverse of the
+-fanout circuit in 
+-Figure \ref{fig:cdf}, but it relies on the fanned-out qubits
+-being teleported back into adjacent positions,
+-which is only possible in a 2D layout.
+-The target qubit of unfanout is usually chosen to be in the same location
+-as the source qubit of the corresponding fanout. 
+-The resources for unfanout are given in
++is of equal size to corrections given above.
++
++Reversing the fanout (un-fanout) in constant depth is an interesting
++problem. Doing so would allow us to improve the overall depth of our
++factoring implementation to $O(\log^2 n)$ instead of $O(\log^3 n )$.
++In this work it is sufficient to perform un-fanout using alternating rounds of
++teleportation and CNOT among the $n$ fanned-out qubits in a logarithmic-depth
++binary tree. The resources for this are given in
+ Table \ref{tab:cd-resources}.
+ 
+ % From Notebook #16, p. 212
+@@ -736,12 +656,12 @@ Table \ref{tab:cd-resources}.
+ \hline
+ \text{Fanout from Figure \ref{fig:cdf}} & 9 & 10n - 9 & 3n-1 \\
+ \hline
+-\text{Unfanout} & $ 6 $ & $ 3n+2 $ & $ n$ \\
++\text{Un-fanout} & $8\log_2(2n)$ & $33n\log_2(2n) + 10\log^2_2(2n)$ & $3n-1$ \\
+ \hline
+ \end{tabular}
+ \end{displaymath}
+ \centerline{}
+-\tcaption{Circuit resources for teleportation, fanout, and unfanout
++\tcaption{Circuit resources for teleportation, fanout, and un-fanout
+ (consisting of
+ alternating rounds of constant-depth teleportation and CNOT).}
+ \label{tab:cd-resources}
+@@ -751,7 +671,7 @@ From an experimental perspective, it is physically efficient to create
+ a cat state in trapped ions using the M{\o}lmer-S{\o}rensen gate
+ \cite{Sorensen2000}\cite{Benhelm2008}. However, the fanout circuit for
+ the 2D CCNTCM model would still be useful for other technologies, such
+-as superconducting qubits on a 2D lattice.
++as superconducting qubits on a two-dimensional lattice.
+ 
+ %Unfortunately, this
+ %``consumes'' the cat state in that there is no known way to unentangle the
+@@ -823,10 +743,10 @@ circuit in $O(n^3)$-depth with linear width \cite{Takahashi2006}.
+ Van Meter and Itoh explore many different approaches for serial QPF,
+ with their lowest achievable depth being $O(n^2\log n)$ with
+ $O(n^2)$ on \textsc{NTC} \cite{VanMeter2005}. Cleve and Watrous
+-calculate a factoring circuit depth of $O(\log^3 n)$ and corresponding
++calculate a theoretical minimum circuit depth of $O(\log^3 n)$ and corresponding
+ circuit size of $O(n^3)$ on \textsc{AC},
+-assuming an adder which has depth $O(\log n)$ and
+-$O(n)$ size and width. We beat this depth and provide a concrete
++using an adder which has depth $O(\log n)$ and
++$O(n)$ size and width. We meet this bound and provide a concrete
+ architectural implementation using an adder with $O(1)$-depth and $O(n)$
+ size and width.
+ 
+@@ -877,10 +797,9 @@ measurement-based quantum computing to the quantum circuit model augmented with
+ unbounded fanout \cite{Browne2009}. Their model, which we adapt and call
+ \textsc{CCNTC}, uses the classical controller mentioned in Section \ref{subsec:fanout}.
+ Using results by H{\o}yer and {\v S}palek \cite{Hoyer2002} that
+-unbounded quantum fanout would allow for a constant-depth factoring algorithm,
++unbounded quantum fanout would allow or a constant-depth factoring algorithm,
+ they conclude that a probabilistic polytime classical machine with access
+-to a constant-depth one-way quantum computer would also be able to factor
+-efficiently.
++to a constant-depth one-way quantum computer would also be able to factor.
+ 
+ %\input{factor2d-csa}
+ \section{The Constant-Depth Carry-Save Technique}
+@@ -1056,14 +975,12 @@ in Figure \ref{fig:csa-3-2}, which satisfies our 2D NTC model.
+ Qubits $\ket a_i$, $\ket b_i$, and $\ket c_i$ reside at the top of Figure~\ref{fig:csa-3-2}, while qubits $\ket{u_i}$ and $\ket{v_{i+1}}$ are initialized to $\ket 0$.
+ Upon completion of the circuit, qubit $\ket{a_i}$ is in state $\ket 0$, as seen from the output in Figure~\ref{fig:csa-circuit}. 
+ Note that this construction uses more gates and one more ancilla than the equivalent
+-quantum full adder circuit in Figure 5 of \cite{Gossett1998}. However this
++quantum full adder circuit in Figure 5 of \cite{Gossett1998}, however this
+ is necessary in order to meet our architectural constraints and does not change the
+ asymptotic results.
+ Also in Figure \ref{fig:csa-3-2}
+ is a variation called a 2-2 adder, which simply re-encodes two $i$-bits
+-into an $i$-bit and an $(i+1)$-bit. The 2-2 adder uses at most the resources
+-of a 3-2 adder, so we can count it as such in our calculations.
+-It will be useful in the next section.
++into an $i$-bit and an $(i+1)$-bit. This will be useful in the next section.
+ 
+ \begin{figure}[b!]
+ \begin{center}
+@@ -1114,19 +1031,19 @@ we add back its modular residue $2^n \bmod m$. How can we guarantee that we won'
+ generate another overflow bit by adding back the modular residue? It turns out
+ we can accomplish this by allowing
+ a slightly larger input and output number ($n+1$ bits in this case), truncating
+-multiple overflow bits, and adding back their $n$-bit modular residues.
++multiple overflow bits, and adding back their modular residues.
+ 
+-For two $(n+1)$-bit conventional numbers $x$ and $y$,
+-we truncate the three high-order bits of their sum $z_{n-1,n+3}$
++For an $(n+1)$-bit conventional number $x$,
++we truncate its high-order bits $x_n$ and $x_{n-1}$
+ and
+ add back their modular residue $x_{(n-1,n)}[m]$:
+ %
+ \begin{eqnarray}
+-x + y \bmod m &=& z_{(0,n+1)}[m] \nonumber \\
+-&=& z_{(0,n-2)} + z_{(n-1,n+1)}[m].
++x \bmod m &=& x_{(0,n)}[m] \nonumber \\
++&=& x_{(0,n-2)} + x_{(n-1,n)}[m].
+ \end{eqnarray}
+ %
+-Since both the truncated number $z_{(0,n-2)}$ and the modular residue
++Since both the truncated number $x_{(0,n-2)}$ and the modular residue
+ are $n$-bit numbers, their sum is an $(n+1)$-bit number as desired, equivalent
+ to $x[m]$.
+ 
+@@ -1149,13 +1066,14 @@ $\{u_0, u_1, \ldots, u_{n-1}\} \cup \{v_1, v_2, \ldots, v_{n-1}\}$.
+ Then we add back the three modular residues
+ $(v_{(n+1)}[m], u_{(n)}[m], v_{(n)}[m])$, and we are guaranteed not to
+ generate additional overflow bits (of significance $2^{n}$ or higher). This equivalence
+-is shown in Equation \ref{eqn:mod-reduce}.
++is shown in Eq \ref{eqn:mod-reduce}.
+ \begin{eqnarray}
+ (u+v)[m] &=& \left(u_{(0,n+1)} + v_{(1,n+2)}\right)[m] \nonumber \\
+  &=& u_{(0,n)} +
+      v_{(1,n)} + \nonumber \\
+  & & u_{(n+1)}[m] +
+-     v_{(n+1)}[m] + v_{(n+2)}[m]
++     v_{(n+1)}[m] + \nonumber \\
++ & & v_{(n+2)}[m]
+ \label{eqn:mod-reduce}
+ \end{eqnarray}
+ 
+@@ -1336,7 +1254,7 @@ distribute the control bit $v_4$ to its modular residue, which we denote as
+ $\ket{c^{v_4}} \equiv \ket{2^4[m]\cdot v_4}$.
+ %%\end{equation}
+ %This fanout requires constant depth;
+-The register $c^{v_4}$ has $n$ bits, which we add to the CSE results of layer 1.
++$c^{v_4}$ has $n$ bits, which we add to the CSE results of layer 1.
+ The results $u_i$ and $v_{i+1}$ are teleported into layer 3. The exception is
+ $v'_4$ which is teleported into layer 4, since there are no other $4$-bits
+ to which it can be added. Wherever there are only
+@@ -1351,7 +1269,7 @@ $u_4$:
+ $\ket{c^{u_4}} \equiv \ket{2^4[m] \cdot u_4}$.
+ %%\end{equation}
+ %This fanout again requires constant depth;
+-The register $c^{u_4}$ has $3$ bits, which we
++The qubit $c^{u_4}$ has $3$ bits, which we
+ add to the CSE results of layer 2, where $u'_i$ and $v'_{i+1}$ are teleported
+ forward into layer 4.
+ 
+@@ -1362,10 +1280,10 @@ is similar to layers 2 and 3, with the modular residue controlled on $v_5$:
+ $\ket{c^{v_5}} \equiv \ket{2^5[m] \cdot v_5}$.
+ %%\end{equation}
+ %This fanout is constant depth;
+-The register $c^{v_5}$ has $3$ bits, which we
++The qubit $c^{v_5}$ has $3$ bits, which we
+ add to the CSE results of layer 3.
+ There is no overflow bit $v'''_5$, and no carry bit from $v''_4$ and $v'_4$
+-as argued in the proof of Lemma 1.
++as argued in Lemma 1.
+ The final modular sum $(a+b+c)[m]$ is $u'''+v'''$.
+ 
+ The general circuit for adding three $n$-qubit quantum integers to
+@@ -1390,7 +1308,7 @@ the size of the modulus is still $n$ bits.
+ 
+ We now calculate numerical upper bounds for the circuit resources of
+ the $n$-bit $3$-to-$2$ modular adder described in the previous section.
+-There are four layers of non-modular $n'$-bit $3$-to-$2$ adders, each of which
++There are four layers of non-modular $n'$-bit $3$-to-$2$ adders, which
+ consists of $n'$ parallel single-bit adders whose
+ resources are detailed in Table \ref{tab:csa-tile-resources}. For factoring
+ an $n$-bit modulus, we have $n'=n+2$ in the first and fourth layers
+@@ -1410,26 +1328,25 @@ in the correct position to be added as inputs.
+ %them are given in Table \ref{tab:csa-tile-resources}.
+ 
+ The resources for the $n$-bit $3$-to-$2$ modular adder depicted in Figure
+-\ref{fig:csa-add-4} are given below.
+-The formulae reflect the resources needed for both computing the output
+-in the forward direction (including creating an entangled fanned-out state
+-controlled on overflow qubits)
++\ref{fig:csa-add-4} is more complicated due to the un-fanout procedure.
++The formulae below reflect the resources needed for both computing the output
++in the forward direction (creating an entangled fanned-out state)
+ and also uncomputing ancillae in the backward
+-direction (including disentangling previous fanned-out copies).
++direction (disentangling fanned-out copies).
+ 
+-The circuit depth is $O(1)$:
++The circuit depth is:
+ 
+ \begin{equation}
+-374\text{.}
++356 + 8\log_2(2n+4)\text{.}
+ \end{equation}
+ 
+-The circuit size is $O(n)$:
++The circuit size is:
+ 
+ \begin{equation}
+-551n + 757\text{.}
++33n\log_2 n + 40\log^2 n + 575n + 752\text{.}
+ \end{equation}
+ 
+-The circuit width is $O(n)$:
++The circuit width is:
+ 
+ \begin{equation}
+ 33n + 47\text{.}
+@@ -1444,10 +1361,8 @@ multiplication in logarithmic depth. We start with a completely classical
+ problem to illustrate the principle of multiplication by repeated addition.
+ Then we consider modular multiplication of two quantum integers in a serial
+ and a parallel fashion in Section
+-\ref{subsec:csa-mod-mult-qq}. Both of these problems use as subroutines
+-\emph{partial product creation}, which we define and solve
+- in Section \ref{subsec:ppc} and
+- \emph{modular multiple addition}, which we define and solve
++\ref{subsec:csa-mod-mult-qq}. Both of these problems use as a subroutine the
++generic problem of \emph{modular multiple addition} which we define and solve
+ in Section \ref{subsec:mma}.
+ 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -1470,11 +1385,7 @@ binary tree to get a total depth of $O(\log n)$.
+ 
+ We now consider the problem of multiplying a classical number controlled
+ on a quantum bit with a
+-\emph{quantum integer}\footnote{In this paper, an $n$-qubit 
+-quantum integer is a
+-general superposition of up to $2^n$ classical integers. As a special case,
+-a classical number controlled on a single qubit is a superposition of
+-$2$ classical integers.},
++\emph{quantum integer}\footnote{In this paper, quantum integers often result by entangling a classical number in one register with a quantum control bit.},
+ which is a
+ quantum superposition of classical numbers:
+ 
+@@ -1488,7 +1399,7 @@ compute $\ket{c} = \ket{xa[m]}$, where $c$ is allowed to be in CSE.
+ This problem occurs naturally in modular exponentiation (described in
+ the next section) and can be considered \emph{serial multiplication},
+ in that $t$ quantum integers are multiplied in series to a single
+-quantum register. This is used in serial QPF as mentioned in
++quantum register. This is the approach used in serial QPF as mentioned in
+ Section \ref{sec:related}.
+ 
+ 
+@@ -1528,7 +1439,7 @@ multiple addition in order to add these numbers down to a single
+ Finally, we tackle the most interesting problem:
+ \begin{quote}
+ Given two $n$-qubit quantum integers $\ket{x}$ and
+-$\ket{y}$ and an $n$-bit classical number
++$\ket{y}$ and a $n$-bit classical number
+ $m$,
+ compute $\ket{c} = \ket{xy \bmod m}$,
+ where $\ket{c}$ is allowed to be in CSE.
+@@ -1559,7 +1470,7 @@ modular multiple addition (Section \ref{subsec:mma}).
+ \begin{enumerate}
+ \item Initially, the inputs consist of the CSE quantum integers $x$ and $y$,
+ each with $2n+3$ bits, sitting on adjacent edges of a square lattice that has
+-sides of length $3(2n+3)$ qubits.
++a length of $3(2n+3)$ qubits.
+ \item For each of $\lceil \log_2 (2n+3) \rceil$ rounds:
+ \begin{enumerate}
+ \item Of the existing $\{x_i\}$ and $\{y_j\}$ bits, apply a CNOT to create an
+@@ -1585,7 +1496,7 @@ on $t'$ $n$-qubit quantum integers down to 2 $n$-qubit quantum integers (one CSE
+ \subsection{Partial Product Creation}
+ \label{subsec:ppc}
+ 
+-This subroutine describes the procedure of creating $t'=O(n^2)$ partial products of
++This subroutine describes the procedure of creating $t=O(n^2)$ partial products of
+ the CSE quantum integers $x$ and $y$, each with $2n+3$ bits each. We will now
+ discuss only the case of parallel multiplication. Although we
+ will not provide an explicit circuit for this subroutine, we will outline
+@@ -1605,7 +1516,7 @@ value for an $n$-bit modulus $m$. There are at least $2n^2 - 2n + 1$
+ such single-bit partial products, which can be grouped into at most
+ $(2n+3)\times n$-bit numbers. Of the $(2n+3)^2$ possible partial products,
+ this leaves the number of remaining $n$-bit partial products as at most
+-$2n^2 + 14n +8$. Therefore we have a maximum number of $n$-bit
++$2n^2 + 14n +8$. Therefore we have a final maximum number of $n$-bit
+ partial products, which we will simply refer to as $t'$ from now on.
+ 
+ \begin{equation}
+@@ -1614,13 +1525,13 @@ t'=2n^2+16n+11
+ \end{equation}
+ 
+ The creation of the product bits $\ket{x_i \cdot y_j}$ occurs on a
+-square lattice of $(3(2n+3))^2$ qubits, with the numbers $\ket{x_i}$ and
+-$\ket{y_j}$ located on adjacent edges. The factor of $3$ in the size of the lattice
++square lattice of $(3(2n+3))^2$, with the numbers $\ket{x_i}$ and
++$\ket{y_j}$ on adjacent edges. The size of the lattice
+ allows the $\ket{x_i}$ and $\ket{y_j}$ bits move past each other.
+ The $\ket{x_i}$ bits are teleported along an axis that is perpendicular to
+ the teleportation axis for the $\ket{y_j}$ bits, and vice versa.
+ Product bit creation, and this square lattice, comprise a single module.
+-In $\lceil \log_2 (2n+3) \rceil$
++In several
+ rounds, these bits are copied via a CNOT and teleported to the middle of
+ a recursively halved interval of the grid. The copied bits $\ket{x_i}$ and
+ $\ket{y_j}$
+@@ -1652,7 +1563,7 @@ a modular multiplier, including the reverse computation.
+ The circuit depth is $O(\log n)$:
+ 
+ \begin{equation}
+-D_{PPC} = 32\log_2 n + 150\text{.}
++D_{PPC} = 40\log_2 10 n\text{.}
+ \end{equation}
+ 
+ The module depth is $O(1)$:
+@@ -1661,11 +1572,12 @@ The module depth is $O(1)$:
+ \overline{D}_{PPC} = 8\text{.}
+ \end{equation}
+ 
+-The circuit size is $O(n\log^2 n)$:
++The circuit size is $O(n^2\log^2 n)$:
+ 
+ \begin{eqnarray}
+-S_{PPC} & = & (6n + 9)\log_2 n +\\
+-        &   & (26n^3 + 232n^2 + 224n + 159)\text{.}
++S_{PPC} & = & (12n^2 + 84n + 48)\log^2_2 (10n) +\\
++        &   & (8n^3 + 64n^2 + 94n + 31)\log_2(10n) +\\
++        &   & (78n^3 + 597n^2 + 419n + 133)\text{.}
+ \end{eqnarray}
+ 
+ The module size is $O(n^2)$:
+@@ -1754,10 +1666,10 @@ the entire modular multiplier circuit has depth $O(\log n)$ and width $O(n^3)$.
+ \subsection{Modular Multiplier Resources}
+ \label{subsec:mod-mult-resources}.
+ 
+-The circuit depth of the entire modular multiplier is $O(\log n)$:
++The circuit depth of the entire modular multiplier is $O(\log^3 n)$:
+ 
+ \begin{equation}
+-D_{MM} = 1383 \log_2 n + 3930\text{.}
++D_{MM} = 3.4 \log_2^3 n + 1295 \log_2 n + 6911\text{.}
+ \end{equation}
+ 
+ The module depth is $O(\log n)$:
+@@ -1765,11 +1677,12 @@ The module depth is $O(\log n)$:
+ \overline{D}_{MM} = 2\log_2 n + 11\text{.}
+ \end{equation}
+ 
+-The circuit size is $O(n^3)$:
++The circuit size is $O(n^3\log n)$:
+ 
+ \begin{eqnarray}
+-S_{MM} = & (6n + 9)\log_2 n +\\
+-        & (1152n^3 + 10780n^2 + 17628n + 7082)\text{.}
++S_{MM} = & (12n^2 + 644n + 288)\log_2^2 (10n) +\\
++        & (74n^3 + 606n^2 + 292n + 41)\log_2 (10n) +\\
++        & (1228n^3 + 10151n^2 + 14397n + 4645)\text{.}
+ \end{eqnarray}
+ 
+ The module size is $O(n^3)$:
+@@ -1835,12 +1748,12 @@ logarithmic-depth binary tree.
+ This is shown in Figure \ref{fig:modexp-qq-parallel}, where arrows indicate multiplication.
+ The tree has depth $\log_2(t)$ in modular multiplier operations. Furthermore,
+ each
+-modular multiplier has depth $O(\log(n))$ and width $O(n^3)$ for $n$-qubit
++modular multiplier has depth $O(\log^2(n))$ and width $O(n^3)$ for $n$-qubit
+ numbers. Therefore, the overall depth of this parallel modular exponentiation
+-structure is $O(\log(t)\log(n))$ with width $O(tn^3)$.
++structure is $O(\log(t)\log^2(n))$ with width $O(tn^3)$.
+ In phase estimation for QPF, it is
+ sufficient to take $t = O(n)$ \cite{Nielsen2000,Kitaev2002}. Therefore our total depth is
+-$O(\log^2(n))$ and our total size and total width are $O(n^4)$, as desired. At this point, combined with the parallel phase
++$O(\log^3(n))$ and our total width is $O(n^4)$, as desired. At this point, combined with the parallel phase
+ estimation procedure of \cite{Kitaev2002}, we have a complete factoring
+ implementation in our 2D nearest-neighbor architecture in polylogarithmic
+ depth.
+@@ -1918,14 +1831,13 @@ The circuit width is $O(n^2)$:
+ \subsection{Circuit Resources for Modular Exponentiator}
+ \label{subsec:modexp-resources}
+ 
+-This leads to the following circuit resource upper bounds for a modular exponentiator. Therefore, these are the total resources for running a
+-single round of parallel QPF as part of Shor's factoring algorithm.
++This leads to the following circuit resource upper bounds for a modular exponentiator.
+ 
+-The circuit depth is $O(\log^2 n)$:
++The circuit depth is $O(\log^3 n)$:
+ 
+ % From Notebook #16 p. 225
+ \begin{equation}
+-D_{ME} = 1383\log_2^2(n) + 21253\log_2(n) + 49095\text{.}
++D_{ME} = 3.4\log_2^3 n + 1337\log_2^2 n + 23070\log_2 n + 86279\text{.}
+ \end{equation}
+ 
+ The module depth is $O(\log n)$:
+@@ -1934,14 +1846,13 @@ The module depth is $O(\log n)$:
+ \overline{D}_{ME} = 3\log_2 n + 24
+ \end{equation}
+ 
+-The circuit size is $O(n^4)$:
++The circuit size is $O(n^4 \log n)$:
+ 
+ \begin{eqnarray}
+ S_{ME} & = & 96 \log_2^3 n + \nonumber \\
+-       & - & (384n + 624)\log_2^2 n \nonumber \\
+-       & + & (384n^2 + 1152n + 840) \log_2 n \nonumber \\
+-       &   & 3302324 n^4 + 30900797 n^3 + 50521837 n^2  + 20284306 n + 
+-  -6494\text{.}
++       &   & (34400 n^3 + 1846079 n^2 + 824937 n - 288)\log_2^2 10n + \nonumber \\
++       &   & (212129 n^4 + 1737086 n^3 + 836442 n^2 + 117239 n - 41) \log_2 10n + \nonumber \\
++       &   & 3520185 n^4 + 29097629 n^3 + 41260290 n^2 + 13300960 n - 4645\text{.}
+ \end{eqnarray}
+ 
+ The module size is $O(n^2)$:
+@@ -1969,7 +1880,7 @@ The module width is $O(n)$:
+ The asymptotic resources required for our approach,
+ as well as the resources for other nearest-neighbor approaches,
+ are listed in Table \ref{tab:results},
+-where we assume a fixed constant error
++where we assume some fixed constant error
+ probability for each round of QPF. Not all resources are
+ provided directly by the referenced source.
+ 
+@@ -2024,7 +1935,7 @@ Fowler, et al. \cite{Fowler2004} & \textsc{1D NTC}   & $O(n^3)$ & $O(n^4)$ & $O(
+ Van Meter \& Itoh \cite{VanMeter2006} & \textsc{1D NTC}   & $O(n^2 \log n)$ & $[O(n^4\log n)]$ & $O(n^2)$\\
+ Kutin \cite{Kutin2006}                     & \textsc{1D NTC}   & $O(n^2)$ & $O(n^3)$ & $O(n)$\\
+ \hline
+-Current Work               & \textsc{2D CCNTCM}   & $O(\log^2{n})$ & $O(n^4)$ & $O(n^4)$   \\
++Current Work               & \textsc{2D CCNTCM}   & $O(\log^3{n})$ & $O(n^4\log n)$ & $O(n^4)$   \\
+ \hline
+ \end{tabular}
+ \end{center}
+@@ -2045,7 +1956,7 @@ independent modules. We call this new model
+ %results are promising.
+ Using a combination of algorithmic
+ improvements (carry-save adders and parallelized phase estimation)
+-and architectural improvements (irregular two-dimensional layouts,
++and architectural improvements (irregular two-dimensional layouts and
+ constant-depth communication, and parallel modules), we conclude
+ that we can run
+ the central part of Shor's factoring algorithm (quantum period-finding)
+@@ -2065,7 +1976,7 @@ with asymptotically smaller depth than previous implementations.
+ %the current work.
+ 
+ A natural extension of the current work is to improve its
+-depth to be sub-logarithmic on 2D CCNTCM using the approach outlined in
++depth to constant using the approach outlined in
+ \cite{Hoyer2002,Siu1993}, generalizing the carry-save adder to
+ a block-save adder using threshold gates. It would also be
+ beneficial to determine lower bounds for the

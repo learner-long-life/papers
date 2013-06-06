@@ -64,46 +64,48 @@
 \begin{document}
 \setlength{\textheight}{8.0truein}    %FOR 2ND PAGE ONWARDS
 
-\runninghead{A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
+\runninghead{A 2D nearest-neighbor quantum architecture for factoring in polylogarithmic depth}
             {P. Pham and K.M. Svore}
 
 \normalsize\textlineskip
 \thispagestyle{empty}
-\setcounter{page}{1}
+\setcounter{page}{937}
 
 %\copyrightheading{Vol.}{No.}{Year}{Page Nos.}
-\copyrightheading{0}{0}{2003}{000--000}
+\copyrightheading{13}{11\&12}{2013}{0937--0962}
 
 \vspace*{0.88truein}
 
 \alphfootnote
 
-\fpage{1}
+\fpage{937}
 
 \centerline{\bf
 %%%%%%%%%%%%%%%%%%%%%
 %Put in titiles here
 %%%%%%%%%%%%%%%%%%%%%
-A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth}
+%A 2D Nearest-Neighbor Quantum Architecture for Factoring in Polylogarithmic Depth
+A 2D NEAREST-NEIGHBOR QUANTUM ARCHITECTURE }\vspace{0.1in}
+\centerline{\bf FOR FACTORING IN POLYLOGARITHMIC DEPTH}
 \vspace*{0.37truein}
 \centerline{\footnotesize
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %put authors' name and address here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Paul Pham\footnote{ppham@cs.washington.edu}}
+PAUL PHAM\footnote{ppham@cs.washington.edu}}
 \vspace*{0.015truein}
 \centerline{\footnotesize\it Quantum Theory Group, University of Washington, Box 352350,}
 \baselineskip=10pt
 \centerline{\footnotesize\it Seattle, WA 98195, USA}
 \vspace*{10pt}
 \centerline{\footnotesize
-Krysta M. Svore\footnote{ksvore@microsoft.com}}
+KRYSTA M. SVORE\footnote{ksvore@microsoft.com}}
 \vspace*{0.015truein}
 \centerline{\footnotesize\it Quantum Architectures and Computation Group, Microsoft Research, One Microsoft Way,}
 \baselineskip=10pt
 \centerline{\footnotesize\it Redmond, WA 98052, USA}
 \vspace*{0.225truein}
-\publisher{(received date)}{(revised date)}
+\publisher{October 11, 2012}{March 29, 2013}
 
 \vspace*{0.21truein}
 
@@ -115,7 +117,7 @@ Krysta M. Svore\footnote{ksvore@microsoft.com}}
 % put abstract here
 %%%%%%%%%%%%%%%%%%%%
 We contribute a 2D nearest-neighbor
-quantum architecture for Shor's algorithm to factor an $n$-bit number in $O(\log^2(n))$ depth.
+quantum architecture for Shor's algorithm to factor an $n$-bit number in $O(\log^3n)$ depth.
 Our implementation uses
 %(1)
 parallel phase estimation,
@@ -132,10 +134,8 @@ constant-depth carry-save modular addition.
 %nearest-neighbor and long-distance communication channels, and ultimately use
 %our circuit within parallel phase estimation to achieve quantum factoring.
 We derive upper bounds on the circuit resources of our architecture under a
-new 2D nearest-neighbor model
-which allows a classical controller and parallel, communicating
-modules. We also contribute a novel constant-depth circuit for
-unbounded quantum \emph{unfanout} in our new model.
+new 2D model which allows a classical controller and parallel, communicating
+modules.
 Finally, we provide a comparison to all previous nearest-neighbor factoring
 implementations.  
 Our circuit results in an exponential improvement in nearest-neighbor circuit depth at the cost of a polynomial increase in circuit size and width.
@@ -146,7 +146,7 @@ Our circuit results in an exponential improvement in nearest-neighbor circuit de
 \keywords{quantum architecture, prime factorization, Shor's algorithm,
 nearest-neighbor, carry-save addition}
 \vspace*{3pt}
-\communicate{to be filled by the Editorial}
+\communicate{B~Kane~\&~M~Mosca}
 
 \vspace*{1pt}\textlineskip    %) USE THIS MEASUREMENT WHEN THERE IS
    %) A SECTION HEADING
@@ -176,15 +176,14 @@ between neighboring qubits, an omnipresent classical controller, and
 modules which are allowed to teleport qubits to each other. We call this new
 model \textsc{2D CCNTCM}.
 We show that our circuit construction is asymptotically more efficient in circuit depth than previous state-of-the-art techniques for nearest-neighbor
-architectures, achieving a depth of $O(\log^2 n)$, a size of
-$O(n^4)$, and a width of $O(n^4)$ qubits, as detailed in Table
+architectures, achieving a depth of $O(\log^3 n)$, a size of
+$O(n^4\log n)$, and a width of $O(n^4)$ qubits, as detailed in Table
 \ref{tab:results} of Section \ref{sec:results}.
 
 Our technique hinges on several key building blocks.
 Section \ref{sec:bg} introduces quantum architectural models, circuit
 resources, and constant-depth communication techniques due to
-\cite{Harrow2012,Rosenbaum2012}, including a circuit for
-constant-depth unfanout which is unique to the current work.
+\cite{Harrow2012,Rosenbaum2012}.
 Section \ref{sec:related} places our work in the context of existing
 results.
 In Section \ref{sec:csa}, we provide a self-contained pedagogical review
@@ -276,8 +275,8 @@ We call an AC or NTC model augmented by these two extensions
 third extension, let us formalize our model for \textsc{2D CCNTC}, with definitions that are (asymptotically) equivalent to those in 
 \cite{Rosenbaum2012}.
 
-\begin{definition}
-A 2D CCNTC architecture consists of
+%\begin{definition}
+{\noindent\bf Definition~1} {\it 2D CCNTC architecture consists of
 
 \begin{itemize}
 \item a quantum computer $QC$ which is represented by a planar graph $(V,E)$. A
@@ -306,8 +305,8 @@ as $V_i$, the set of all qubits acted upon during timestep $i$.
 V_i = \bigcup_{j: g_{i,j} \in G_i} v_{i,j} \cup v^{(1)}_{i,j} \cup v^{(2)}_{i,j}
 \end{equation}
 
-\end{itemize}
-\end{definition}
+\end{itemize}}
+%\end{definition}
 
 We can then define the three conventional circuit resources in this model.
 
@@ -415,8 +414,8 @@ classically and share a clock.
 \label{fig:modules}
 \end{figure}
 
-\begin{definition}
-A \textsc{2D CCNTCM} architecture consists of
+%\begin{definition}
+{\noindent\bf Definition~1} {\it A \textsc{2D CCNTCM} architecture consists of
 
 \begin{itemize}
 \item a quantum computer $\overline{QC}$ which is represented by a planar graph $(\overline{V},\overline{E})$. A
@@ -462,7 +461,7 @@ V_i = \bigcup_{j: g_{i,j} \in G_i} v_{i,j} \cup v^{(1)}_{i,j} \cup v^{(2)}_{i,j}
 \end{equation}
 
 \end{itemize}
-\end{definition}
+} %\end{definition}
 
 We measure the efficiency of a circuit in this new module using not just
 the three conventional circuit resources, but with three novel resources
@@ -493,14 +492,6 @@ module width.
 W = O(n\overline{W})
 \label{eqn:module-width}
 \end{equation}
-
-This restriction imposes some locality on our model by constraining it to
-nearest-neighbor gates within a linear-sized group of qubits, but allowing
-it long-range teleportation to circumvent onerous geometric constraints.
-Using the constant-depth communication in Section \ref{subsec:fanout}, and for
-the specific case of factoring, we
-can simulate arbitrary connectivity between modules with only a polynomial
-increase in the module size and a constant increase in module depth.
 
 \subsection{Circuit Resource Comparisons}
 
@@ -541,14 +532,10 @@ Section \ref{sec:modexp}, we also give circuit resources in
 terms of module depth, module size, and module width.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Constant-depth Teleportation, Fanout, and Unfanout}
+\subsection{Constant-depth Teleportation and Fanout}
 \label{subsec:fanout}
 
 Communication, namely the \emph{moving} and \emph{copying} of quantum information, in nearest-neighbor quantum architectures is challenging.
-In this section we quote known results for teleportation and
-fanout in constant depth while also contributing a novel construction
-for unfanout.
-
 The first challenge of moving quantum information from one site to another over
 arbitrarily long distances can be addressed by using
 %A related problem is how to teleport a qubit an arbitrary distance.
@@ -655,73 +642,12 @@ depth 2 and size 2. Also, given the symmetric nature of the cat state, there
 is an alternate set of Pauli corrections which would give the same state and
 is of equal size to the corrections given above.
 
-\begin{figure*}[tb!]
-\begin{center}
-\begin{displaymath}
-\Qcircuit @C=1em @R=1em {
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \qw      & \qw &  \measureD{Z} & \cw & \rstick{j_1} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_2} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \targfix & \qw & \measureD{Z} & \cw & \rstick{j_3} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_4} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \ctrl{1} & \qw & \targfix & \qw & \measureD{Z} & \cw & \rstick{j_5} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \targfix & \qw & \ctrl{1} & \qw & \measureD{Z} & \cw & \rstick{j_6} & \\
-& \lstick{\ket{\ell}}	& \qw & \gate{H} & \qw & \qw      & \qw & \targfix & \qw & \gate{H} & \qw & \rstick{Z^{j_2 \oplus j_4}(\alpha\ket{0} + \beta\ket{1})}
-}
-\end{displaymath}
-\centerline{}
-\fcaption{A novel, constant-depth circuit for unbounded quantum unfanout on
-CCNTC, from the $7$-qubit entangled state $\alpha\ket{0}^{\otimes 7} + \beta\ket{1}^{\otimes 7}$ to the
-target product state $(\alpha\ket{0} + \beta\ket{1})\otimes\ket{0}^{\otimes 6}$.}
-\label{fig:cdu}
-\end{center}\end{figure*}
-
-Reversing the fanout is an operation called \emph{unfanout}. Unfanout
-takes as input 
-the following entangled $n$-qubit state which is the result of a fanout.
-
-\begin{equation}
-\normtwo (\ket{0}^{\otimes n} + \ket{1}^{\otimes n})
-\label{eqn:fanned-out}
-\end{equation}
-
-The output of unfanout, after Pauli corrections, is the product state
-consisting of all $\ket{0}$'s except for a single target qubit $\alpha\ket{0} + \beta\ket{1}$, which is in the
-same state as the original source qubit of the fanout.
-
-In the model of \cite{Hoyer2002}, the fanout and unfanout were identical, elementary
-operations. In CCNTC, the operations are not identical due to
-the one-way nature of the measurement and the
-constraints of NTC. In Figure \ref{fig:cdu}, we contribute a novel quantum circuit for unbounded quantum
-unfanout for $n=7$ in constant depth on 2D CCNTC.
-Note that the state in Equation \ref{eqn:fanned-out}
-is completely symmetric in that all qubits are
-equivalent entangled copies of each other. Therefore, the asymmetry 
-of the final target qubit is entirely determined by the unfanout circuit,
-which in this case selects the bottom qubit in the figure.
-
-The initial fanned out state lives in a $2$-dimensional subspace. The
-round of Hadamard gates increases its dimension to $2^n$, and the two
-interleaved layers of CNOTs in a sense ``disentangle'' the qubits from
-one another, up to a Pauli $Z$ correction. This correction, on the
-final target qubit, is controlled by the parity of the classical measurements
-on every ``even'' qubit ($j_2$ and $j_4$ in the figure), excluding the 
-next-to-last qubit ($j_6$ in the figure). Each measurement projects the state of the
-target qubit
-into a subspace with half the dimension, so $n-1$ measurements project
-the target qubit into a final $2$-dimensional subspace, which is the
-qubit $\alpha\ket{0} + \beta\ket{1}$.
-
-Although the circuit show works for odd $n$, we can easily take into
-account even $n$ with an initial CNOT to ``uncopy'' one qubit from its
-neighbors. The unfanout circuit in Figure \ref{fig:cdu} is the
-functional inverse of the
-fanout circuit in 
-Figure \ref{fig:cdf}, but it relies on the fanned-out qubits
-being teleported back into adjacent positions,
-which is only possible in a 2D layout.
-The target qubit of unfanout is usually chosen to be in the same location
-as the source qubit of the corresponding fanout. 
-The resources for unfanout are given in
+Reversing the fanout (un-fanout) in constant depth is an interesting
+problem. Doing so would allow us to improve the overall depth of our
+factoring implementation to $O(\log^2 n)$ instead of $O(\log^3 n )$.
+In this work it is sufficient to perform un-fanout using alternating rounds of
+teleportation and CNOT among the $n$ fanned-out qubits in a logarithmic-depth
+binary tree. The resources for this are given in
 Table \ref{tab:cd-resources}.
 
 % From Notebook #16, p. 212
@@ -736,12 +662,12 @@ Table \ref{tab:cd-resources}.
 \hline
 \text{Fanout from Figure \ref{fig:cdf}} & 9 & 10n - 9 & 3n-1 \\
 \hline
-\text{Unfanout} & $ 6 $ & $ 3n+2 $ & $ n$ \\
+\text{Un-fanout} & $8\log_2(2n)$ & $33n\log_2(2n) + 10\log^2_2(2n)$ & $3n-1$ \\
 \hline
 \end{tabular}
 \end{displaymath}
 \centerline{}
-\tcaption{Circuit resources for teleportation, fanout, and unfanout
+\tcaption{Circuit resources for teleportation, fanout, and un-fanout
 (consisting of
 alternating rounds of constant-depth teleportation and CNOT).}
 \label{tab:cd-resources}
@@ -826,7 +752,7 @@ $O(n^2)$ on \textsc{NTC} \cite{VanMeter2005}. Cleve and Watrous
 calculate a factoring circuit depth of $O(\log^3 n)$ and corresponding
 circuit size of $O(n^3)$ on \textsc{AC},
 assuming an adder which has depth $O(\log n)$ and
-$O(n)$ size and width. We beat this depth and provide a concrete
+$O(n)$ size and width. We meet this bound and provide a concrete
 architectural implementation using an adder with $O(1)$-depth and $O(n)$
 size and width.
 
@@ -1410,23 +1336,22 @@ in the correct position to be added as inputs.
 %them are given in Table \ref{tab:csa-tile-resources}.
 
 The resources for the $n$-bit $3$-to-$2$ modular adder depicted in Figure
-\ref{fig:csa-add-4} are given below.
-The formulae reflect the resources needed for both computing the output
-in the forward direction (including creating an entangled fanned-out state
-controlled on overflow qubits)
+\ref{fig:csa-add-4} is more complicated due to the un-fanout procedure.
+The formulae below reflect the resources needed for both computing the output
+in the forward direction (creating an entangled fanned-out state)
 and also uncomputing ancillae in the backward
-direction (including disentangling previous fanned-out copies).
+direction (disentangling fanned-out copies).
 
-The circuit depth is $O(1)$:
+The circuit depth is: $O(\log n)$:
 
 \begin{equation}
-374\text{.}
+356 + 8\log_2(2n+4)\text{.}
 \end{equation}
 
-The circuit size is $O(n)$:
+The circuit size is $O(n\log n)$:
 
 \begin{equation}
-551n + 757\text{.}
+33n\log_2 n + 40\log^2 n + 575n + 752\text{.}
 \end{equation}
 
 The circuit width is $O(n)$:
@@ -1652,7 +1577,7 @@ a modular multiplier, including the reverse computation.
 The circuit depth is $O(\log n)$:
 
 \begin{equation}
-D_{PPC} = 32\log_2 n + 150\text{.}
+D_{PPC} = 40\log_2 10 n\text{.}
 \end{equation}
 
 The module depth is $O(1)$:
@@ -1661,11 +1586,12 @@ The module depth is $O(1)$:
 \overline{D}_{PPC} = 8\text{.}
 \end{equation}
 
-The circuit size is $O(n\log^2 n)$:
+The circuit size is $O(n^2\log^2 n)$:
 
 \begin{eqnarray}
-S_{PPC} & = & (6n + 9)\log_2 n +\\
-        &   & (26n^3 + 232n^2 + 224n + 159)\text{.}
+S_{PPC} & = & (12n^2 + 84n + 48)\log^2_2 (10n) +\\
+        &   & (8n^3 + 64n^2 + 94n + 31)\log_2(10n) +\\
+        &   & (78n^3 + 597n^2 + 419n + 133)\text{.}
 \end{eqnarray}
 
 The module size is $O(n^2)$:
@@ -1733,6 +1659,7 @@ into a destination tile.
 \centerline{
 \includegraphics[width=5.5in]{./mod-mult-add.pdf}
 }
+\vspace{5pt}	
 \fcaption{Modular multiple addition of quantum integers on a CSA tile
 architecture for $t'=18$ in a logarithmic-depth tree with height $(\lceil \log_{\frac{3}{2}}(t'/3) \rceil + 1) = 6$. Arrows represent teleportation
 in between modules.}
@@ -1754,10 +1681,10 @@ the entire modular multiplier circuit has depth $O(\log n)$ and width $O(n^3)$.
 \subsection{Modular Multiplier Resources}
 \label{subsec:mod-mult-resources}.
 
-The circuit depth of the entire modular multiplier is $O(\log n)$:
+The circuit depth of the entire modular multiplier is $O(\log^2 n)$:
 
 \begin{equation}
-D_{MM} = 1383 \log_2 n + 3930\text{.}
+D_{MM} = 3.4 \log_2^2 n + 1295 \log_2 n + 6911\text{.}
 \end{equation}
 
 The module depth is $O(\log n)$:
@@ -1765,11 +1692,12 @@ The module depth is $O(\log n)$:
 \overline{D}_{MM} = 2\log_2 n + 11\text{.}
 \end{equation}
 
-The circuit size is $O(n^3)$:
+The circuit size is $O(n^3\log n)$:
 
 \begin{eqnarray}
-S_{MM} = & (6n + 9)\log_2 n +\\
-        & (1152n^3 + 10780n^2 + 17628n + 7082)\text{.}
+S_{MM} = & (12n^2 + 644n + 288)\log_2^2 (10n) +\\
+        & (74n^3 + 606n^2 + 292n + 41)\log_2 (10n) +\\
+        & (1228n^3 + 10151n^2 + 14397n + 4645)\text{.}
 \end{eqnarray}
 
 The module size is $O(n^3)$:
@@ -1835,12 +1763,12 @@ logarithmic-depth binary tree.
 This is shown in Figure \ref{fig:modexp-qq-parallel}, where arrows indicate multiplication.
 The tree has depth $\log_2(t)$ in modular multiplier operations. Furthermore,
 each
-modular multiplier has depth $O(\log(n))$ and width $O(n^3)$ for $n$-qubit
+modular multiplier has depth $O(\log^2(n))$ and width $O(n^3)$ for $n$-qubit
 numbers. Therefore, the overall depth of this parallel modular exponentiation
-structure is $O(\log(t)\log(n))$ with width $O(tn^3)$.
+structure is $O(\log(t)\log^2(n))$ with width $O(tn^3)$.
 In phase estimation for QPF, it is
 sufficient to take $t = O(n)$ \cite{Nielsen2000,Kitaev2002}. Therefore our total depth is
-$O(\log^2(n))$ and our total size and total width are $O(n^4)$, as desired. At this point, combined with the parallel phase
+$O(\log^3(n))$ and our total width is $O(n^4)$, as desired. At this point, combined with the parallel phase
 estimation procedure of \cite{Kitaev2002}, we have a complete factoring
 implementation in our 2D nearest-neighbor architecture in polylogarithmic
 depth.
@@ -1849,6 +1777,7 @@ depth.
 \centerline{
 \includegraphics[width=5.5in]{./mod-exp-par.pdf}
 }
+\vspace{5pt}
 \fcaption{Parallel modular exponentiation: multiplying $t$ quantum integers
 %$\{\ket{x^{(0)}}, \ket{x^{(1)}}, \ldots, \ket{x^{(t-1)}}\}$ in parallel,
 in a $O(\log{(t)}\log{(n)})$-depth binary tree. Arrows indicate modular
@@ -1921,11 +1850,11 @@ The circuit width is $O(n^2)$:
 This leads to the following circuit resource upper bounds for a modular exponentiator. Therefore, these are the total resources for running a
 single round of parallel QPF as part of Shor's factoring algorithm.
 
-The circuit depth is $O(\log^2 n)$:
+The circuit depth is $O(\log^3 n)$:
 
 % From Notebook #16 p. 225
 \begin{equation}
-D_{ME} = 1383\log_2^2(n) + 21253\log_2(n) + 49095\text{.}
+D_{ME} = 3.4\log_2^3 n + 1337\log_2^2 n + 23070\log_2 n + 86279\text{.}
 \end{equation}
 
 The module depth is $O(\log n)$:
@@ -1934,14 +1863,13 @@ The module depth is $O(\log n)$:
 \overline{D}_{ME} = 3\log_2 n + 24
 \end{equation}
 
-The circuit size is $O(n^4)$:
+The circuit size is $O(n^4 \log n)$:
 
 \begin{eqnarray}
 S_{ME} & = & 96 \log_2^3 n + \nonumber \\
-       & - & (384n + 624)\log_2^2 n \nonumber \\
-       & + & (384n^2 + 1152n + 840) \log_2 n \nonumber \\
-       &   & 3302324 n^4 + 30900797 n^3 + 50521837 n^2  + 20284306 n + 
-  -6494\text{.}
+       &   & (34400 n^3 + 1846079 n^2 + 824937 n - 288)\log_2^2 10n + \nonumber \\
+       &   & (212129 n^4 + 1737086 n^3 + 836442 n^2 + 117239 n - 41) \log_2 10n + \nonumber \\
+       &   & 3520185 n^4 + 29097629 n^3 + 41260290 n^2 + 13300960 n - 4645\text{.}
 \end{eqnarray}
 
 The module size is $O(n^2)$:
@@ -2024,7 +1952,7 @@ Fowler, et al. \cite{Fowler2004} & \textsc{1D NTC}   & $O(n^3)$ & $O(n^4)$ & $O(
 Van Meter \& Itoh \cite{VanMeter2006} & \textsc{1D NTC}   & $O(n^2 \log n)$ & $[O(n^4\log n)]$ & $O(n^2)$\\
 Kutin \cite{Kutin2006}                     & \textsc{1D NTC}   & $O(n^2)$ & $O(n^3)$ & $O(n)$\\
 \hline
-Current Work               & \textsc{2D CCNTCM}   & $O(\log^2{n})$ & $O(n^4)$ & $O(n^4)$   \\
+Current Work               & \textsc{2D CCNTCM}   & $O(\log^3{n})$ & $O(n^4\log n)$ & $O(n^4)$   \\
 \hline
 \end{tabular}
 \end{center}
