@@ -1,20 +1,28 @@
-\documentclass[twocolumn,10pt]{article}
+\documentclass[prodmode,acmtecs]{acmsmall}
 
-\usepackage[dvips]{graphicx}
+\usepackage[ruled]{algorithm2e}
+%\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\small}
+\SetAlCapFnt{\small}
+\SetAlCapNameFnt{\small}
+\SetAlCapHSkip{0pt}
+\IncMargin{-\parindent}
+
+\usepackage{graphicx}
 %\usepackage{times}
-\usepackage{fullpage}
-\usepackage{eprint}
-\usepackage{rotating}
-\usepackage{eepic}
-\usepackage{amsfonts}
+%\usepackage{fullpage}
+%\usepackage{eprint}
+%\usepackage{rotating}
+%\usepackage{eepic}
+%\usepackage{amsfonts}
 \usepackage{algorithmic}
-\usepackage{amsthm}
+%\usepackage{amsthm}
 
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
+%\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}
 
 \title{Quantum compiling with Kitaev-Shen-Vyalyi}
-\date{December 20, 2011}
+%\date{December 20, 2011}
 \author{Paul Pham}
 
 \input{Qcircuit}
@@ -26,6 +34,34 @@
 \newcommand{\braket}[2]{\langle #1|#2 \rangle}
 \newcommand{\normtwo}{\frac{1}{\sqrt{2}}}
 \newcommand{\norm}[1]{\parallel #1 \parallel}
+
+\markboth{P. Pham}{Quantum compiling with Kitaev-Shen-Vyalyi}
+
+% Title portion
+\title{}
+\author{PAUL PHAM
+\affil{University of Washington}
+}
+
+\category{G.1}{Mathematics of Computing}{Numerical Analysis}
+\category{J.2}{Physical Sciences and Engineering}{Computer Applications}
+
+\terms{Algorithms, Performance}
+
+\keywords{Quantum compiling, Quantum computing, Phase estimation,
+Quantum gate simulation, Solovay-Kitaev Theorem, Numerical Comparison}
+
+\acmformat{Pham, P.  2012. Quantum compiling with Kitaev-Shen-Vyalyi.}
+
+\begin{bottomstuff}
+This work is supported by the National Science Foundation, under
+grant CNS-0435060, grant CCR-0325197 and grant EN-CS-0329609.
+
+Author's address: P. Pham, University of Washington,
+Department of Computer Science \& Engineering,
+Box 352350, Seattle, Washington 98195-2350, United States of America.
+\end{bottomstuff}
+
 
 \maketitle
 
@@ -47,7 +83,20 @@
 
 \input{ksv-compiler-future}
 
+
+% Acknowledgments
+\begin{acks}
+The author would like to gratefully acknowledge the help of
+his advisors Dave Bacon and Mark Oskin,
+as well as Aram Harrow for the introduction to
+Super-Kitaev and related expertise.
+\end{acks}
+
+% Bibliography
+\bibliographystyle{acmsmall}
 \bibliography{ksv-compiler}
-\bibliographystyle{tocplain}
+
+% History dates
+%\received{February 2007}{March 2009}{June 2009}
 
 \end{document}

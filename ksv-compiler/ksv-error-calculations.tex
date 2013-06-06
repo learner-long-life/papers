@@ -237,24 +237,34 @@ Now we also need to use the fact that the real part of a sum over complex
 numbers is at most the sum of real parts of each complex number.
 
 \begin{equation}
-\Re\left[ \sum_{i} c_i \right] \le \sum_{i} \Re( c_i )
+\Re\left[ \sum_{i} c_i \right] \quad \le \quad \sum_{i} \Re( c_i )
 \end{equation}
 
-Substituting the real part of a sum with the sum of real parts
+Furthermore, the following inequality holds.
+
+\begin{equation}
+1 - \sum_{i} \Re(c_i) \quad \le \quad \sum_{i} \left(1 - \Re(c_i) \right)
+\end{equation}
+
+Substituting this
 back in our original calculation, we get:
 
 \begin{eqnarray}
-\braket{\psi}{\psi} & \le & 2 - 2\sum_{y \in \Delta} \left[ \Re\left(
+\braket{\psi}{\psi} & \le & 2 - 2\sum_{y \in \Delta} \Re\left(
   \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
-  \braket{\phi_{(y,j)}}{\phi_{(y,h)}} \right) \right] \\
-   & \le & 2 - 2\sum_{y \in Delta} \left[ \Re\left(
-           \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}\Pr(y | j) \right)\right] \\
+  \braket{\phi_{(y,j)}}{\phi_{(y,j)}} \right) \\
+   & \le & 2 - 2\sum_{y \in \Delta} \Re\left(
+           \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}\Pr(y | j) \right) \\
+   & \le & 2 - 2\sum_{y \in \Delta} \Re\left(
+           \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}\right) \Pr(y | j) \\
+   & \le & 2 \left[ 1 - \sum_{y \in \Delta} \Re\left(
+           \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi} \right) \right] \Pr(y | j) \\
    & \le & 2 \sum_{y \in \Delta}\left[
            1 - \Re\left( \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi} \right)
-           \Pr(y | j) \right]
+           \Pr(y | j)
 \end{eqnarray}
 
-In the last line, we used the definition of
+In the second line, we used the definition of
 $\bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} = \braket{\phi_{(y,j)}}{\phi_{(y,h)}}$
 as the probability of getting outcome $y$ in the register
 $\mathcal{J}$ given that we have projected onto outcome $j$ in register
@@ -352,7 +362,38 @@ Now we can jump ahead to equation \ref{eqn:sym-real}, which is the first
 place in the proof of Theorem \ref{thm:coherent} where this asymmetry matters.
 
 \begin{eqnarray}
-\braket{\phi}{\phi} & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
-                                                             \bra{0^N}R_j^{\dagger}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right]
+\braket{\psi}{\psi} & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+                                                             \bra{0^N}\Pi_{\mathcal{M}_y}R_j\ket{0^N} \right]
 \end{eqnarray}
+
+As in the proof of Theorem \ref{thm:coherent}, we can label the projected
+ancillae state like so:
+
+\begin{equation}
+\ket{\phi_{(y,j)} = \Pi_{\mathcal{M}_y}R_j \ket{0^N}
+\end{equation}
+
+and substitute it into our calculation:
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+                                                             \braket{0^N}{\phi_{(y,j)}} \right]
+\end{eqnarray}
+
+Here, the braket $\braket{0^N}{\phi_{(y,j)}}$ cannot be
+directly factored out of the real operator since it is no longer the overlap of
+a vector with itself, and therefore it is not guaranteed to be a
+real number. Therefore, we must upper bound the real part of this complex
+number with its magnitude, as in the inequality below with any two vectors
+$\ket{\phi}$ and $\ket{\sigma}$.
+
+\begin{equation}
+\Re(\braket{\phi}{\sigma}) \quad \le \lvert \braket{\phi}{\sigma} \rvert
+\end{equation}
+
+\begin{eqnarray}
+\braket{\psi}{\psi} & = & 2 - 2\Re\left[ \sum_{y \in \Delta} \bra{\xi}Q_{f(j)}^{\dagger}Q_y \ket{\xi}
+                                                             \braket{0^N}{\phi_{(y,j)}} \right]
+\end{eqnarray}
+
 \end{proof}

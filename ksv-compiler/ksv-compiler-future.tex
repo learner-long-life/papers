@@ -1,7 +1,7 @@
 \section{Conclusion and Future Directions}
 
 In summary, we have seen the expected asymptotic bounds of both the
-Solovay-Kitaev and Super-Kitaev quantum compiling algorithms reflected in
+Solovay-Kitaev and KSV quantum compiling algorithms reflected in
 numerical resource comparisons. Solovay-Kitaev requires a large classical
 preprocessing overhead but produces a more tractable number of compiled
 gates and zero ancillae, albeit at larger circuit depth. This seems to be
@@ -13,7 +13,7 @@ situation may change in the future when
 quantum computers become more mature, scalable, and parallel;
 when we become more ambitious in our
 algorithm input sizes; and when the performance bottleneck becomes circuit depth.
-In that case, Super-Kitaev may be preferrable.
+In that case, KSV may be preferrable.
 Quantum computer engineers of the future will be able to use this work to
 choose the most suitable quantum compiling technique currently available
 as well as compare it to future compiling algorithms.
@@ -28,10 +28,3 @@ this low-depth compiling would need to have a
 "phase factory" for enacting the $\Lambda(e^{i\phi})$ gate, which would
 included an efficient parallelized phase estimation routine. These are
 novel resources which are currently not being considered in related literature.
-
-\section{Acknowledgements}
-
-The author would like to gratefully acknowledge the help of
-his advisors Dave Bacon and Mark Oskin,
-as well as Aram Harrow for the introduction to
-Super-Kitaev and related expertise.
